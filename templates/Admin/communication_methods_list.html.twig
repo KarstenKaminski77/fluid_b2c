@@ -1,0 +1,80 @@
+{% extends 'Admin/layout_list.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row border-bottom admin-header" style="left: 16.8%">
+        <div class="col-12 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <h4 class="text-truncate m-0">Communication Methods</h4>
+        </div>
+    </div>
+    <div class="row pb-3 pt-2 border-left border-right border-bottom">
+        <div class="row pb-3 border-bottom d-none d-md-flex">
+            <div class="col-1 fw-bold ps-4 text-truncate">
+                #ID
+            </div>
+            <div class="col-6 fw-bold text-truncate">
+                Communication Method
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Modified
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Created
+            </div>
+        </div>
+        {% set count = communicationMethods|length %}
+        {% set i = 0 %}
+        {% set class = '' %}
+        {% for communicationMethod in communicationMethods %}
+            {% set class = 'border-bottom-dashed py-3' %}
+            {% set i = i + 1 %}
+            {% if i == count %}
+                {% set class = 'pt-3' %}
+            {% endif %}
+            <div class="row {{ class }}" id="row_{{ communicationMethod.id }}">
+                <div class="col-4 fw-bold ps-4 d-block d-md-none text-truncate">
+                    #ID
+                </div>
+                <div class="col-8 col-md-1 ps-4 text-truncate">
+                    #{{ communicationMethod.id }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Clinic Name
+                </div>
+                <div class="col-8 col-md-6 text-truncate">
+                    {{ communicationMethod.method }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Modified
+                </div>
+                <div class="col-8 col-md-2 text-truncate">
+                    {{ communicationMethod.modified|date('Y-m-d H:i:s') }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Created
+                </div>
+                <div class="col-8 col-md-2 text-truncate">
+                    {{ communicationMethod.created|date('Y-m-d') }}
+                </div>
+                <div class="col-12 col-md-1 mt-3 mt-md-0 text-truncate">
+                    <a
+                        href="{{ path('communication_methods', {'communicationMethodId':communicationMethod.id} ) }}"
+                        class="float-end open-user-modal"
+                    >
+                        <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+        {{ pagination|raw }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

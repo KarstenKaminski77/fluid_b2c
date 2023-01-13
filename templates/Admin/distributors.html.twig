@@ -1,0 +1,632 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="distributors_form" id="distributors_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="distributor_id" id="distributor_id" value="{{ distributor.id ? distributor.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4>
+                        {% if distributor.id > 0 %}
+                            Editing {{ nzo_decrypt(distributor.distributorName) }}
+                        {% else %}
+                            New Distributor
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                            class="action-saveAndReturn btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end"
+                            type="submit"
+                            name="save_return"
+                    >
+                        <span class="btn-label">Save and exit</span>
+                    </button>
+                    <button
+                            class="action-saveAndContinue btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end"
+                            type="submit"
+                            name="save_continue"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon far fa-edit"></i>
+                            Save
+                        </span>
+                    </button>
+                    <button
+                        class="btn-approve btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 me-md-3 float-end text-truncate"
+                        type="submit"
+                        name="decline-distributor"
+                        data-distributor-id="{{ distributor.id|default(0) }}"
+                        data-is-approved="2"
+                    >
+                        <i class="action-icon fa-light fa-thumbs-down"></i>
+                        <span class="btn-label">Decline</span>
+                    </button>
+                    <button
+                        class="btn-approve btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                        type="submit"
+                        name="approve-distributor"
+                        data-distributor-id="{{ distributor.id|default(0) }}"
+                        data-is-approved="1"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon fa-light fa-thumbs-up"></i>
+                            Approve
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+                {# Clinic Name #}
+                <div class="col-12">
+                    <label class="ms-2 text-primary" for="is_published">
+                        Clinic Name
+                    </label>
+                    <input
+                        name="distributor-name"
+                        id="distributor_name"
+                        class="form-control"
+                        type="text"
+                        value="{{ nzo_decrypt(distributor.distributorName) }}"
+                        placeholder="Clinic Name"
+                    >
+                </div>
+            </div>
+
+            <div class="row mt-4">
+
+                {# Email #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Email <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="email"
+                        id="email"
+                        value="{{ nzo_decrypt(distributor.email) }}"
+                        placeholder="Email Address"
+                    >
+                    <div class="hidden_msg" id="error_email">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Telephone #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Telephone <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="telephone"
+                        id="telephone"
+                        value="{{ nzo_decrypt(distributor.telephone) }}"
+                        placeholder="Telephone Number"
+                    >
+                    <div class="hidden_msg" id="error_telephone">
+                        Required Field
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-4">
+
+                {# API #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">API <span class="text-danger">*</span> </label>
+                    <select name="api" id="api" class="form-control">
+                        <option value="">Select an API</option>
+                        {% if api|length > 0 %}
+                            {% for value in api %}
+                                {% set selected = '' %}
+                                {% if distributor.apiDetails.api.id|default(0) == value.id %}
+                                    {% set selected = 'selected' %}
+                                {% endif %}
+                                <option value="{{ value.id }}" {{ selected }}>{{ value.name }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                    <div class="hidden_msg" id="error_api">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Organizatation Id #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Organisation Id <span class="text-danger">*</span> </label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            name="organization-id"
+                            id="organization_id"
+                            value="{{ nzo_decrypt(distributor.apiDetails.organizationId|default('')) }}"
+                            placeholder="Organisation Id"
+                    >
+                    <div class="hidden_msg" id="error_organization_id">
+                        Required Field
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-4">
+
+                {# Client Id #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Client Id <span class="text-danger">*</span> </label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            name="client-id"
+                            id="client_id"
+                            value="{{ nzo_decrypt(distributor.apiDetails.clientId|default('')) }}"
+                            placeholder="Client Id"
+                    >
+                    <div class="hidden_msg" id="error_client_id">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Client Secret #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Client Secret <span class="text-danger">*</span> </label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            name="client-secret"
+                            id="client_secret"
+                            value="{{ nzo_decrypt(distributor.apiDetails.clientSecret|default('')) }}"
+                            placeholder="Client Secret"
+                    >
+                    <div class="hidden_msg" id="error_client_secret">
+                        Required Field
+                    </div>
+                </div>
+
+            </div>
+
+            {# Manager Name #}
+            <div class="row mt-4">
+
+                {# First Name #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Manager First Name <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="manager-first-name"
+                        id="manager_first_name"
+                        value="{{ nzo_decrypt(distributor.managerFirstName) }}"
+                        placeholder="Managers First Name"
+                    >
+                    <div class="hidden_msg" id="error_manager_first_name">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Last Name #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Manager Last Name <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="manager-last-name"
+                        id="manager_last_name"
+                        value="{{ nzo_decrypt(distributor.managerLastName) }}"
+                        placeholder="Managers Last Name"
+                    >
+                    <div class="hidden_msg" id="error_manager_last_name">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+
+            {# Manager ID #}
+            <div class="row mt-4">
+
+                {# ID No #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Manager ID No. <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="manager-id-no"
+                        id="manager_id_no"
+                        value="{{ nzo_decrypt(distributor.managerIdNo) }}"
+                        placeholder="Managers First Name"
+                    >
+                    <div class="hidden_msg" id="error_manager_id_no">
+                        Required Field
+                    </div>
+                </div>
+
+                {# ID Expiry Date #}
+                <div class="col-12 col-md-6">
+                    <label class="text-primary mb-2">Manager ID Exp Date <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="manager-id-exp-date"
+                        id="manager_id_exp_date"
+                        value="{{ distributor.managerIdExpDate|date('Y-m-d') }}"
+                        placeholder="Managers ID Expiry Date"
+                    >
+                    <div class="hidden_msg" id="error_manager_id_exp_date">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+
+            {# Trade License #}
+            {% if distributor.tradeLicense is not null %}
+                <div class="row mt-4">
+
+                    {# Trade License #}
+                    <div class="col-12 col-md-4">
+                        <label class="text-primary mb-2">Trade License <span class="text-danger">*</span> </label>
+                        <a href="{{ path('download_trade_license', {'trade-license':distributor.tradeLicense }) }}">
+                            <div
+                                class="form-control bg-disabled"
+                                id="trade_license_file"
+                                disabled=""
+                            >
+                                {{ distributor.tradeLicense }}
+                            </div>
+                        </a>
+                    </div>
+
+                    {# Trade License Number #}
+                    <div class="col-12 col-md-4">
+                        <label class="text-primary mb-2">Trade License <span class="text-danger">*</span> </label>
+                        <div
+                            class="form-control bg-disabled"
+                            id="trade_license_file"
+                        >
+                            {{ nzo_decrypt(distributor.tradeLicenseNo) }}
+                        </div>
+                    </div>
+
+                    {# Trade License Expiry Date #}
+                    <div class="col-12 col-md-4">
+                        <label class="text-primary mb-2">Trade License <span class="text-danger">*</span> </label>
+                        <div
+                            class="form-control bg-disabled"
+                            id="trade_license_file"
+                        >
+                            {{ distributor.tradeLicenseExpDate|date('Y-m-d') }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Clinic Users #}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <label class="text-primary mb-2">User Accounts</label>
+                    {% set count = distributorUsers|length %}
+                    {% set i = 0 %}
+                    {% set class = '' %}
+                    {% for user in distributorUsers %}
+                        {% set i = i + 1 %}
+                        {% if i == count %}
+                            {% set class = 'border-bottom' %}
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-9 col-sm-11 pe-0">
+                                <input
+                                    type="hidden"
+                                    value="{{ user.id }}"
+                                    name="user_id[]"
+                                >
+                                <div class="border-left border-top ps-2 py-2 bg-white {{ class }}">
+                                    {{ nzo_decrypt(user.firstName) ~' '~ nzo_decrypt(user.lastName) }}
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-1 ps-0 d-table">
+                                <div class="border-right border-top py-2 d-table-cell bg-white {{ class }}" style="display: table-cell !important;">
+                                    <a href="" class="float-end user-edit-icon me-3 text-primary" data-user-id="{{ user.id }}">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="" class="float-end user-edit-icon me-3 text-danger" data-user-id="{{ user.id }}">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row distributor-users" id="user_row_{{ user.id }}" data-user-id="{{ user.id }}" style="display: none">
+                            <div class="col-12 d-table">
+                                <div class="border-left border-right {{ class }} d-table-cell px-2 py-2">
+                                    <div class="row">
+
+                                        {# First Name #}
+                                        <div class="col-12 col-md-6">
+                                            <label class="text-primary mb-2">
+                                                First Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                name="user_first_name[]"
+                                                id="user_first_name"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="First Name"
+                                                value="{{ nzo_decrypt(user.firstName) }}"
+                                            >
+                                            <div class="hidden_msg" id="user_first_name">
+                                                Required Field
+                                            </div>
+                                        </div>
+
+                                        {# Last Name #}
+                                        <div class="col-12 col-md-6">
+                                            <label class="text-primary mb-2">
+                                                Last Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                name="user_last_name[]"
+                                                id="user_last_name"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Last Name"
+                                                value="{{ nzo_decrypt(user.lastName) }}"
+                                            >
+                                            <div class="hidden_msg" id="user_last_name">
+                                                Required Field
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+
+                                        {# Email #}
+                                        <div class="col-12 col-md-6">
+                                            <label class="text-primary mb-2">
+                                                Email <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                name="user_email[]"
+                                                id="user_email"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Email"
+                                                value="{{ nzo_decrypt(user.email) }}"
+                                            >
+                                            <div class="hidden_msg" id="user_email">
+                                                Required Field
+                                            </div>
+                                        </div>
+
+                                        {# Telephone #}
+                                        <div class="col-12 col-md-6">
+                                            <label class="text-primary mb-2">
+                                                Telephone <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                name="user_telephone[]"
+                                                id="user_telephone"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Telephone"
+                                                value="{{ nzo_decrypt(user.telephone) }}"
+                                            >
+                                            <div class="hidden_msg" id="user_telephone">
+                                                Required Field
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3 mb-3">
+
+                                        {# User Permissions #}
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="text-primary mb-2">
+                                                        User Permissions
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                {% for userPermission in userPermissions %}
+                                                    {% set checked = '' %}
+                                                    {% for permission in user.distributorUserPermissions %}
+                                                        {% if permission.permission.id == userPermission.id %}
+                                                            {% set checked = 'checked' %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <div class="col-12 col-md-3">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="user_permissions[]"
+                                                            class="form-check-input me-2"
+                                                            id="permission_{{ userPermission.id }}"
+                                                            value="{{ userPermission.id }}_{{ user.id }}"
+                                                            {{ checked }}
+                                                        >
+                                                        <label
+                                                            class="text-primary mb-2 text-md"
+                                                            for="permission_{{ userPermission.id }}"
+                                                        >
+                                                            {{ userPermission.permission }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            {# Save Products #}
+            $(document).on('submit', '#distributors_form', function (e){
+
+                e.preventDefault();
+
+                let distributor_name = $('#distributor-name').val();
+                let email = $('#email').val();
+                let telephone = $('#telephone').val();
+                let clientId = $('#client_id').val();
+                let clientSecret = $('#client_secret').val();
+                let organizationId = $('#organization_id').val();
+                let api = $('#api').val();
+                let is_valid = true;
+                let btn = document.activeElement.getAttribute('name');
+
+                let error_distributor_name = $('#error_distributor_name');
+                let error_email = $('#error_email');
+                let error_telephone = $('#error_telephone');
+                let error_client_id = $('#error_client_id');
+                let error_client_secret = $('#error_client_secret');
+                let error_organization_id = $('#error_organization_id');
+                let error_api = $('#error_api');
+
+                error_distributor_name.hide();
+                error_telephone.hide();
+                error_email.hide();
+                error_client_id.hide();
+                error_client_secret.hide();
+                error_organization_id.hide();
+                error_api.hide();
+
+                if(distributor_name == '' || distributor_name == 'undefined'){
+
+                    error_distributor_name.show();
+                    is_valid = false;
+                }
+
+                if(email == '' || email == 'undefined'){
+
+                    error_email.show();
+                    is_valid = false;
+                }
+
+                if(telephone == '' || telephone == 'undefined'){
+
+                    error_telephone.show();
+                    is_valid = false;
+                }
+
+                if(clientId == '' || clientId == 'undefined'){
+
+                    error_client_id.show();
+                    is_valid = false;
+                }
+
+                if(clientSecret == '' || clientSecret == 'undefined'){
+
+                    error_client_secret.show();
+                    is_valid = false;
+                }
+
+                if(organizationId == '' || organizationId == 'undefined'){
+
+                    error_organization_id.show();
+                    is_valid = false;
+                }
+
+                if(api == '' || api == 'undefined'){
+
+                    error_api.show();
+                    is_valid = false;
+                }
+
+                if(is_valid) {
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('distributor_crud') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        success: function (response) {
+
+                            getFlash(response.flash);
+                            $('.content-header-title').empty().append('<h4>Editing '+ response.distributorName +'</h4>');
+
+                            if(btn == 'save_return'){
+
+                                window.location.assign('{{ path('distributors_list',{ 'page_id':1 }) }}');
+                            }
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.btn-approve', function (e){
+
+                e.preventDefault();
+
+                let distributorId = $(this).attr('data-distributor-id');
+                let isApproved = $(this).attr('data-is-approved')
+
+                $.ajax({
+                    url: "{{ path('distributor_is_approved') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'distributor-id': distributorId,
+                        'is-approved': isApproved,
+                    },
+                    beforeSend: function () {
+
+                        isLoading(true)
+                    },
+                    success: function (response) {
+
+                        getFlash(response.flash);
+                        window.location.assign('{{ path('distributors_list',{ 'page_id':1 }) }}');
+                    }
+                });
+            });
+            {# End Save Products #}
+
+            {# User Accounts #}
+            $(document).on('click', '.user-edit-icon', function (e){
+
+                e.preventDefault();
+
+                let user_id = $(this).data('user-id');
+
+                $('#user_row_'+ user_id).toggle(700);
+
+                $('.distributor-users').each(function (){
+
+                    if($(this).data('user-id') != user_id){
+
+                        $(this).hide(700);
+                    }
+                });
+
+            });
+            {# End User Accounts #}
+        });
+
+    </script>
+{% endblock %}

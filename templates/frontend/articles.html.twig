@@ -1,0 +1,102 @@
+{% extends 'layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html,body{
+            width:100%;
+            margin:0;
+            height:100%;
+            background: #f4f4f4 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hidden users-flash mb-0" id="flash"></div>
+<div class="container mb-3 form-control-bg-grey overflow-hidden">
+
+    {% if articles|length >= 1 %}
+        {% if articles[0].isMulti == 0 %}
+            <div class="row px-3 px-sm-0">
+                <div class="col-12 px-0">
+                    <h4 class="pb-3 text-truncate">{{ articles[0].name }}</h4>
+                </div>
+            </div>
+            <div class="row mb-3 px-3 px-sm-0">
+                <div class="col-12 px-0">
+                    <div class="bg-white border-xy p-3 p-sm-5">
+                        {{ articles[0].articleDetails[0].copy|raw }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% for article in articles %}
+                {% set counter = 0 %}
+                {% set authorNames = '' %}
+                {% set names = '' %}
+                {% set data = {} %}
+                {% for authors in article.articleDetails %}
+                    {% set authorNames = authorNames ~ nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName) ~ ', ' %}
+                    {% if nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName) not in data %}
+                        {% set data = data|merge([nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName)]) %}
+                        {% set names = authorNames %}
+                    {% endif %}
+                {% endfor %}
+                {% set authors = '' %}
+                {% for author in data %}
+                    {% if counter < 3 %}
+                        {% set authors = authors ~' '~ author ~ ', ' %}
+                    {% endif %}
+                    {% set counter = counter + 1 %}
+                {% endfor %}
+                <div class="row mb-3 px-3 px-sm-0">
+                    <div class="col-12  p-3 p-sm-5 bg-white border-xy">
+                        <div class="row d-table w-100">
+                            <div class="col-2 col-sm-1 d-table-cell align-middle text-center">
+                                <i class="{{ article.icon }} fs-1"></i>
+                            </div>
+                            <div class="col-10 col-sm-11">
+                                <a href="{{ path('article_list_page', {'pageId':app.request.get('pageId') ,'articleId':article.id }) }}">
+                                    <h6>{{ article.name }}</h6>
+                                </a>
+                                <span class="w-100">{{ article.description }}</span>
+                                <p class="info w-100 pt-4 mb-0">{{ article.articleCount }} articles in this collection</p>
+                                <p class="info w-100 mb-0">
+                                    {% if authors|length > 0 %}
+                                        Written by {{ authors|trim(', ') }}
+                                        {{ render(controller(
+                                            'App\\Controller\\ArticlesController::articleAuthorsAction', {'articleId':article.id}
+                                        )) }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="overlay"></div>
+<div class="spanner">
+    <div class="loader"></div>
+    <p class="text-light fw-bold" style="font-size: 36px;">Loading...</p>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('body').addClass('form-control-bg-grey');
+        });
+    </script>
+{% endblock %}

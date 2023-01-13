@@ -1,0 +1,76 @@
+<table style="border: none; width: 100%; padding: 10px; font-family: Arial, Helvetica, sans-serif" cellpadding="10">
+    <tr>
+        <td colspan="2">
+            <p>To reset your password, please visit the following link</p>
+
+            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+
+            <p style="margin-bottom: 0">This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+            <br>
+
+            <p>Kind Regards,</p>
+            <p style="margin-bottom: 0">The Fluid Team</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding: 0">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="width: 170px">
+            <img src="{{ app.request.schemeAndHttpHost }}/images/logo.png" style="width: 150px; height: auto">
+        </td>
+        <td>
+            <table>
+                <tr>
+                    <td style="width: 30px">
+                        <img src="{{ app.request.schemeAndHttpHost }}/images/icons/telephone.png" style="width: 24px">
+                    </td>
+                    <td>
+                        +971 6 5395443
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="{{ app.request.schemeAndHttpHost }}/images/icons/email.png" style="width: 24px">
+                    </td>
+                    <td>
+                        info@fluid.vet
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="{{ app.request.schemeAndHttpHost }}/images/icons/web.png" style="width: 24px">
+                    </td>
+                    <td>
+                        <a href="https://wwwfluid.vet">www.fluid.vet</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="border-top: solid 1px #ccc">
+            <p style="padding-top: 10px">
+                <a href="" style="margin-right: 5px; text-decoration: none;">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/facebook.png" style="width: 30px;">
+                </a>
+                <a href="" style="margin-right: 5px; text-decoration: none">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/linkedin.png" style="width: 30px">
+                </a>
+                <a href="" style="margin-right: 5px; text-decoration: none">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/tiktok.png" style="width: 30px">
+                </a>
+                <a href="" style="margin-right: 5px; text-decoration: none">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/twitter.png" style="width: 30px">
+                </a>
+                <a href="" style="margin-right: 5px; text-decoration: none">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/instagram.png" style="width: 30px">
+                </a>
+                <a href="" style="margin-right: 5px; text-decoration: none">
+                    <img src="{{ app.request.schemeAndHttpHost }}/images/icons/youtube.png" style="width: 30px">
+                </a>
+            </p>
+        </td>
+    </tr>
+</table>

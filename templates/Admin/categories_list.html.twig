@@ -1,0 +1,162 @@
+{% extends 'Admin/layout_list.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row border-bottom admin-header" style="left: 16.8%">
+        <div class="col-12 col-sm-6 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <h4 class="text-truncate m-0">Categories</h4>
+        </div>
+        <div class="col-12 col-sm-6 text-truncate mt-1 pt-3 pb-3 px-4">
+            <a
+                href="{{ path('categories') }}"
+                class="btn btn-primary btn-sm float-end w-sm-100 text-truncate"
+            >
+                <i class="fa-solid fa-circle-plus me-2"></i> ADD CATEGORY
+            </a>
+        </div>
+    </div>
+    <div class="row pb-3 pt-2 pt-sm-4 mt-sm-5 border-left border-right">
+        <div class="row pb-3 border-bottom d-none d-md-flex">
+            <div class="col-1 fw-bold ps-4 text-truncate">
+                #ID
+            </div>
+            <div class="col-6 fw-bold text-truncate">
+                Category
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Modified
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Created
+            </div>
+        </div>
+        {% set last_element = categories|length %}
+        {% if last_element > 0 %}
+            {% set count = 0 %}
+            {% for category in categories %}
+                {% set border = 'border-bottom-dashed py-3' %}
+                {% set count = count + 1 %}
+                {% if last_element == count %}
+                    {% set border = 'pt-3' %}
+                {% endif %}
+                <div class="row {{ border }}" id="row_{{ category.id }}">
+                    <div class="col-4 fw-bold ps-4 d-block d-md-none text-truncate">
+                        #ID
+                    </div>
+                    <div class="col-8 col-md-1 ps-4 text-truncate">
+                        #{{ category.id }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Category
+                    </div>
+                    <div class="col-8 col-md-6 text-truncate">
+                        {{ category.name }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Modified
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ category.modified|date('Y-m-d H:i:s') }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Created
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ category.created|date('Y-m-d') }}
+                    </div>
+                    <div class="col-12 col-md-1 mt-3 mt-md-0 text-truncate">
+                        <a
+                            href="{{ path('categories', {'categoryId': category.id}) }}"
+                            class="float-end open-user-modal"
+                        >
+                            <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                        </a>
+                        <a
+                            href=""
+                            class="delete-icon float-start ms-3 ms-md-0 float-sm-end open-delete-user-modal"
+                            data-bs-toggle="modal"
+                            data-category-id="{{ category.id }}"
+                            data-bs-target="#modal_delete_category"
+                        >
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="row">
+                <div class="col-12 pt-3 ps-4 text-truncate">
+                    No Results Found
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row py-3">
+        <div class="col-12">
+            {{ pagination|raw }}
+        </div>
+    </div>
+
+    <!-- Delete Category Modal -->
+    <div class="modal fade" id="modal_delete_category" tabindex="-1" aria-labelledby="user_delete_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="user_delete_label">Delete Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-0">
+                            Are you sure you would like to delete this category? This action cannot be undone.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-danger btn-sm" id="delete_category">DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Delete category Modal -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+<script>
+
+    $(document).ready(function (){
+
+        $(document).on('click', '.delete-icon', function (e){
+
+            $('#delete_category').attr('data-category-id', $(this).data('category-id'));
+        });
+        $(document).on('click', '#delete_category', function (e){
+
+            let category_id = $(this).attr('data-category-id');
+
+            $.ajax({
+                url: "{{ path('category_crud') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    delete:category_id,
+                },
+                success: function (response) {
+
+                    getFlash(response);
+                    $('#modal_delete_category').modal('toggle');
+                    $('#row_'+ category_id).remove();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

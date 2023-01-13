@@ -1,0 +1,131 @@
+{% extends 'layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html,body{
+            width:100%;
+            margin:0;
+            height:100%;
+            background: #f4f4f4 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hidden users-flash mb-0" id="flash"></div>
+<div class="container mb-3">
+    <div class="row mb-3 px-3 px-sm-0">
+        <div class="col-12">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h4 class="pb-1 text-truncate">
+                        <i class="me-2 {{ article.icon }}"></i>
+                        {{ article.name }}
+                    </h4>
+                </div>
+                <div class="col-12">
+                    {% if article.isMulti == 1 %}
+                        <span class="d-block mb-1 fs-5">{{ article.description }}</span>
+                        <p class="info w-100 pt-3 pb-0 my-0">{{ article.articleCount }} articles in this collection</p>
+                        <p class="info w-100 pt-0">
+                            {% set counter = 0 %}
+                            {% set authorNames = '' %}
+                            {% set names = '' %}
+                            {% set data = {} %}
+                            {% for authors in article.articleDetails %}
+                                {% set authorNames = authorNames ~ nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName) ~ ', ' %}
+                                {% if nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName) not in data %}
+                                    {% set data = data|merge([nzo_decrypt(authors.user.firstName) ~' '~ nzo_decrypt(authors.user.lastName)]) %}
+                                    {% set names = authorNames %}
+                                {% endif %}
+                            {% endfor %}
+                            {% set authors = '' %}
+                            {% set separator = ', ' %}
+                            {% if data|length <= 2 %}
+                                {% set separator = ' & ' %}
+                            {% endif %}
+                            {% for author in data %}
+                                {% if counter < 3 %}
+                                    {% set authors = authors ~' '~ author ~ separator %}
+                                {% endif %}
+                                {% set counter = counter + 1 %}
+                            {% endfor %}
+                            {% if authors|length > 0 %}
+                                {{ authors|trim(separator) }}
+                                {{ render(controller(
+                                    'App\\Controller\\ArticlesController::articleAuthorsAction', {
+                                        'articleId':article.id
+                                    }
+                                )) }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if article.isMulti == 1 %}
+                {% set counter = 0 %}
+                {% for articleDetails in article.articleDetails %}
+                    {% set marginBottom = 'mb-3' %}
+                    {% set counter = counter + 1 %}
+                    {% if counter == article.articleDetails|length %}
+                        {% set marginBottom = '' %}
+                    {% endif %}
+                    <div class="row {{ marginBottom }}">
+                        <div class="col-12  p-3 p-sm-5 bg-white border-xy">
+                            <div class="row d-table w-100">
+                                <div class="col-12">
+                                    <a href="{{ path('article_details_page', {
+                                        'pageId': app.request.get('pageId'),
+                                        'articleId': app.request.get('articleId'),
+                                        'articleDetailId': articleDetails.id,
+                                    }) }}">
+                                        <h6>{{ articleDetails.name }}</h6>
+                                    </a>
+                                    <span class="d-block">{{ articleDetails.description }}</span>
+                                    <span class="d-block pt-3">
+                                        Written By {{ nzo_decrypt(articleDetails.user.firstName) ~' '~ nzo_decrypt(articleDetails.user.lastName) }}
+                                        {{ render(controller(
+                                            'App\\Controller\\ArticlesController::articleListAuthorsAction', {
+                                                'articleDetailId':articleDetails.id,
+                                                'showAuthors':0
+                                            }
+                                        )) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="row mb-3 px-3 px-sm-0">
+                    <div class="col-12">
+                        {{ article.articleDetails[0].copy()|raw }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="overlay"></div>
+<div class="spanner">
+    <div class="loader"></div>
+    <p class="text-light fw-bold" style="font-size: 36px;">Loading...</p>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('body').addClass('form-control-bg-grey');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,330 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="banners_form" id="banners_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="banner-id" id="banner_id" value="{{ banner.id ? banner.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4 class="text-truncate content-header-title">
+                        {% if banner.id > 0 %}
+                            Editing {{ banner.name }}
+                        {% else %}
+                            New Banner
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                            class="action-saveAndReturn btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end text-truncate"
+                            type="submit"
+                            name="save_return"
+                    >
+                        <span class="btn-label">Save and exit</span>
+                    </button>
+                    <button
+                            class="action-saveAndContinue btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                            type="submit"
+                            name="save_continue"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon far fa-edit"></i>
+                            Save
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+                {# Is Published #}
+                <div class="col-12 col-md-6">
+                    <div class="form-check form-switch">
+                        {% set isPublished = '' %}
+                        {% if banner.isPublished == 1 %}
+                            {% set isPublished = 'checked' %}
+                        {% endif %}
+                        <input
+                                name="is-published"
+                                id="is_published"
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                value="1"
+                                tabindex="1"
+                                {{ isPublished }}
+                        >
+                        <label class="ms-2 text-primary" for="is_published">
+                            Published
+                        </label>
+                    </div>
+                </div>
+
+                {# Default Banner #}
+                <div class="col-12 col-md-6">
+                    <div class="form-check form-switch">
+                        {% set isDefault = '' %}
+                        {% if banner.isDefault == 1 %}
+                            {% set isDefault = 'checked' %}
+                        {% endif %}
+                        <input
+                                name="is-default"
+                                id="is_default"
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                value="1"
+                                tabindex="1"
+                                {{ isDefault }}
+                        >
+                        <label class="ms-2 text-primary" for="is_default">
+                            Default
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                {# Order By #}
+                <div class="col-12 col-md-6">
+                    <label class="ms-2 text-primary" for="is_de">
+                        Order By
+                    </label>
+                    <input
+                            name="order-by"
+                            id="order_by"
+                            class="form-control"
+                            type="text"
+                            value="{{ banner.orderBy }}"
+                    >
+                    <div class="hidden_msg" id="error_order_by">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Page #}
+                <div class="col-12 col-md-6">
+                    {% set selected = '' %}
+                    <label class="ms-2 text-primary" for="is_published">
+                        Page ID
+                    </label>
+                    <select name="page-id" id="page_id" class="form-control">
+                        <option value="">Select a Page...</option>
+                        {% for page in pages %}
+                            {% set selected = '' %}
+                            {% if banner.id is not null %}
+                                {% if banner.page.id == page.id %}
+                                    {% set selected = 'selected' %}
+                                {% endif %}
+                            {% endif %}
+                            <option value="{{ page.id }}" {{ selected }}>{{ page.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="hidden_msg" id="error_page_id">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+
+            {# Banner + Alt #}
+            <div class="row mt-4">
+                {# Banner #}
+                <div class="col-12 col-sm-6">
+                    <div class="row m-0">
+                        <div class="col-11 ps-0" id="logo_file">
+                            <label class="ms-2 text-primary" for="is_published">
+                                Banner <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                name="banner"
+                                id="banner"
+                                class="form-control"
+                                type="file"
+                                value="{{ banner.name }}"
+                                placeholder="Banner"
+                            >
+                        </div>
+                        <div class="col-1 ps-0 pe-0" id="logo_col">
+                            {% if banner.name != null %}
+                            <a href="" data-bs-toggle="modal" data-bs-target="#maodal_banner">
+                                <i class="fa-solid fa-image img-icon float-end"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {# Alt #}
+                <div class="col-12 col-sm-6">
+                    <label class="ms-2 text-primary" for="is_published">
+                        Alt <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        name="alt"
+                        id="alt"
+                        class="form-control"
+                        type="text"
+                        value="{{ banner.alt }}"
+                        placeholder="Alt Text"
+                    >
+                    <div class="hidden_msg" id="error_alt">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+
+            {# Caption #}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <textarea
+                        class="form-control"
+                        name="caption"
+                        id="caption"
+                    >{{ banner.caption }}</textarea>
+                </div>
+            </div>
+
+            {# Modal Banner #}
+            <div class="modal fade" id="maodal_banner" tabindex="-1" aria-labelledby="" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <span class="flash-close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </span>
+                        <div class="modal-body" style="padding: 0">
+                            <div class="row">
+                                <div class="col-12 mb-0 text-center">
+                                    <img src="{{ asset('images/banners/' ~ banner.name) }}" id="logo_img" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            $(document).on('click', '.flash-close', function () {
+
+                $('#maodal_banner').modal('toggle');
+            });
+
+            {# Save Products #}
+            $(document).on('submit', '#banners_form', function (e){
+
+                e.preventDefault();
+
+                let orderBy = $('#order_by').val();
+                let pageId = $('#page_id').val();
+                let alt = $('#alt').val();
+                let isValid = true;
+                let btn = document.activeElement.getAttribute('name');
+                let errorOrderBy = $('#error_order_by');
+                let errorPageId = $('#error_page_id');
+                let errorAlt = $('#error_alt');
+
+                errorOrderBy.hide();
+                errorPageId.hide();
+                errorAlt.hide();
+
+                if(orderBy == '' || orderBy == 'undefined'){
+
+                    errorOrderBy.show();
+                    isValid = false;
+                }
+
+                if(pageId == '' || pageId == 'undefined'){
+
+                    errorPageId.show();
+                    isValid = false;
+                }
+
+                if(alt == '' || alt == 'undefined'){
+
+                    errorAlt.show();
+                    isValid = false;
+                }
+
+                if(isValid) {
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('banner_crud') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        success: function (response) {
+
+                            getFlash(response.flash);
+                            $('.content-header-title').empty().append('<h4>Editing '+ response.banner +'</h4>');
+
+                            if(btn == 'save_return'){
+
+                                window.location.assign('{{ path('banners_list',{ 'page_id':1 }) }}');
+                            }
+                        }
+                    });
+                }
+            });
+            {# End Save Products #}
+
+            tinymce.init({
+                selector: '#caption',
+                plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+                editimage_cors_hosts: ['picsum.photos'],
+                menubar: false,
+                toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist removeformat',
+                toolbar_sticky: true,
+                statusbar: true,
+                image_advtab: true,
+                link_list: [
+                    { title: 'My page 1', value: 'https://www.tiny.cloud' },
+                    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+                ],
+                image_list: [
+                    { title: 'My page 1', value: 'https://www.tiny.cloud' },
+                    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+                ],
+                image_class_list: [
+                    { title: 'None', value: '' },
+                    { title: 'Some class', value: 'class-name' }
+                ],
+                importcss_append: true,
+                templates: [
+                    { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+                    { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+                    { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+                ],
+                template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+                template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+                height: 600,
+                image_caption: true,
+                quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                noneditable_class: 'mceNonEditable',
+                toolbar_mode: 'sliding',
+                contextmenu: 'link image table',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+            });
+        });
+
+    </script>
+{% endblock %}

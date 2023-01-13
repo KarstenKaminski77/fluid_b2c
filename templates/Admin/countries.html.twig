@@ -1,0 +1,173 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="country_form" id="country_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="country-id" id="country_id" value="{{ country.id ? country.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4 class="text-truncate">
+                        Editing <b id="title">{{ country.name }}</b>
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                        class="action-saveAndReturn btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end text-truncate"
+                        type="submit"
+                        name="save_return"
+                    >
+                        <span class="btn-label">Save and exit</span>
+                    </button>
+                    <button
+                        class="action-saveAndContinue btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                        type="submit"
+                        name="save_continue"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon far fa-edit"></i>
+                            Save
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+                {# Is Active #}
+                {% set isActive = '' %}
+                {% if country.isActive == 1 %}
+                    {% set isActive = 'checked' %}
+                {% endif %}
+                <div class="col-12">
+                    <label class="ms-2 text-primary">
+                        &nbsp;
+                    </label>
+                    <div class="form-check form-switch mt-2">
+                        <input
+                                name="is-active"
+                                id="is_active"
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                value="1"
+                                tabindex="1"
+                                {{ isActive }}
+                        >
+                        <label class="ms-2 text-primary" for="is_active">
+                            Is Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                {# Country #}
+                <div class="col-12 col-md-6">
+                    <label class="ms-2 text-primary">
+                        Country <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        name="country-name"
+                        id="country_name"
+                        class="form-control"
+                        type="text"
+                        value="{{ country.name }}"
+                        placeholder="Country name"
+                    >
+                    <div class="hidden_msg" id="error_country_name">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Currency #}
+                <div class="col-12 col-md-6">
+                    <label class="ms-2 text-primary" for="is_active">
+                        Currency <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        name="currency"
+                        id="currency"
+                        class="form-control"
+                        type="text"
+                        value="{{ country.currency }}"
+                        placeholder="Currency Code"
+                    >
+                    <div class="hidden_msg" id="error_currency">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            {# Save Species #}
+            $(document).on('submit', '#country_form', function (e){
+
+                e.preventDefault();
+
+                let country = $('#country_name').val();
+                let currency = $('#currency').val();
+                let isValid = true;
+                let btn = document.activeElement.getAttribute('name');
+                let errorCountry = $('#error_country_name');
+                let errorCurrency = $('#error_currency');
+
+                errorCountry.hide();
+                errorCurrency.hide();
+
+                if(country == '' || country == 'undefined'){
+
+                    errorCountry.show();
+                    isValid = false;
+                }
+
+                if(currency == '' || currency == 'undefined'){
+
+                    errorCurrency.show();
+                    isValid = false;
+                }
+
+                if(isValid) {
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('country_crud') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        success: function (response) {
+
+                            getFlash(response.flash);
+                            $('#title').empty().append(response.country);
+
+                            if(btn == 'save_return'){
+
+                                window.location.assign('{{ path('countries_list',{ 'page_id':1 }) }}');
+                            }
+                        }
+                    });
+                }
+            });
+            {# End Save Species #}
+        });
+
+    </script>
+{% endblock %}

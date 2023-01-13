@@ -1,0 +1,244 @@
+{% extends 'Admin/layout_list.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row border-bottom admin-header" style="left: 16.8%">
+        <div class="col-12 col-md-3 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <h4 class="text-truncate m-9">Banners</h4>
+        </div>
+        <div class="col-12 col-sm-9 text-truncate mt-1 pt-3 pb-3 px-4">
+            <div class="input-group">
+                <input name="search-string" id="search_string" class="form-control form-control-sm" type="text" placeholder="Search...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary btn-sm w-sm-100 mt-2 mt-sm-0" id="search_btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <a href="{{ path('banners', {'bannerId':0}) }}" class="btn btn-primary btn-sm float-end w-sm-100 text-truncate mt-2 mt-sm-0 ms-2">
+                        <i class="fa-solid fa-circle-plus me-2"></i> ADD BANNER
+                    </a>
+                    <a href="{{ path('banners_list', {'page_id':1}) }}" class="btn btn-secondary float-end btn-sm ms-sm-2 w-sm-100 mt-2 mt-sm-0">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-3 pt-2 pt-sm-4 mt-sm-5 border-left border-right">
+        <div class="row pb-3 border-bottom d-none d-md-flex">
+            <div class="col-1 fw-bold ps-4 text-truncate">
+                #ID
+            </div>
+            <div class="col-1 fw-bold text-truncate">
+                Published
+            </div>
+            <div class="col-3 fw-bold text-truncate">
+                Name
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Alt
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Modified
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Created
+            </div>
+        </div>
+        <div id="banners">
+            {% set count = banners|length %}
+            {% set i = 0 %}
+            {% set class = '' %}
+            {% for banner in banners %}
+                {% set class = 'border-bottom-dashed py-3' %}
+                {% set i = i + 1 %}
+                {% if i == count %}
+                    {% set class = 'pt-3' %}
+                {% endif %}
+                <div class="row {{ class }}" id="row_{{ banner.id }}">
+                    <div class="col-4 fw-bold ps-4 d-block d-md-none text-truncate">
+                        #ID
+                    </div>
+                    <div class="col-8 col-md-1 ps-4 text-truncate">
+                        #{{ banner.id }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Published
+                    </div>
+                    <div class="col-8 col-md-1 text-truncate">
+                        <div class="form-check form-switch">
+                            {% set is_published = '' %}
+                            {% if banner.isPublished == 1 %}
+                                {% set is_published = 'checked' %}
+                            {% endif %}
+                            <input
+                                name="is-published"
+                                class="form-check-input is-published"
+                                type="checkbox"
+                                role="switch"
+                                data-banner-id="{{ banner.id }}"
+                                value="{{ banner.isPublished }}"
+                                {{ is_published }}
+                            >
+                        </div>
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Name
+                    </div>
+                    <div class="col-8 col-md-3 text-truncate">
+                        {{ banner.name }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Alt
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ banner.alt }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Modified
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ banner.modified|date('Y-m-d H:i:s') }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Created
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ banner.created|date('Y-m-d') }}
+                    </div>
+                    <div class="col-12 col-md-1 mt-3 mt-md-0 text-truncate">
+                        <a
+                            href="{{ path('banners', {'bannerId':banner.id} ) }}"
+                            class="float-end open-user-modal"
+                        >
+                            <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                        </a>
+                        <a
+                            href=""
+                            class="delete-icon float-start float-sm-end ms-5 ms-md-0 open-delete-banner-modal"
+                            data-bs-toggle="modal"
+                            data-banner-id="{{ banner.id }}"
+                            data-bs-target="#modal_delete_banner"
+                        >
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {{ pagination|raw }}
+    </div>
+
+    <!-- Delete Banner Modal -->
+    <div class="modal fade" id="modal_delete_banner" tabindex="-1" aria-labelledby="banner_delete_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="banner_delete_label">Delete banner</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-0">
+                            Are you sure you would like to delete this banner? This action cannot be undone.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-danger btn-sm" id="delete_banner">DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            $(document).on('change', '.is-published', function (e){
+
+                let bannerId = $(this).data('banner-id');
+                let isPublished = '';
+
+                if ($(this).is(':checked')) {
+
+                    isPublished = 1;
+
+                } else {
+
+                    isPublished = 0;
+                }
+
+                $.ajax({
+                    url: "{{ path('banner_is_published') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'is-published':isPublished,
+                        'banner-id':bannerId
+                    },
+                    success: function (response) {
+
+                    }
+                });
+            });
+
+            $(document).on('click', '#search_btn', function (e) {
+
+                e.preventDefault();
+
+                let searchString = $('#search_string').val();
+
+                if(searchString != '' || searchString != 'undefined') {
+
+                    $.ajax({
+                        url: "{{ path('banner_search') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'search-string': searchString,
+                        },
+                        success: function (response) {
+
+                            $('#banners').empty().append(response.html);
+                            $('.custom-pagination').hide();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '.open-delete-banner-modal', function (e){
+
+                $('#delete_banner').attr('data-banner-id', $(this).data('banner-id'));
+            });
+            $(document).on('click', '#delete_banner', function (e){
+
+                let bannerId = $(this).attr('data-banner-id');
+
+                $.ajax({
+                    url: "{{ path('banner_crud') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        delete:bannerId,
+                    },
+                    success: function (response) {
+
+                        getFlash(response.flash);
+                        $('#modal_delete_banner').modal('toggle');
+                        $('#row_'+ bannerId).remove();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

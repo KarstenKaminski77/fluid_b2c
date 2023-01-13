@@ -1,0 +1,32 @@
+{% extends '/base_frontend.html.twig' %}
+
+{% block body %}
+    {{ parent() }}
+
+    {# Header #}
+    {% block header %}
+        {% include '/_header.html.twig' %}
+    {% endblock header %}
+
+    {# Carousel #}
+    {% block carousel %}
+    {% endblock %}
+
+    {# Messages #}
+    {% block flash_messages %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success text-center">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+    {# Footer #}
+    {% block footer %}
+        {% include '/_footer.html.twig' %}
+    {% endblock footer %}
+
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}

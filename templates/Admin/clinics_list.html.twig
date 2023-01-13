@@ -1,0 +1,208 @@
+{% extends 'Admin/layout_list.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row border-bottom admin-header" style="left: 16.8%">
+        <div class="col-12 col-sm-3 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <h4 class="text-truncate m-0">Clinics</h4>
+        </div>
+        <div class="col-12 col-sm-3 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <div class="input-group">
+                <select name="clinic-status" id="clinic_status" class="form-control form-control-sm clinic-status">
+                    <option value="">Select a Status</option>
+                    <option value="0">Awaiting Approval</option>
+                    <option value="1">Approved</option>
+                    <option value="2">Declined</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 mt-1 pt-3 pb-3">
+            <div class="input-group">
+                <input
+                        name="search-string"
+                        id="search_string"
+                        class="form-control form-control-sm"
+                        type="text"
+                        placeholder="Search..."
+                >
+                <div class="input-group-append">
+                    <button
+                            class="btn btn-primary btn-sm w-sm-100 mt-2 mt-sm-0"
+                            id="search_btn"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <a
+                            href="{{ path('clinics_list', {'page_id':1}) }}"
+                            class="btn btn-secondary float-end btn-sm ms-sm-3 w-sm-100 mt-2 mt-sm-0 me-sm-4"
+                    >
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-3 pt-2 pt-sm-4 mt-sm-5 border-left border-right">
+        <div class="row pb-3 border-bottom d-none d-md-flex">
+            <div class="col-1 fw-bold ps-4 text-truncate">
+                #ID
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Clinic Name
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Email
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Telephone
+            </div>
+            <div class="col-1 fw-bold text-truncate">
+                Status
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Modified
+            </div>
+            <div class="col-1 fw-bold text-truncate">
+                Created
+            </div>
+        </div>
+        <div class="row" id="clinics">
+        {% set last_element = clinics|length %}
+        {% set count = 0 %}
+        {% for clinic in clinics %}
+            {% set border = 'border-bottom-dashed py-3' %}
+            {% set count = count + 1 %}
+            {% if last_element == count %}
+                {% set border = 'pt-3' %}
+            {% endif %}
+            <div class="col-12">
+                <div class="row {{ border }}" id="row_{{ clinic.id }}">
+                    <div class="col-4 fw-bold ps-4 d-block d-md-none text-truncate">
+                        #ID
+                    </div>
+                    <div class="col-8 col-md-1 ps-4 text-truncate">
+                        #{{ clinic.id }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Clinic Name
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ nzo_decrypt(clinic.clinicName) }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Email
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ nzo_decrypt(clinic.email) }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Telephone
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ nzo_decrypt(clinic.telephone) }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Status
+                    </div>
+                    <div class="col-8 col-md-1 text-truncate">
+                        {% if clinic.isApproved == 0 %}
+                            Awaiting Approval
+                        {% elseif clinic.isApproved == 1 %}
+                            Approved
+                        {% elseif clinic.isApproved == 2 %}
+                            Declined
+                        {% endif %}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Modified
+                    </div>
+                    <div class="col-8 col-md-2 text-truncate">
+                        {{ clinic.modified|date('Y-m-d H:i:s') }}
+                    </div>
+                    <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                        Created
+                    </div>
+                    <div class="col-8 col-md-1 text-truncate">
+                        {{ clinic.created|date('Y-m-d') }}
+                    </div>
+                    <div class="col-12 col-md-1 mt-3 mt-md-0 text-truncate">
+                        <a
+                            href="{{ path('clinics', {'clinic_id':clinic.id} ) }}"
+                            class="float-end open-user-modal"
+                        >
+                            <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col-12">
+            {{ pagination|raw }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+<script>
+
+    $(document).ready(function (){
+
+        $(document).on('click', '#search_btn', function (e) {
+
+            e.preventDefault();
+
+            let searchString = $('#search_string').val();
+
+            if(searchString != '' || searchString != 'undefined') {
+
+                $.ajax({
+                    url: "{{ path('clinic_search') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'search-string': searchString,
+                    },
+                    success: function (response) {
+
+                        $('#clinics').empty().append(response.html);
+                        $('.custom-pagination').hide();
+                    }
+                });
+            }
+        });
+        $(document).on('change', '.clinic-status', function () {
+
+            let statusId = $(this).val();
+
+            $.ajax({
+                url: "{{ path('clinics_list', {'page_id':1}) }}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'is-status-change': 1,
+                    'is-approved': statusId,
+                },
+                beforeSend: function () {
+
+                    isLoading(true)
+                },
+                success: function (response) {
+
+                    $('#clinics').empty().append(response);
+                    isLoading(false);
+                }
+            });
+        })
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html,body{
+            width:100%;
+            margin:0;
+            height:100%;
+            background: #fff !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hidden users-flash mb-0" id="flash"></div>
+<div class="container mb-3">
+    <div class="row mb-3 mt-5">
+        <div class="col-12 p-5 bg-white border-xy">
+            <h4 class="pb-1 text-truncate">{{ articleDetails.name }}</h4>
+            <span class="d-block mb-1 fs-5">{{ articleDetails.description }}</span>
+            <span class="d-block mb-5">Written By: {{ articleDetails.user.firstName ~' '~ articleDetails.user.lastName }}</span>
+
+        </div>
+    </div>
+</div>
+
+<div class="overlay"></div>
+<div class="spanner">
+    <div class="loader"></div>
+    <p class="text-light fw-bold" style="font-size: 36px;">Loading...</p>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('body').addClass('form-control-bg-grey');
+        });
+    </script>
+{% endblock %}

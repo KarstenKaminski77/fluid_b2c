@@ -1,0 +1,4152 @@
+{% extends 'layout_distributor.html.twig' %}
+
+{% block title %}Hello DistributorsController!{% endblock %}
+
+{% block body %}
+    <div class="hidden users-flash mb-0" id="flash"></div>
+    <div class="container-fluid pe-sm-4">
+        <div class="row flex-nowrap">
+            <div class="col-2 col-sm-2 col-md-3 col-xl-2 px-sm-2 px-0 bg-light border-right distributor-left-col">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 text-truncate overflow-hidden">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100 mt-4" id="menu">
+                        <li class="nav-item py-3 w-100">
+                            {% if distributor.isApproved == 1 %}
+                                {% set tag = 'a' %}
+                                {% set id = 'customers_link' %}
+                                {% set disabled = '' %}
+                            {% else %}
+                                {% set tag = 'span' %}
+                                {% set id = '' %}
+                                {% set disabled = 'text-disabled' %}
+                            {% endif %}
+                            <{{ tag }} href="#" class="align-middle px-0 text-primary nav-icon text-truncate {{ disabled }}" id="{{ id }}">
+                                <i class="fa-regular fa-users fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">Customers</span>
+                            </{{ tag }}>
+                        </li>
+                        <li class="w-100">
+                            <a
+                                href="#submenu1"
+                                data-bs-toggle="collapse"
+                                class="px-0 align-middle text-primary collapsed text-center text-sm-start nav-icon mb-3 text-truncate dropdown-link"
+                                aria-expanded="false"
+                            >
+                                <i class="fa-regular fa-user-gear fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">My Account</span>
+                                <span class="float-end d-none d-sm-inline">
+                                    <i class="fa-solid fa-caret-right"></i>
+                                </span>
+                            </a>
+                            <ul class="nav flex-column collapse" id="submenu1" data-bs-parent="#menu" style="">
+                                <li class="w-100 mb-3">
+                                    {% if 10 in permissions %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="account_settings_link">
+                                            <i class="fa-regular fa-screwdriver-wrench fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Company Information</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-screwdriver-wrench fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Company Information</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 15 in permissions and distributor.isApproved == 1 %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="about_link">
+                                            <i class="fa-regular fa-circle-question fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">About</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-circle-question fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">About</span>
+                                        </span>
+                                    {% endif %}
+
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 16 in permissions and distributor.isApproved == 1 %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="operating_hours_link">
+                                            <i class="fa-regular fa-clock fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Operating Hours</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-clock fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Operating Hours</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 17 in permissions and distributor.isApproved == 1 %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="refund_policy_link">
+                                            <i class="fa-solid fa-rotate-left fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Refund Policy</span>
+                                        </a>
+                                    {% else %}
+                                        <span href="#" class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-solid fa-rotate-left fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Refund Policy</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 18 in permissions and distributor.isApproved == 1 %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="sales_tax_policy_link">
+                                            <i class="fa-regular fa-scale-unbalanced fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Sale Tax Policy</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-scale-unbalanced fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Sale Tax Policy</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 19 in permissions and distributor.isApproved == 1 %}
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="shipping_policy_link">
+                                            <i class="fa-regular fa-truck-ramp-box fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Shipping Policy</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-truck-ramp-box fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Shipping Policy</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li class="w-100 mb-3">
+                                    {% if 6 in permissions and distributor.isApproved == 1 %}
+                                        <a class="align-middle text-primary nav-icon text-truncate" href="#" id="users_link">
+                                            <i class="fa-regular fa-address-book fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Users</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="align-middle text-primary nav-icon text-truncate text-disabled">
+                                            <i class="fa-regular fa-address-book fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Users</span>
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="w-100">
+                            {% if 5 in permissions and distributor.isApproved == 1 %}
+                                <a
+                                        href="#"
+                                        class="px-0 align-middle text-primary nav-icon mb-3 text-truncate"
+                                        data-distributor-id="{{ distributor.id }}"
+                                        id="orders_link"
+                                >
+                                    <i class="fa-regular fa-file-invoice fa-fw"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Orders</span>
+                                </a>
+                            {% else %}
+                                <span
+                                        class="px-0 align-middle text-primary nav-icon mb-3 text-truncate text-disabled"
+                                        data-distributor-id="{{ distributor.id }}"
+                                >
+                                    <i class="fa-regular fa-file-invoice fa-fw"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Orders</span>
+                                </span>
+                            {% endif %}
+                        </li>
+                        <li class="w-100">
+                            {% if distributor.isApproved == 1 %}
+                                {% set tag = 'a' %}
+                                {% set href = '#submenu2' %}
+                                {% set disabled = '' %}
+                            {% else %}
+                                {% set tag = 'span' %}
+                                {% set href = '' %}
+                                {% set disabled = 'text-disabled' %}
+                            {% endif %}
+                            <{{ tag }}
+                                href="{{ href }}"
+                                data-bs-toggle="collapse"
+                                class="px-0 align-middle text-primary collapsed text-center text-sm-start nav-icon mb-3 text-truncate {{ disabled }}"
+                                aria-expanded="false"
+                            >
+                                <i class="fa-regular fa-cart-flatbed fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">Inventory</span>
+                            </{{ tag }}>
+                            {% if 20 in permissions %}
+                                <ul class="nav flex-column collapse" id="submenu2" data-bs-parent="#menu" style="">
+                                    <li class="w-100 mb-3">
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="inventory_link">
+                                            <i class="fa-regular fa-square-plus fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Attatch New</span>
+                                        </a>
+                                    </li>
+                                    <li class="w-100 mb-3">
+                                        <a href="#" class="align-middle text-primary nav-icon text-truncate" id="inventory_list_link">
+                                            <i class="fa-regular fa-shelves fa-fw"></i>
+                                            <span class="ms-1 d-none d-sm-inline">List</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            {% else %}
+                                <span class="px-0 align-middle text-primary nav-icon mb-3 text-truncate text-disabled">
+                                    <i class="fa-regular fa-cart-flatbed fa-fw"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Invetory</span>
+                                </span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-10 col-sm-10 pb-3 distributor-right-col">
+
+                {# Account & Settings #}
+                <div class="row hidden" id="account_settings">
+                    <div class="col-12 text-center mt-1 pt-3 pb-3">
+                        <h4 class="text-primary text-truncate">Company Information</h4>
+                    </div>
+                    {{form_start(form, {'name': 'form_company_information', 'attr': {'id': 'form_company_information'}})}}
+                    <div class="row pb-3 pt-2 pt-sm-3 bg-light border-left border-right border-top">
+
+                        {# Company name #}
+                        <div class="col-12 col-sm-6">
+                            <label>
+                                Company Name
+                            </label>
+                            <input
+                                name="distributor_form[distributor-name]"
+                                id="distributor_name"
+                                class="form-control"
+                                placeholder="Distributor Name",
+                                value="{{ nzo_decrypt(distributor.distributorName) }}"
+                            />
+                            <div class="hidden_msg" id="error_distributor_name">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# Website #}
+                        <div class="col-12 col-sm-6 pt-2 pt-sm-0">
+                            <label>
+                                Website
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1">https://</span>
+                                <input
+                                    name="distributor_form[website]"
+                                    id="website"
+                                    class="form-control"
+                                    placeholder="Website",
+                                    value="{{ nzo_decrypt(distributor.website) }}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# Email #}
+                        <div class="col-12 col-sm-6">
+                            <label>
+                                Email Address
+                            </label>
+                            <input
+                                name="distributor_form[email]"
+                                id="email"
+                                class="form-control"
+                                placeholder="Business Email Address",
+                                value="{{ nzo_decrypt(distributor.email) }}"
+                            />
+                            <div class="hidden_msg" id="error_email">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# Telephone #}
+                        <div class="col-12 col-sm-6 pt-2 pt-sm-0">
+                            <label>
+                                Telephone
+                            </label>
+                            <input
+                                type="hidden"
+                                name="distributor_form[telephone]"
+                                value="{{ nzo_decrypt(distributor.telephone) }}"
+                                id="telephone"
+                            >
+                            <input
+                                type="text"
+                                name="mobile"
+                                placeholder="Telephone*"
+                                value="{{ nzo_decrypt(distributor.telephone) }}"
+                                id="mobile"
+                                class="form-control"
+                            >
+                            <div class="hidden_msg" id="error_telephone">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# Logo #}
+                        <div class="col-12 col-sm-6" id="logo_file">
+                            <label>
+                                Logo
+                            </label>
+                            <div class="input-group">
+                                {{ form_widget(form.logo,{id: 'logo', 'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Logo',
+                                    'value': distributor.logo
+                                }}) }}
+                                {% if distributor.logo is not null %}
+                                <span class="input-group-text">
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#modal_logo">
+                                        <i class="fa-regular fa-image"></i>
+                                    </a>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Country #}
+                        <div class="col-12 col-sm-6 pt-2 pt-sm-0">
+                            <label>
+                                Country
+                            </label>
+                            {% set country_id = '' %}
+                            {% if distributor.addressCountry|length > 0 %}
+                                {% set country_id = distributor.addressCountry.id %}
+                            {% endif %}
+                            {{ form_widget(form.addressCountry,{id: 'country', 'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Country',
+                                'value': country_id,
+                            }}) }}
+                            <div class="hidden_msg" id="error_country">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# Street #}
+                        <div class="col-12 col-sm-6">
+                            <label>
+                                Street Address
+                            </label>
+                            <input
+                                name="distributor_form[address-street]"
+                                id="street_address"
+                                class="form-control"
+                                placeholder="Street Address",
+                                value="{{ nzo_decrypt(distributor.addressStreet) }}"
+                            />
+                            <div class="hidden_msg" id="error_street_address">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# City #}
+                        <div class="col-12 col-sm-6 pt-2 pt-sm-0">
+                            <label>
+                                City
+                            </label>
+                            <input
+                                name="distributor_form[address-city]"
+                                id="city"
+                                class="form-control"
+                                placeholder="City",
+                                value="{{ nzo_decrypt(distributor.addressCity) }}"
+                            />
+                            <div class="hidden_msg" id="error_city">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# Postal Code #}
+                        <div class="col-12 col-sm-6">
+                            <label>
+                                Postal Code
+                            </label>
+                            <input
+                                name="distributor_form[address-postal-code]"
+                                id="postal_code"
+                                class="form-control"
+                                placeholder="Postal Code",
+                                value="{{ nzo_decrypt(distributor.addressPostalCode) }}"
+                            />
+                            <div class="hidden_msg" id="error_postal_code">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# State #}
+                        <div class="col-12 col-sm-6 pt-2 pt-sm-0">
+                            <label>
+                                State
+                            </label>
+                            <input
+                                name="distributor_form[address-state]"
+                                id="state"
+                                class="form-control"
+                                placeholder="State",
+                                value="{{ nzo_decrypt(distributor.addressState) }}"
+                            />
+                            <div class="hidden_msg" id="error_state">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Manager Name #}
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# First Name #}
+                        <div class="col-12 col-sm-6 pt-3 pt-sm-0">
+                            <label>
+                                Managers First Name <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="distributor_form[manager-first-name]"
+                                id="manager_first_name"
+                                class="form-control"
+                                placeholder="Managers First Name"
+                                value="{{ nzo_decrypt(distributor.managerFirstName) }}"
+                            >
+                            <div class="hidden_msg" id="error_manager_first_name">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# Last Name #}
+                        <div class="col-12 col-sm-6 pt-3 pt-sm-0">
+                            <label>
+                                Managers Last Name <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="distributor_form[manager-last-name]"
+                                id="manager_last_name"
+                                class="form-control"
+                                placeholder="Managers Last Name"
+                                value="{{ nzo_decrypt(distributor.managerLastName) }}"
+                            >
+                            <div class="hidden_msg" id="error_manager_last_name">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Manager ID #}
+                    <div class="row pb-3 bg-light border-left border-right">
+
+                        {# ID No #}
+                        <div class="col-12 col-sm-6 pt-3 pt-sm-0">
+                            <label>
+                                Managers Emirates ID No. <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="distributor_form[manager-id-no]"
+                                id="manager_id_no"
+                                class="form-control"
+                                placeholder="Managers Emirates ID Number"
+                                value="{{ nzo_decrypt(distributor.managerIdNo) }}"
+                            >
+                            <div class="hidden_msg" id="error_manager_id_no">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# ID Expiry Date #}
+                        <div class="col-12 col-sm-6 pt-3 pt-sm-0">
+                            <label>
+                                Managers ID Exp. Date <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="date"
+                                name="distributor_form[manager-id-exp-date]"
+                                id="manager_id_exp_date"
+                                class="form-control"
+                                placeholder="Managers ID Expiry Date"
+                                value="{{ distributor.managerIdExpDate|date('Y-m-d') }}"
+                            >
+                            <div class="hidden_msg" id="error_manager_id_exp_date">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Trading License #}
+                    <div class="row pb-3 bg-light border-left border-right border-bottom">
+
+                        {# Upload License #}
+                        <div class="col-12 col-sm-4 pt-3 pt-sm-0">
+                            <label>
+                                Trade License '. $tradeLicenseAsterisc .'
+                            </label>
+                            <div class="input-group">
+                                <input
+                                    type="file"
+                                    name="distributor_form[trade-license-file]"
+                                    id="trade_license_file"
+                                    class="form-control"
+                                >
+                                {% if distributor.tradeLicense is not null %}
+                                    <a href="{{ path('download_trade_license', {'trade-license':distributor.tradeLicense }) }}">
+                                        <span class="input-group-text">
+                                            <i class="fa-regular fa-download"></i>
+                                        </span>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="hidden_msg" id="error_trade_license_file">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# License No #}
+                        <div class="col-12 col-sm-4 pt-3 pt-sm-0">
+                            <label>
+                                Trade License No. <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="distributor_form[trade-license-no]"
+                                id="trade_license_no"
+                                class="form-control"
+                                placeholder="Trade License Number"
+                                value="{{
+                                    nzo_decrypt(distributor.tradeLicenseNo)
+                                }}"
+                            >
+                            <div class="hidden_msg" id="error_trade_license_no">
+                                Required Field
+                            </div>
+                        </div>
+
+                        {# License Exp Date #}
+                        <div class="col-12 col-sm-4 pt-3 pt-sm-0">
+                            <label>
+                                Expiry Date <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="date"
+                                name="distributor_form[trade-license-exp-date]"
+                                id="trade_license_exp_date"
+                                class="form-control"
+                                placeholder="Trade License Expiry Date"
+                                value="{{ distributor.tradeLicenseExpDate|date('Y-m-d') }}"
+                            >
+                            <div class="hidden_msg" id="error_trade_license_exp_date">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mt-1 mb-5 ps-0 pe-0">
+                            <input id="btn_company_information" type="submit" class="btn btn-primary w-100" value="UPDATE COMPANY INFORMATION">
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+
+                    {# Modal Logo #}
+                    <div class="modal fade" id="modal_logo" tabindex="-1" aria-labelledby="product_delete_label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header" style="border: none; padding-bottom: 0">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="padding: 0">
+                                    <div class="row">
+                                        <div class="col-12 mb-0 text-center">
+                                            <img src="{{ asset('images/logos/' ~ distributor.logo) }}" id="logo_img" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# End Account & Settings #}
+
+                {# About #}
+                <div class="row hidden" id="about">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">About</h3>
+                    </div>
+                    {{form_start(form, {'name': 'form_about_us', 'attr': {'id': 'form_about_us', 'class':'col-12 ps-0 pe-0'}})}}
+
+                    <div class="col-12">
+                        {{ form_widget(form.about,{'id': 'about_us', 'value': distributor.about, 'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'About*'
+                        }}) }}
+                        <div class="hidden_msg" id="error_about_us">
+                            Required Field
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-5">
+                        <button id="btn_about_us" type="submit" class="btn btn-primary w-100">UPDATE ABOUT US</button>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+                {# End About #}
+
+                {# Operating Hours #}
+                <div class="row hidden" id="operating_hours">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">Operating Hours</h3>
+                    </div>
+                    {{form_start(form, {'name': 'form_operating_hours', 'attr': {'id': 'form_operating_hours', 'class':'col-12 ps-0 pe-0'}})}}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_widget(form.operatingHours,{'id': 'operating_hours_field', 'value': distributor.operatingHours, 'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Operating Hours*'
+                            }}) }}
+                            <div class="hidden_msg" id="error_operating_hours">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 mb-5">
+                            <button id="btn_operating_hours" type="submit" class="btn btn-primary w-100">UPDATE OPERATING HOURS</button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+                {# End Operating Hours #}
+
+                {# Refund Policy #}
+                <div class="row hidden" id="refund_policy">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">Refund Policy</h3>
+                    </div>
+                    {{form_start(form, {'name': 'form_refund_policy', 'attr': {'id': 'form_refund_policy', 'class':'col-12 ps-0 pe-0'}})}}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_widget(form.refundPolicy,{'id': 'refund_policy_field', 'value': distributor.refundPolicy, 'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Refund Policy*'
+                            }}) }}
+                            <div class="hidden_msg" id="error_refund_policy">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 mb-5">
+                            <button id="btn_refund_policy" type="submit" class="btn btn-primary w-100">UPDATE OPERATING HOURS</button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+                {# End Refund Policy #}
+
+                {# Sales Tax Policy #}
+                <div class="row hidden" id="sales_tax_policy">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">Sales Tax Policy</h3>
+                    </div>
+                    {{form_start(form, {'name': 'form_sales_tax_policy', 'attr': {'id': 'form_sales_tax_policy', 'class':'col-12 ps-0 pe-0'}})}}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_widget(form.salesTaxPolicy,{'id': 'sales_tax_policy_field', 'value': distributor.salesTaxPolicy, 'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Sales Tax Policy*'
+                            }}) }}
+                            <div class="hidden_msg" id="error_sales_tax_policy">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 mb-5">
+                            <button id="btn_sales_tax_policy" type="submit" class="btn btn-primary w-100">UPDATE OPERATING HOURS</button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+                {# End Sales Tax Policy #}
+
+                {# Shipping Policy #}
+                <div class="row hidden" id="shipping_policy">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">Shipping Policy</h3>
+                    </div>
+                    {{form_start(form, {'name': 'form_shipping_policy', 'attr': {'id': 'form_shipping_policy', 'class':'col-12 ps-0 pe-0'}})}}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_widget(form.shippingPolicy,{'id': 'shipping_policy_field', 'value': distributor.shippingPolicy, 'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Shipping Policy*'
+                            }}) }}
+                            <div class="hidden_msg" id="error_shipping_policy">
+                                Required Field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 mb-5">
+                            <button id="btn_shipping_policy" type="submit" class="btn btn-primary w-100">UPDATE OPERATING HOURS</button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+                {# End Sales Tax Policy #}
+
+                {# Invenory / Distributor Products #}
+                <div id="inventory">
+                    {{form_start(form, {'name': 'form_inventory_item', 'attr': {'id': 'form_inventory_item'}})}}
+                    {{ form_widget(inventory_form.product,{'id': 'product_id'}) }}
+                    {{ form_widget(inventory_form.distributor,{'id': 'distributor_id'}) }}
+                    <div class="row">
+                        <div class="col-12 text-center mt-1 pt-3 pb-3" id="order_header">
+                            <h4 class="text-primary text-truncate">Inventory</h4>
+                        </div>
+                    </div>
+
+                    {# Semi Tracked #}
+                    {% set trackingId = distributor.tracking.id %}
+                    {% set hidden = 'hidden' %}
+                    {% if trackingId == 2 %}
+                        {% set hidden = '' %}
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-12 {{ hidden }}" id="semi_tracked_row">
+                            {% if distributor.distributorProducts|length > 0 %}
+                                <a href="{{ path('download_inventory_csv') }}" class="float-end" id="download_inventory_csv">
+                                    <i class="fa-light fa-file-csv me-2"></i>
+                                    Export Products
+                                </a>
+                                <a
+                                    href=""
+                                    class="float-end me-4"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal_upload_file"
+                                    id="download_file"
+                                >
+                                    <i class="fa-light fa-file-csv me-2"></i>
+                                    Upload Products
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {# Import Products From API #}
+                    {% set hidden = 'hidden' %}
+                    {% if trackingId == 1 %}
+                        {% set hidden = '' %}
+                    {% endif %}
+                    <div class="row {{ hidden }}" id="import_products_row">
+                        <div class="col-12 w-100">
+                            <a role="button" id="import_products" class="float-end text-primary">
+                                <i class="fa-light fa-cloud-arrow-down me-2"></i>
+                                Import Products
+                            </a>
+                        </div>
+                    </div>
+
+                    {# Refresh Token #}
+                    <div class="row">
+                        <div class="col-12 pt-2 pb-2 bg-light border-left border-right border-bottom border-top" id="zoho_container" style="display: none">
+                            <a
+                                href="https://accounts.zoho.com/oauth/v2/auth?scope=ZohoInventory.FullAccess.all&client_id={{ nzo_decrypt(distributor.apiDetails.clientId|default('')) }}&state=testing&response_type=code&redirect_uri={{ app.request.schemeAndHttpHost }}/distributors/zoho/set/refresh-token&access_type=offline&prompt=consent"
+                                class="btn btn-danger w-100"
+                            >
+                                Connect to Zoho Inventory
+                            </a>
+                        </div>
+                    </div>
+
+                    {# Error #}
+                    <div class="row">
+                        <div class="col-12 pt-2 pb-2 bg-light border-left border-right border-bottom text-center pt-4 pb-4" id="zoho_error" style="display: none">
+                            Please contact admin with your app <b><i>CLIENT_ID</i></b> and <b><i>CLIENT_SECRET</i></b>
+                        </div>
+                    </div>
+
+                    {# Search #}
+                    <div class="row" id="search_row">
+                        <div class="col-12 col-sm-6 pt-2 pb-2 bg-light border-left border-top" id="inventory_search_container">
+                            <div class="row">
+                                <div class="col-12 search-div">
+                                    <input type="text" id="search_field" class="form-control" placeholder="Search Inventory" autocomplete="off" />
+                                </div>
+                                <div class="col-1 clear-search hidden">
+                                    <a href="/distributors/manage-inventory" class="btn btn-secondary float-end btn-sm ms-sm-3 w-sm-100 mt-2 mt-sm-0" id="inventory_clear">
+                                        <i class="fa-solid fa-rotate-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="suggestion_field"></div>
+                        </div>
+
+                        {# Stock Tracking #}
+                        <div class="col-12 col-sm-6 pt-2 pb-2 bg-light border-right border-top">
+                            <select class="form-control" name="tracking-id" id="tracking_id">
+                                <option value="0">Select a Tracking Method</option>
+                                {% for track in tracking %}
+                                    {% set selected = '' %}
+                                    {% if distributor.tracking.id == track.id %}
+                                        {% set selected = 'selected' %}
+                                    {% endif %}
+                                    <option value="{{ track.id }}" {{ selected }}>{{ track.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="inventory_item" class="row bg-light border-left border-right border-bottom">
+                        <div class="row mb-0 mb-sm-3 pe-0">
+
+                            {# Dosage #}
+                            <div class="col-12 col-sm-6 pe-0 pe-sm-2 pt-2">
+                                <label>
+                                    Dosage
+                                </label>
+                                <input type="text" class="form-control" id="dosage" disabled value="">
+                            </div>
+
+                            {# Size #}
+                            <div class="col-12 col-sm-6 pe-0 pt-2">
+                                <label>
+                                    Size
+                                </label>
+                                <input type="text" class="form-control" id="size" disabled value="">
+                            </div>
+                        </div>
+
+                        <div class="row mb-0 mb-sm-3 pe-0">
+
+                            {# Active Ingredient #}
+                            <div class="col-12 col-sm-6 pe-0 pe-sm-2 pt-2 pt-sm-0">
+                                <label>
+                                    Active Ingredient
+                                </label>
+                                <input type="text" class="form-control" id="active_ingredient" disabled value="">
+                            </div>
+
+                            {# Unit #}
+                            <div class="col-12 col-sm-6 pe-0 pe-sm-2 pt-2 pt-sm-0">
+                                <label>
+                                    Unit
+                                </label>
+                                <input type="text" class="form-control" id="unit" disabled value="">
+                            </div>
+                        </div>
+
+                        <div class="row mb-0 mb-sm-3 pe-0">
+
+                            {# Item ID #}
+                            <div class="col-12 col-sm-6 pe-0 pt-2 pt-sm-0">
+                                <label>
+                                    Item ID
+                                </label>
+                                {{ form_widget(inventory_form.itemId,{'id': 'item_id', 'attr':{
+                                    'class': 'form-control',
+                                    'placeholder': 'Your Item ID'
+                                }}) }}
+                                <div class="hidden_msg" id="error_item_id">
+                                    Required Field
+                                </div>
+                            </div>
+
+                            {# SKU #}
+                            <div class="col-12 col-sm-6 pe-0 pt-2 pt-sm-0">
+                                <label>
+                                    #SKU
+                                </label>
+                                {{ form_widget(inventory_form.sku,{'id': 'sku', 'attr':{
+                                    'class': 'form-control',
+                                    'placeholder': 'SKU'
+                                }}) }}
+                                <div class="hidden_msg" id="error_sku">
+                                    Required Field
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-0 mb-sm-3 pe-0" id="tracking_row">
+
+                            {# Unit Price #}
+                            <div class="col-12 col-sm-6 pe-0 pt-2 pt-sm-0">
+                                <label>
+                                    Unit Price
+                                </label>
+                                {{ form_widget(inventory_form.unitPrice,{'id': 'unit_price', 'attr':{
+                                    'class': 'form-control',
+                                    'placeholder': 'Unit Price'
+                                }}) }}
+                                <div class="hidden_msg" id="error_unit_price">
+                                    Required Field
+                                </div>
+                            </div>
+
+                            {# Stock Level #}
+                            <div class="col-12 col-sm-6 pe-0 pe-sm-2 pt-2 pt-sm-0">
+                                <label>
+                                    Stock Level
+                                </label>
+                                {% set disabled = false %}
+                                {% if trackingId == 2 or trackingId == 3 %}
+                                    {% set disabled = true %}
+                                {% endif %}
+                                {{ form_widget(inventory_form.stockCount,{'id': 'stock_count', 'attr':{
+                                    'class': 'form-control',
+                                    'placeholder': 'Stock Level',
+                                    'disabled': disabled
+                                }}) }}
+                                <div class="hidden_msg" id="error_stock_count">
+                                    Required Field
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-0 mb-sm-3 pe-0">
+                            {# Tax Empt #}
+                            <div class="col-12 pt-2 pt-sm-0">
+                                <label class="d-block">
+                                    Tax Exempt
+                                </label>
+                                <div class="form-check form-check-inline radio-label">
+                                    <input type="radio" class="form-check-input" id="taxExempt_1" name="distributor_products_form[taxExempt]" value="1">
+                                    <label for="distributor_products_form_taxExempt_1" class="radio-text">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline radio-label">
+                                    <input type="radio" class="form-check-input" id="taxExempt_0" name="distributor_products_form[taxExempt]" value="0">
+                                    <label for="distributor_products_form_taxExempt_0" class="radio-text">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="inventory_btn">
+                        <div class="col-12 mt-3 ps-0 pe-0">
+                            <button id="btn_inventory" type="submit" class="btn btn-primary w-100"></button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {render_rest: false}) }}
+
+                    {# Modal Upload Products #}
+                    <div class="modal fade" id="modal_upload_file" tabindex="-1" aria-labelledby="modal_upload_file" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form name="upload-csv" id="upload_csv" enctype="multipart/form-data" method="post">
+                                    <div class="modal-body">
+                                        <div class="row my-2">
+                                            {# File Upload #}
+                                            <div class="col-12">
+                                                <input
+                                                    name="file"
+                                                    id="file"
+                                                    class="form-control"
+                                                    type="file"
+                                                >
+                                                <div class="hidden_msg" id="error_file">
+                                                    Required Field
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                                        <button type="submit" class="btn btn-primary" id="btn_upload_file">SAVE</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row hidden" id="inventory_list_container">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 text-center mt-1 pt-3 pb-3" id="order_header">
+                                <h4 class="text-primary text-truncate">Inventory</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light border-top border-left border-right">
+                                <div class="row">
+                                    <div class="col-12 col-md-3 offset-sm-0 offset-md-3 py-3">
+                                        <select
+                                            class="form-control"
+                                            name="manufacturer-id"
+                                            id="manufacturer_id"
+                                        >
+                                            <option value="0">
+                                                Select a Manufacturer
+                                            </option>
+                                            {% for manufacturer in manufacturers %}
+                                                <option value="{{ manufacturer.manufacturers.id }}">
+                                                    {{ nzo_decrypt(manufacturer.manufacturers.name) }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-3 py-3">
+                                        <select
+                                            class="form-control"
+                                            name="species-id"
+                                            id="species_id"
+                                        >
+                                            <option value="0">
+                                                Select a Species
+                                            </option>
+                                            {% for specie in species %}
+                                                <option value="{{ specie.species.id }}">
+                                                    {{ specie.species.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-none d-xl-block">
+                                <div class="row">
+                                    <div class="col-md-3 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-left border-top">
+                                        Name
+                                    </div>
+                                    <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Active Ingredient
+                                    </div>
+                                    <div class="col-md-1 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Dosage
+                                    </div>
+                                    <div class="col-md-1 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Size
+                                    </div>
+                                    <div class="col-md-1 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Unit
+                                    </div>
+                                    <div class="col-md-1 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Stock
+                                    </div>
+                                    <div class="col-md-1 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                        Price
+                                    </div>
+                                    <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-right border-top">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12" id="inventory_list">
+                                {% for distributorProduct in distributorProducts %}
+                                    <div class="row border-left border-right border-bottom bg-light" id="distributor_product_{{ distributorProduct.id }}">
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Name:
+                                        </div>
+                                        <div
+                                            class="col-7 col-md-3 col-xl-3 text-truncate border-list pt-3 pb-3"
+                                            data-bs-trigger="hover"
+                                            data-bs-container="body"
+                                            data-bs-toggle="popover"
+                                            data-bs-placement="top"
+                                            data-bs-html="true"
+                                            data-bs-content="{{ distributorProduct.name }}"
+                                        >
+                                            {{ distributorProduct.name }}
+                                        </div>
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Active Ingredient:
+                                        </div>
+                                        <div class="col-7 col-md-2 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                            {{ distributorProduct.activeIngredient }}
+                                        </div>
+                                        <div class="col-5 col-md-1 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Dosage:
+                                        </div>
+                                        <div class="col-7 col-md-1 col-xl-1 text-truncate border-list pt-3 pb-3">
+                                            {{ distributorProduct.dosage }}
+                                        </div>
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Size:
+                                        </div>
+                                        <div class="col-7 col-md-1 col-xl-1 text-truncate border-list pt-3 pb-3">
+                                            {{ distributorProduct.size }}
+                                        </div>
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Unit:
+                                        </div>
+                                        <div class="col-7 col-md-1 col-xl-1 text-truncate border-list pt-3 pb-3">
+                                            {{ distributorProduct.unit }}
+                                        </div>
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Stock:
+                                        </div>
+                                        <div class="col-7 col-md-1 col-xl-1 text-truncate border-list pt-3 pb-3">
+                                            {{ distributorProduct.distributorProducts[0].stockCount }}
+                                        </div>
+                                        <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                            Price:
+                                        </div>
+                                        <div class="col-7 col-md-1 col-xl-1 text-truncate border-list pt-3 pb-3">
+                                            {{distributorProduct.distributorProducts[0].unitPrice }}
+                                        </div>
+                                        <div class="col-md-2  t-cell text-truncate border-list pt-3 pb-3">
+                                            <a
+                                                href=""
+                                                class="float-end update-product"
+                                                data-product-name="{{ distributorProduct.name }}"
+                                                data-product-id="{{ distributorProduct.id }}"
+                                            >
+                                                <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                                            </a>
+                                            <a
+                                                href=""
+                                                class="delete-icon float-end delete-distributor-product"
+                                                data-bs-toggle="modal"
+                                                data-distributor-product-id="{{ distributorProduct.id }}"
+                                                data-bs-target="#modal_product_delete"
+                                                >
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                <div id="distributor_products_pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Modal Delete Distributor Product #}
+                <div class="modal fade" id="modal_product_delete" tabindex="-1" aria-labelledby="product_delete_label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="product_delete_label">Delete Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12 mb-0">
+                                        Are you sure you would like to delete this product? This action cannot be undone.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+                                <button type="submit" class="btn btn-danger btn-sm" id="delete_product">DELETE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# End Invenory / Distributor Products #}
+
+                {# Users #}
+                <div class="row" id="users">
+                    <div class="col-12 text-center pt-3 pb-3 mt-1">
+                        <h3 class="text-primary text-truncate">Manage User Accounts</h3>
+                    </div>
+                    <div class="col-12">
+                        <a
+                            type="button"
+                            class="float-end mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_user"
+                            id="user_new"
+                        >
+                            <i class="fa-regular fa-square-plus"></i>
+                            Create New
+                        </a>
+                    </div>
+                    <div class="col-12 d-none d-xl-block">
+                        <div class="row">
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-left border-top">
+                                First Name
+                            </div>
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                Last Name
+                            </div>
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                Username
+                            </div>
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                Telephone
+                            </div>
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-top">
+                                Position
+                            </div>
+                            <div class="col-md-2 pt-3 pb-3 text-primary fw-bold bg-light border-bottom border-right border-top">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12" id="users_list">
+                        {% for user in users %}
+                            <div class="row border-left border-right border-bottom border-md-top-0 bg-light mb-3 mb-lg-0">
+                                <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                    First Name:
+                                </div>
+                                <div class="col-7 col-md-10 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                    {{ nzo_decrypt(user.firstName) }}
+                                </div>
+                                <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                    Last Name:
+                                </div>
+                                <div class="col-7 col-md-10 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                    {{ nzo_decrypt(user.lastName) }}
+                                </div>
+                                <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                    Email:
+                                </div>
+                                <div class="col-7 col-md-10 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                    {{ nzo_decrypt(user.email) }}
+                                </div>
+                                <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                    Telephone:
+                                </div>
+                                <div class="col-7 col-md-10 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                    {{ nzo_decrypt(user.telephone) }}
+                                </div>
+                                <div class="col-5 col-md-2 d-xl-none t-cell fw-bold text-primary text-truncate border-list pt-3 pb-3">
+                                    Position:
+                                </div>
+                                <div class="col-7 col-md-10 col-xl-2 text-truncate border-list pt-3 pb-3">
+                                    {{ nzo_decrypt(user.position) }}
+                                </div>
+                                <div class="col-md-2  t-cell text-truncate pt-3 pb-3">
+                                    <a href="" class="float-end update-user" data-user-id="{{ user.id }}" data-bs-toggle="modal" data-bs-target="#modal_user">
+                                        <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                                    </a>
+                                    {% if user.isPrimary != 1 %}
+                                        <a href="" class="delete-icon float-end delete-user" data-bs-toggle="modal"
+                                       data-user-id="{{ user.id }}" data-bs-target="#modal_user_delete"
+                                    >
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {{ users_pagination|raw }}
+                    </div>
+
+                    {# Modal Manage Users #}
+                    <div class="modal fade" id="modal_user" tabindex="-1" aria-labelledby="modal_user" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-xl">
+                            <div class="modal-content">
+                                {{form_start(form, {'name': 'form_users', 'attr': {'id': 'form_users'}})}}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="user_modal_label"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+
+                                        {# First Name #}
+                                        <div class="col-12 col-sm-6">
+                                            {{ form_label(user_form.firstName) }}
+                                            <input type="hidden" value="" name="distributor_users_form[user_id]" id="user_id">
+                                            {{ form_widget(user_form.firstName,{'id': 'user_first_name', 'attr':{
+                                                'class': 'form-control',
+                                                'placeholder': 'First Name*'
+                                            }}) }}
+                                            <div class="hidden_msg" id="error_user_first_name">
+                                                Required Field
+                                            </div>
+                                        </div>
+
+                                        {# Last Name #}
+                                        <div class="col-12 col-sm-6">
+                                            {{ form_label(user_form.lastName) }}
+                                            {{ form_widget(user_form.lastName,{'id': 'user_last_name', 'attr':{
+                                                'class': 'form-control',
+                                                'placeholder': 'Last Name*'
+                                            }}) }}
+                                            <div class="hidden_msg" id="error_user_last_name">
+                                                Required Field
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+
+                                        {# Email #}
+                                        <div class="col-12 col-sm-6">
+                                            {{ form_label(user_form.email) }}
+                                            {{ form_widget(user_form.email,{'id': 'user_email', 'attr':{
+                                                'class': 'form-control',
+                                                'placeholder': 'Email Address'
+                                            }}) }}
+                                            <div class="hidden_msg" id="error_user_email">
+                                                Required Field
+                                            </div>
+                                        </div>
+
+                                        {# Telephone Number #}
+                                        <div class="col-12 col-sm-6">
+                                            {{ form_label(user_form.telephone) }}
+                                            <span id="telephone_container">
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                name="distributor_users_form[mobile]"
+                                                id="user_mobile" value=""
+                                                placeholder="(123) 456-7890*"
+                                        >
+                                    </span>
+
+                                            <div class="hidden_msg" id="error_user_telephone">
+                                                Required Field
+                                            </div>
+                                            <input type="hidden" name="distributor_users_form[telephone]" id="user_telephone" value="">
+                                            {{ form_widget(user_form.isoCode, {'id': 'user_iso_code'}) }}
+                                            {{ form_widget(user_form.intlCode, {'id': 'user_intl_code'}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+
+                                        {# Position #}
+                                        <div class="col-12">
+                                            {{ form_label(user_form.position) }}
+                                            {{ form_widget(user_form.position,{'id': 'user_position', 'attr':{
+                                                'class': 'form-control',
+                                                'placeholder': 'Position'
+                                            }}) }}
+                                            <div class="hidden_msg" id="error_user_telephone">
+                                                Required Field
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {# User Permissions #}
+                                    <div class="row mb-3">
+                                        {% if user_permissions|length > 0 %}
+                                            {% for user in user_permissions %}
+                                                <!-- User Permissions -->
+                                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                                    <div class="btn-sm btn-outline-light border-1 border p-2 my-2">
+                                                        <input
+                                                                class="form-check-input me-2"
+                                                                type="checkbox"
+                                                                value="{{ user.id }}"
+                                                                id="permission_{{ user.id }}"
+                                                                data-permission-id="{{ user.id }}"
+                                                                name="distributor_users_form[permission][]"
+                                                        >
+                                                        <label class="form-check-label info" for="permission_{{ user.id }}">
+                                                            {{ user.permission }}
+                                                        </label>
+                                                        <span
+                                                                class="ms-1 float-end text-primary"
+                                                                data-bs-trigger="hover"
+                                                                data-bs-container="body"
+                                                                data-bs-toggle="popover"
+                                                                data-bs-placement="top"
+                                                                data-bs-html="true"
+                                                                data-bs-content="{{ user.info }}"
+                                                                role="button"
+                                                        >
+                                                        <i class="far fa-question-circle"></i>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn btn-primary" id="create_user">SAVE</button>
+                                </div>
+                                {{ form_end(form, {render_rest: false}) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Modal Delete User #}
+                    <div class="modal fade" id="modal_user_delete" tabindex="-1" aria-labelledby="user_delete_label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <input type="hidden" value="" name="addresses_form[address_id]" id="address_id">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="user_delete_label">Delete User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-0">
+                                            Are you sure you would like to delete this user? This action cannot be undone.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" id="delete_user">DELETE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# End Users #}
+
+                {# Orders #}
+                <div id="order_container"></div>
+                {# End Orders #}
+
+                {# Customers #}
+                <div id="customer_container"></div>
+                {# End Customers #}
+
+                {# Access Denied #}
+                <div class="row hidden h-100 height-distributors" style="height: calc(100% - 56px)!important" id="access_denied">
+                    <div class="col-12">
+                        <table class="w-100 h-100">
+                            <tr>
+                                <td class="align-middle text-center">
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <i class="fa-solid fa-ban pe-2" style="font-size: 30vh; margin-bottom: 30px; color: #CCC;text-align: center"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <h1>Access Denied</h1>
+
+                                            <p class="mt-4 mb-0">
+                                                Your user account does not have permission to view the requested page.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                {# End Access Denied #}
+            </div>
+        </div>
+    </div>
+    <div class="overlay"></div>
+    <div class="spanner">
+        <div class="loader"></div>
+        <p>Loading...</p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        // Redirect to company info if not approved
+        let uri = window.location.pathname;
+        let isCompanyInfo = uri.match('/distributors/account');
+        let isApproved = '{{ distributor.isApproved|default(0) }}';
+
+        if(isApproved == 0 && isCompanyInfo == null)
+        {
+            window.location.href = '{{ app.request.schemeAndHttpHost }}/distributors/account';
+        }
+
+        $(document).ready(function(){
+
+            let input = '';
+            let iti = '';
+
+            function getFlash(flash, type = 'success'){
+                $('#flash').addClass('alert-'+ type).addClass('alert').addClass('text-center');
+                $('#flash').removeClass('users-flash').addClass('users-flash').empty().append(flash).removeClass('hidden');
+
+                setTimeout(function() {
+                    $('#flash').removeClass('alert-success').removeClass('alert').removeClass('text-center');
+                    $('#flash').removeClass('users-flash').empty().addClass('hidden');
+                }, 5000);
+            }
+
+            {# Dropdown Menu Chevron #}
+            $(document).on('click', '.dropdown-link', function (e) {
+
+                e.preventDefault();
+
+                if($(this).attr('aria-expanded') == 'true')
+                {
+                    $(this).find('.fa-caret-right').css({'rotate':'90deg'});
+                }
+                else
+                {
+                    $(this).find('.fa-caret-right').css({'rotate':'0deg'});
+                }
+            });
+
+            let brand = $('#brand');
+            let account_settings = $('#account_settings');
+            let about = $('#about');
+            let operating_hours = $('#operating_hours');
+            let refund_policy = $('#refund_policy');
+            let sales_tax_policy = $('#sales_tax_policy');
+            let shipping_policy = $('#shipping_policy');
+            let inventory = $('#inventory');
+            let inventory_search = $('#inventory_search');
+            let inventory_item = $('#inventory_item');
+            let inventoryList = $('#inventory_list_container');
+            let users = $('#users');
+            let inventory_clear = $('#inventory_clear');
+            let inventory_btn = $('#inventory_btn');
+            let order_container = $('#order_container');
+            let customerContainer = $('#customer_container');
+            let access_denied = $('#access_denied');
+            let get_messages = '';
+            let date = new Date();
+            let date_time = date.getFullYear() +'-'+ (date.getMonth() + 1) +'-'+ date.getDate() +' '+ String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0") +':'+ String(date.getSeconds()).padStart(2, '0');
+            sessionStorage.setItem('date_time', date_time);
+
+            account_settings.hide();
+            about.hide();
+            operating_hours.hide();
+            refund_policy.hide();
+            sales_tax_policy.hide();
+            shipping_policy.hide();
+            inventory.hide();
+            inventoryList.hide();
+            inventory_item.hide();
+            users.hide();
+            order_container.hide();
+            customerContainer.hide();
+            $('#btn_inventory').hide();
+            
+
+            {# Get correct content on refresh #}
+            let uri = '{{ app.request.requestUri }}';
+            let is_account_settings = uri.match('/distributors/account');
+            let is_about = uri.match('/distributors/about');
+            let is_operating_hours = uri.match('/distributors/operating-hours');
+            let is_refund_policy = uri.match('/distributors/refund-policy');
+            let is_sales_tax_policy = uri.match('/distributors/sales-tax-policy');
+            let is_shipping_policy = uri.match('/distributors/shipping-policy');
+            let is_inventory = uri.match('/distributors/manage-inventory');
+            let is_inventory_list = uri.match('/distributors/inventory/list');
+            let is_users = uri.match('/distributors/users');
+            let is_customers = uri.match('/distributors/customers');
+
+            {# Account & Settings #}
+            if(is_account_settings != null) {
+
+                getAccountSettings();
+            }
+
+            {# About #}
+            if(is_about != null) {
+
+                getAbout();
+            }
+
+            {# Operating Hours #}
+            if(is_operating_hours != null) {
+
+                getOperatingHours();
+            }
+
+            {# Refund Policy #}
+            if(is_refund_policy != null) {
+
+                getRefundPolicy();
+            }
+
+            {# Sales Tax Policy #}
+            if(is_sales_tax_policy != null) {
+
+                getSalesTaxPolicy();
+            }
+
+            {# Shipping Policy #}
+            if(is_shipping_policy != null) {
+
+                getShippingPolicy();
+            }
+
+            {# Inventory #}
+            if(is_inventory != null) {
+
+                getInventory();
+            }
+            if(is_inventory_list != null) {
+
+                getInventoryList();
+            }
+
+            {# Users #}
+            if(is_users != null) {
+
+                getUsers();
+            }
+
+            {# Customers #}
+            if(is_customers != null) {
+
+                getCustomersList();
+            }
+
+            {# Orders #}
+            {# Orders List #}
+            function getOrdersList(distributor_id, page_id, clinic_id = '', status_id = '', date = ''){
+
+                $.ajax({
+                    url: "{{ path('distributor_get_order_list') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        page_id: page_id,
+                        distributor_id: distributor_id,
+                        clinic_id: clinic_id,
+                        status_id: status_id,
+                        date: date,
+                    },
+                    beforeSend: function () {
+                        $("div.spanner").addClass("show");
+                        $("div.overlay").addClass("show");
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('distributor_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+                        $('#order_container').empty().append(response.html).append(response.pagination);
+                        account_settings.hide();
+                        about.hide();
+                        operating_hours.hide();
+                        refund_policy.hide();
+                        sales_tax_policy.hide();
+                        shipping_policy.hide();
+                        inventory.hide();
+                        inventoryList.hide();
+                        inventory_item.hide();
+                        users.hide();
+                        order_container.show();
+                        customerContainer.hide();
+                        $("div.spanner").removeClass("show");
+                        $("div.overlay").removeClass("show");
+                        $('#filter_row_toggle').removeClass('border-bottom');
+
+                        window.history.pushState(null, "Fluid", '/distributors/orders/'+ distributor_id);
+
+                        let selector = '#datepicker';
+
+                        if ($(window).width() < 769){
+
+                            selector = '#datepicker_mobile';
+                            $('.clinic_select').removeClass('me-2');
+                            $('.status_select').removeClass('me-2 ms-3');
+                        }
+
+                        if($('#filter_row').is( ":visible" )){
+
+                            $('#filter_row_toggle').removeClass('border-bottom');
+                            $('#filter_row_toggle').addClass('border-bottom');
+                        }
+
+                        const picker = new easepick.create({
+                            element: selector,
+                            css: [
+                                'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css',
+                                '{{ asset('css/date_picker.min.css') }}',
+                            ],
+                            zIndex: 11,
+                            readonly: false,
+                            plugins: [
+                                "AmpPlugin",
+                                "RangePlugin",
+                            ]
+                        })
+                    }
+                });
+            }
+
+            $('#orders_link').click(function (e){
+
+                e.preventDefault();
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.empty().show();
+                brand.empty().hide();
+
+                getOrdersList($(this).data('distributor-id'), 1);
+            });
+            $(document).on('click', '.orders_link', function (e){
+
+                e.preventDefault();
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.empty().show();
+                brand.empty().hide();
+
+                getOrdersList($(this).data('distributor-id'), 1);
+            });
+            $(document).on('click','.order-link', function (e){
+
+                let distributor_id = window.location.pathname.split('/')[3];
+
+                e.preventDefault();
+                clearInterval(get_messages);
+                getOrdersList(distributor_id, $(this).data('page-id'));
+
+            });
+            $(document).on('change', '.clinic_select', function (){
+                $('.clinic_search').attr('data-clinic-id', $(this).val());
+            });
+            setInterval(function(){
+
+                if($('#datepicker_mobile').val() != '' && $('#datepicker_mobile').val() != 'Date') {
+
+                    $('.clinic_search').attr('data-date', $('#datepicker_mobile').val());
+                }
+
+                if($('#datepicker').val() != '' && $('#datepicker').val() != 'Date') {
+
+                    $('.clinic_search').attr('data-date', $('#datepicker').val());
+                }
+            } , 1000);
+            $(document).on('change', '.status_select', function (){
+                $('.clinic_search').attr('data-status-id', $(this).val());
+            });
+            $(document).on('click', '.clinic_refresh', function (){
+
+                $('.datepicker').val('');
+                $('.clinic_select').val('');
+                $('.status_select').val('');
+
+                let distributor_id = $(this).data('distributor-id');
+
+                getOrdersList(distributor_id, 1);
+            });
+            $(document).on('click', '.clinic_search', function (){
+                let distributor_id = $(this).data('distributor-id');
+                let date = $(this).data('date');
+                let clinic_id = $(this).data('clinic-id');
+                let status = $(this).data('status-id');
+
+                getOrdersList(distributor_id, 1, clinic_id, status, date);
+            });
+            $(document).on('click', '#filter_orders', function (){
+                $('#filter_row').toggle(700, 'linear');
+
+                setInterval(function(){
+
+                    if($('#filter_row').is( ":visible" )){
+
+                        $('#filter_row_toggle').addClass('border-bottom');
+
+                    } else {
+
+                        $('#filter_row_toggle').removeClass('border-bottom');
+                    }
+                } , 1000);
+            });
+            {# Order Details #}
+            let is_order_detail = uri.match('/distributors/order/[0-9]+');
+            let is_order_list = uri.match('/distributors/orders/[0-9]+');
+
+            let orderid = '{{app.request.get('order_id')}}';
+            let distributorid = '{{distributor.id}}';
+            let clinicid = '{{clinic_id}}';
+
+            if(is_order_list != null && '{{ app.request.get('distributor_id') }}' > 0) {
+
+                getOrdersList('{{ app.request.get('distributor_id') }}', 1);
+            }
+
+            if(is_order_detail != null && orderid > 0 && distributorid > 0 && clinicid > 0) {
+
+                getOrderDetails(orderid, distributorid, clinicid);
+            }
+
+            function getOrderDetails(order_id, distributor_id, clinic_id){
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.show();
+
+                $.ajax({
+                    url: "{{ path('distributor_get_order_details') }}",
+                    type: 'POST',
+                    data: {
+                        order_id: order_id,
+                        permissions: '{{ permissions|json_encode }}',
+                    },
+                    dataType: 'json',
+                    beforeSend: function (){
+
+                        isLoading(true);
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('distributor_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+
+                        // Reset page load time for refresh button alert
+                        date_time = date.getFullYear() +'-'+ (date.getMonth() + 1) +'-'+ date.getDate() +' '+ String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0") +':'+ String(date.getSeconds()).padStart(2, '0');
+                        sessionStorage.setItem('date_time', date_time);
+
+                        $('#order_container').empty().append(response);
+                        $('#distributor_chat_inner').scrollTop($('#distributor_chat_inner').prop("scrollHeight"));
+                        popOver();
+                        getChat(order_id, distributor_id, clinic_id)
+                        $('#chat_pulse').hide();
+
+                        var maxWidth = Math.max.apply( null, $( '.badge' ).map( function () {
+                            return $( this ).outerWidth( true );
+                        }).get() );
+
+                        $('.badge').css({'width':maxWidth+'px'});
+
+                        isLoading(false);
+                    }
+                });
+            }
+            $(document).on('click', '.order_detail_link, .refresh-distributor-order', function (e){
+
+                e.preventDefault();
+
+                let order_id = $(this).data('order-id');
+                let clinic_id = $(this).data('clinic-id');
+                let distributor_id = $(this).data('distributor-id');
+
+                sessionStorage.setItem('order_id', order_id);
+                window.history.pushState(null, "Fluid", '/distributors/order/'+ order_id);
+
+                getOrderDetails(order_id, distributor_id, clinic_id);
+                checkLastModified(order_id);
+            });
+
+            function getLastModified(order_id){
+
+                session_date_time = sessionStorage.getItem('date_time');
+
+                $.ajax({
+                    url: "{{ path('get_order_last_update') }}",
+                    type: 'POST',
+                    cache: false,
+                    timeout: 10000,
+                    data: {
+                        order_id: order_id
+                    },
+                    success: function (response) {
+                        console.log(response +' '+ session_date_time);
+                        if (response > session_date_time) {
+                            console.log('add class');
+                            $('.refresh-distributor-order').removeClass('blinking-text').addClass('blinking-text');
+
+                            date = new Date();
+                            date_time = date.getFullYear() +'-'+ (date.getMonth() + 1) +'-'+ date.getDate() +' '+ String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0") +':'+ String(date.getSeconds()).padStart(2, '0');
+
+                            sessionStorage.setItem('date_time', date_time);
+
+                        }
+                    }
+                });
+            };
+
+            function checkLastModified(order_id) {
+                setInterval(function(){ getLastModified(order_id, distributor_id); }, 5000);
+            }
+
+            let chat_pulse = $('#chat_pulse');
+            let chat_field = $('#chat_field');
+            let order_id = $('#chat_field').data('order-id');
+            let distributor_id = $('#chat_field').data('distributor-id');
+
+            $.ajax({
+                url: "{{ path('is_typing') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    order_id: order_id,
+                    distributor_id: distributor_id,
+                    is_typing: 0,
+                },
+                success: function (response) {
+
+                    $('#chat_pulse').hide();
+                }
+            });
+            $(document).on('click','#chat_field', function () {
+
+                chat_pulse = $('#chat_pulse');
+                chat_field = $('#chat_field');
+                order_id = $(this).data('order-id');
+                distributor_id = $(this).data('distributor-id');
+
+                $.ajax({
+                    url: "{{ path('is_typing') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_id: order_id,
+                        distributor_id: distributor_id,
+                        is_clinic: 0,
+                        is_distributor: 1,
+                        is_typing: 1,
+                    },
+                    success: function (response) {
+
+                        if(response.clinic_is_typing > 0) {
+
+                            $('#chat_pulse').show();
+
+                        } else {
+
+                            $('#chat_pulse').hide();
+                        }
+                    }
+                });
+            });
+            $(document).on('blur','#chat_field', function (){
+
+                $.ajax({
+                    url: "{{ path('is_typing') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_id: order_id,
+                        distributor_id: distributor_id,
+                        is_clinic: 0,
+                        is_distributor: 1,
+                        is_typing: 0,
+                    },
+                    success: function (response) {
+
+                        $(chat_pulse).hide();
+                    }
+                });
+            });
+            $(document).on('click', '#btn_chat_send', function (e){
+
+                e.preventDefault();
+
+                let message = $('#chat_field').val();
+
+                if(message.length > 0){
+
+                    $.ajax({
+                        url:"{{ path('clinic_send_message') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            distributor: 1,
+                            clinic: 0,
+                            distributor_id: $(this).data('distributor-id'),
+                            message: message,
+                            order_id: $(this).data('order-id')
+                        },
+                        success: function(response) {
+                            $('#distributor_chat_container').empty().append(response);
+                            $('#distributor_chat_inner').scrollTop($('#distributor_chat_inner').prop("scrollHeight"));
+                            $('#chat_field').val('');
+                            $('#chat_pulse').hide();
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '#order_send_notification', function (e){
+
+                e.preventDefault();
+
+                let order_id = $(this).data('order-id');
+                let distributor_id = $(this).data('distributor-id');
+                let clinic_id = $(this).data('clinic-id');
+
+                if(order_id > 0 && distributor_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_send_order_notification') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            order_id: order_id,
+                            distributor_id: distributor_id,
+                            clinic_id: clinic_id
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                            getFlash(response);
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.btn_confirm', function (e){
+
+                e.preventDefault();
+
+                let item_id = $(this).data('item-id');
+
+                if(item_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_update_order_item_status') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            item_id: item_id,
+                            confirmed_status: 1
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.btn_pending', function (e){
+
+                e.preventDefault();
+
+                let item_id = $(this).data('item-id');
+
+                if(item_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_update_order_item_status') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            item_id: item_id,
+                            confirmed_status: 0
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                        }
+                    });
+                }
+            });
+            $(document).on('change', '.expiry-date', function (e){
+
+                e.preventDefault();
+
+                let item_id = $(this).data('item-id');
+                let expiry_date = $(this).val();
+
+                if(item_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_update_expiry_date') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            item_id: item_id,
+                            expiry_date: expiry_date
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                        }
+                    });
+                }
+            });
+            $(document).on('change', '.item-price', function (e){
+
+                e.preventDefault();
+
+                let item_id = $(this).data('item-id');
+                let price = $(this).val();
+
+                if(item_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_update_price') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            item_id: item_id,
+                            price: price
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                        }
+                    });
+                }
+            });
+            $(document).on('change', '.item-qty', function (e){
+
+                e.preventDefault();
+
+                let item_id = $(this).data('item-id');
+                let qty = $(this).val();
+
+                if(item_id > 0){
+
+                    $.ajax({
+                        url:"{{ path('distributor_update_qty') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            item_id: item_id,
+                            qty: qty
+                        },
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function(response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $('#basket_container').empty().append(response.orders);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+                        }
+                    });
+                }
+            });
+            $(document).on('submit', '#form_distributor_orders', function (e){
+
+                e.preventDefault();
+
+                let data = new FormData(this);
+                let product_id = data.getAll('product_id[]');
+                let exp_dates = data.getAll('expiry_date[]');
+                let prices = data.getAll('price[]');
+                let qtys = data.getAll('qty[]');
+                let is_valid = true;
+
+                for($i = 0; $i < product_id.length; $i++){
+
+                    let error_exp_date = $('#error_expiry_date_'+ product_id[$i]);
+                    let error_price = $('#error_price_'+ product_id[$i]);
+                    let error_qty = $('#error_qty_'+ product_id[$i]);
+                    let exp_date = exp_dates[$i];
+                    let price = prices[$i];
+                    let qty = qtys[$i];
+
+                    error_exp_date.hide();
+                    error_price.hide();
+                    error_qty.hide();
+
+                    if((exp_date == '' || exp_date == 'undefined') && exp_date !== 0){
+
+                        error_exp_date.show();
+                        is_valid = false;
+                    }
+
+                    if(price == '' || price == 'undefined'){
+
+                        error_price.show();
+                        is_valid = false;
+                    }
+
+                    if(qty == '' || qty == 'undefined'){
+
+                        error_qty.show();
+                        is_valid = false;
+                    }
+                }
+
+                if(is_valid) {
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_order') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        beforeSend: function () {
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function (response) {
+                            getFlash(response.flash);
+                            getOrderDetails(response.order_id, response.distributor_id, response.clinic_id);
+                            $("div.spanner").removeClass("show");
+                            $("div.overlay").removeClass("show");
+
+                            date = new Date();
+                            date_time = date.getFullYear() +'-'+ (date.getMonth() + 1) +'-'+ date.getDate() +' '+ String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0") +':'+ String(date.getSeconds()).padStart(2, '0');
+
+                            sessionStorage.setItem('date_time', date_time);
+                        }
+                    });
+                }
+            });
+
+            function getMessages(distributor_id, clinic_id){
+
+                let uri = window.location.pathname;
+                let is_order_detail = uri.match('/[a-zA-Z]+/[a-zA-Z]+/[0-9]+');
+                order_id = sessionStorage.getItem('order_id');
+
+                if(is_order_detail != null && order_id > 0) {
+
+                    let messages_sent = $('.speech-bubble-right').length;
+                    let messages_received = $('.speech-bubble-left').length;
+                    let total_messages = messages_sent + messages_received;
+
+                    $.ajax({
+                        url: "{{ path('get_messages') }}",
+                        type: 'GET',
+                        cache: false,
+                        timeout: 10000,
+                        data: {
+                            distributor: 1,
+                            clinic: 0,
+                            order_id: order_id,
+                            distributor_id: distributor_id,
+                            clinic_id: clinic_id,
+                            total_messages: total_messages
+                        },
+                        success: function (response) {
+
+                            if (response.messages.length > 0) {
+
+                                $('#distributor_chat_container').empty().append(response.messages);
+                                $('#distributor_chat_inner').scrollTop($('#distributor_chat_inner').prop("scrollHeight"));
+                            }
+
+                            if (response.is_typing == 1) {
+
+                                $('#chat_pulse').show();
+
+                            } else {
+
+                                $('#chat_pulse').hide();
+                            }
+                        }
+                    });
+                }
+            };
+
+            function getChat(order_id, distributor_id, clinic_id) {
+                get_messages = setInterval(function(){
+                    getMessages(distributor_id, clinic_id);
+                }, 1000);
+            }
+            {# End Orders #}
+
+            {# Account & Settings #}
+            function getAccountSettings(){
+
+                // International Numbers
+                input = document.querySelector('#mobile');
+                let iso_code = '{{ nzo_decrypt(distributor.isoCode) }}';
+                iti = '';
+
+
+                iti = window.intlTelInput(input, {
+                    initialCountry: iso_code,
+                    preferredCountries: ['ae','qa', 'bh', 'om', 'sa'],
+                    autoPlaceholder: "polite",
+                    nationalMode: true,
+                    utilsScript: "{{ asset('js/utils.min.js') }}", // just for formatting/placeholders etc
+                    separateDialCode: true,
+                    utilsScript: "/js/utils.js",
+                });
+
+                let handleChange = function() {
+                    let mobile = $('#telephone');
+                    let mobile_number = (iti.isValidNumber()) ? iti.getNumber() : false;
+                    let textNode = document.createTextNode(mobile_number);
+
+                    if(mobile_number != false){
+
+                        mobile.val(mobile_number.substring(1));
+                    }
+                };
+
+                // listen to "keyup", but also "change" to update when the user selects a country
+                input.addEventListener('change', handleChange);
+                input.addEventListener('keyup', handleChange);
+
+                {% if 10 in permissions %}
+                    access_denied.hide();
+                    account_settings.show();
+                {% else %}
+                    account_settings.hide();
+                    access_denied.show();
+                {% endif %}
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                clearInterval(get_messages);
+                window.history.pushState(null, "Fluid", '/distributors/account');
+            }
+
+            $('#account_settings_link').click(function (e){
+
+                e.preventDefault();
+                getAccountSettings();
+            });
+
+            {# About #}
+            function getAbout(){
+
+                account_settings.hide();
+                {% if 15 in permissions %}
+                access_denied.hide();
+                about.show();
+                {% else %}
+                about.hide();
+                access_denied.show();
+                {% endif %}
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/about');
+            }
+
+            $('#about_link').click(function (e){
+
+                e.preventDefault();
+                getAbout();
+
+            });
+
+            {# Operating Hours #}
+            function getOperatingHours(){
+
+                account_settings.hide();
+                about.hide();
+                {% if 16 in permissions %}
+                access_denied.hide();
+                operating_hours.show();
+                {% else %}
+                operating_hours.hide();
+                access_denied.show();
+                {% endif %}
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/operating-hours');
+            }
+
+            $('#operating_hours_link').click(function (e){
+
+                e.preventDefault();
+                getOperatingHours();
+            });
+
+            {# Refund Policy #}
+            function getRefundPolicy(){
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                {% if 17 in permissions %}
+                access_denied.hide();
+                refund_policy.show();
+                {% else %}
+                refund_policy.hide();
+                access_denied.show();
+                {% endif %}
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/refund-policy');
+            }
+
+            $('#refund_policy_link').click(function (e){
+
+                e.preventDefault();
+                getRefundPolicy();
+            });
+
+            {# Sales Tax Policy #}
+            function getSalesTaxPolicy(){
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                {% if 18 in permissions %}
+                access_denied.hide();
+                sales_tax_policy.show();
+                {% else %}
+                sales_tax_policy.hide();
+                access_denied.show();
+                {% endif %}
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/sales-tax-policy');
+            }
+
+            $('#sales_tax_policy_link').click(function (e){
+
+                e.preventDefault();
+                getSalesTaxPolicy();
+            });
+
+            {# Shipping Policy #}
+            function getShippingPolicy(){
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                {% if 19 in permissions %}
+                access_denied.hide();
+                shipping_policy.show();
+                {% else %}
+                shipping_policy.hide();
+                access_denied.show();
+                {% endif %}
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/shipping-policy');
+            }
+
+            $('#shipping_policy_link').click(function (e){
+
+                e.preventDefault();
+                getShippingPolicy();
+            });
+
+            {# Inventory #}
+            function getInventory(){
+
+                $.ajax({
+                    url: "{{ path('distributor_get_access_token') }}",
+                    type: 'POST',
+                    success: function (response) {
+                        account_settings.hide();
+                        about.hide();
+                        operating_hours.hide();
+                        refund_policy.hide();
+                        sales_tax_policy.hide();
+                        shipping_policy.hide();
+                        inventoryList.hide();
+                        {% if 20 in permissions %}
+                        access_denied.hide();
+                        inventory.show();
+                        {% else %}
+                        inventory.hide();
+                        inventoryList.hide();
+                        access_denied.show();
+                        {% endif %}
+                        inventory_item.hide();
+                        users.hide();
+                        order_container.hide();
+                        customerContainer.hide();
+                        brand.empty().hide();
+
+                        if(response.button == true){
+
+                            $('#zoho_container').show();
+                            $('#inventory_search_container').hide();
+                            $('#zoho_error').hide();
+
+                        } else if(response.error == true){
+
+                            $('#zoho_container').hide();
+                            $('#inventory_search_container').hide();
+                            $('#zoho_error').show();
+
+                        } else if(response.token == true){
+
+                            $('#zoho_container').hide();
+                            $('#inventory_search_container').show();
+                            $('#zoho_error').hide();
+                        }
+
+                        $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                        window.history.pushState(null, "Fluid", '/distributors/manage-inventory');
+                    }
+                });
+            }
+            function getInventoryList(distributorId = false, manufacturerId = false)
+            {
+                distributorId = '{{ app.user.distributor.id|default(0) }}';
+
+                if(distributorId > 0 && distributorId != 'undefined')
+                {
+                    $.ajax({
+                        url: "{{ path('get_distributor_products') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'distributor-id': distributorId,
+                        },
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        success: function (response) {
+
+                            $('#inventory_list').empty().append(response.html);
+                            isLoading(false);
+                            popOver();
+                        }
+                    });
+                }
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventoryList.show();
+                inventory.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().hide();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/inventory/list/1');
+                popOver();
+            }
+            $('#inventory_link').click(function (e){
+
+                e.preventDefault();
+
+                $('#search_field').val('');
+                getInventory();
+            });
+            $('#inventory_list_link').click(function (e){
+
+                e.preventDefault();
+                getInventoryList();
+            });
+            $(document).on('change', '#manufacturer_id, #species_id', function () {
+
+                let manufacturerId = $('#manufacturer_id').val() ? $('#manufacturer_id').val() : 0;
+                let speciesId = $('#species_id').val() ? $('#species_id').val() : 0;
+                let distributorId = '{{ app.user.distributor.id|default(0) }}';
+
+                if(manufacturerId > 0 || speciesId > 0)
+                {
+                    $.ajax({
+                        url: "{{ path('get_distributor_products') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'manufacturer-id': manufacturerId,
+                            'species-id': speciesId,
+                            'distributor-id': distributorId,
+                        },
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        success: function (response) {
+
+                            $('#inventory_list').empty().append(response.html);
+                            isLoading(false);
+                            popOver();
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.update-product', function (e) {
+
+                e.preventDefault();
+
+                let productId = $(this).attr('data-product-id');
+                let productName = $(this).attr('data-product-name');
+
+                $('#search_field').val(productName);
+
+                getInventory();
+                selectProduct(productId, productName);
+            });
+            $(document).on('click', '.delete-distributor-product', function (e) {
+
+                e.preventDefault();
+
+                let distributorProductId = $(this).attr('data-distributor-product-id');
+                let deleteBtn = $('#delete_product');
+
+                deleteBtn.attr('data-distributor-product-id', distributorProductId);
+            });
+            $(document).on('click', '#delete_product', function (e) {
+
+                e.preventDefault();
+
+                let distributorProductId = $(this).attr('data-distributor-product-id');
+
+                if(distributorProductId > 0 && distributorProductId != 'undefined')
+                {
+                    $.ajax({
+                        url: "{{ path('delete_distributor_product') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'distributor-product-id': distributorProductId,
+                        },
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        success: function (response) {
+
+                            $('#distributor_product_'+ distributorProductId).remove();
+                            $('#modal_product_delete').modal('toggle')
+                            isLoading(false);
+                            getFlash(response);
+                        }
+                    });
+                }
+            });
+            {# Users #}
+            function getUsers(){
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory.hide();
+                inventoryList.hide();
+                inventory_item.hide();
+                users.show();
+                order_container.hide();
+                customerContainer.hide();
+                brand.empty().append('<button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_user" id="user_new"> <i class="fa-solid fa-circle-plus"></i> ADD COLLEAGUE</button>').show();
+
+                $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                window.history.pushState(null, "Fluid", '/distributors/users');
+            }
+
+            $('#users_link').click(function (e){
+
+                e.preventDefault();
+                getUsers();
+            });
+
+            {# Customers #}
+            function getCustomersList(){
+
+                $.ajax({
+                    url: "{{ path('zoho_customers') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("div.spanner").addClass("show");
+                        $("div.overlay").addClass("show");
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('distributor_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+                        $('#customer_container').empty().append(response);
+                        $('.distributor-right-col').animate ({scrollTop:0}, 200);
+                        account_settings.hide();
+                        about.hide();
+                        operating_hours.hide();
+                        refund_policy.hide();
+                        sales_tax_policy.hide();
+                        shipping_policy.hide();
+                        inventory.hide();
+                        inventoryList.hide();
+                        inventory_item.hide();
+                        users.hide();
+                        order_container.hide();
+                        customerContainer.show();
+                        $("div.spanner").removeClass("show");
+                        $("div.overlay").removeClass("show");
+
+                        window.history.pushState(null, "Fluid", '/distributors/customers/1');
+                    }
+                });
+            }
+
+            {# Update Personal Information #}
+            $('#btn_personal_information').click(function (e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let first_name = $('#first_name').val();
+                let last_name = $('#last_name').val();
+                let position = $('#position').val();
+                let telephone = $('#telephone').val();
+                let error_first_name = $('#error_first_name');
+                let error_last_name = $('#error_last_name');
+                let error_position = $('#error_position');
+                let error_telephone = $('#error_telephone');
+
+                error_first_name.hide();
+                error_last_name.hide();
+                error_position.hide();
+                error_telephone.hide();
+
+                if(first_name == '' || first_name == 'undefined'){
+
+                    error_first_name.show();
+                    is_valid = false;
+                }
+
+                if(last_name == '' || last_name == 'undefined'){
+
+                    error_last_dashname.show();
+                    is_valid = false;
+                }
+
+                if(position == '' || position == 'undefined'){
+
+                    error_position.show();
+                    is_valid = false;
+                }
+
+                if(telephone == '' || telephone == 'undefined'){
+
+                    error_telephone.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_personal_information') }}",
+                        type: 'POST',
+                        data: {
+                            first_name: first_name,
+                            last_name: last_name,
+                            position: position,
+                            telephone: telephone,
+                        },
+                        success: function (response) {
+                            $('#flash').addClass('alert-success');
+                            $('#flash').removeClass('alert-danger');
+                            $('#flash').addClass('alert');
+                            $('#flash').addClass('text-center');
+                            $('#flash').removeClass('users-flash');
+                            $('#flash').addClass('users-flash');
+                            $('#flash').empty();
+                            $('#flash').append(response);
+                            $('#flash').removeClass('hidden');
+                        }
+                    });
+                }
+            });
+            $(document).on('change', '#trade_license_file', function() {
+
+                let fp = $("#trade_license_file");
+                let lg = fp[0].files.length; // get length
+                let items = fp[0].files;
+                let errorTradeLicense = $('#error_trade_license_file');
+                let fileName = '';
+                let fileSize = '';
+                let fileType = '';
+
+                errorTradeLicense.hide().append('Required Field');
+
+                if (lg > 0) {
+                    for (let i = 0; i < lg; i++) {
+                        fileName = items[i].name; // get file name
+                        fileSize = items[i].size; // get file size
+                        fileType = items[i].type; // get file type
+                    }
+                }
+
+                if(fileType != 'application/pdf')
+                {
+                    fp.val('');
+                    errorTradeLicense.empty().append('Please select a PDF document').show();
+                }
+            });
+            {# End Update Personal Information #}
+
+            {# Update Company Information #}
+            let logo = '{{ distributor.logo }}';
+
+            if(logo != null || logo != ''){
+
+                $('#logo_file').removeClass('col-12').addClass('col-11');
+                $('#logo_col').removeClass('hidden');
+            }
+
+            $('#form_company_information').submit(function (e) {
+
+                e.preventDefault();
+
+                let isValid = true;
+                let companyName = $('#distributor_name').val();
+                let email = $('#email').val();
+                let telephone = $('#telephone').val();
+                let country = $('#country').val();
+                let streetAddress = $('#street_address').val();
+                let city = $('#city').val();
+                let postalCode = $('#postal_code').val();
+                let state = $('#state').val();
+                let managerFirstName = $('#manager_first_name').val();
+                let managerLastName = $('#manager_last_name').val();
+                let managerIdNo = $('#manager_id_no').val();
+                let managerIdExpDate = $('#manager_id_exp_date').val();
+                let tradeLicenseFile = $('#trade_license_file').val();
+                let tradeLicenseNo = $('#trade_license_no').val();
+                let tradeLicenseExpDate = $('#trade_license_exp_date').val();
+                let errorCompanyName = $('#error_distributor_name');
+                let errorEmail = $('#error_email');
+                let errorTelephone = $('#error_telephone');
+                let errorCountry = $('#error_country');
+                let errorStreetAddress = $('#error_street_address');
+                let errorCity = $('#error_city');
+                let errorPostalCode = $('#error_postal_code');
+                let errorState = $('#error_state');
+                let errorManagerFirstName = $('#error_manager_first_name');
+                let errorManagerLastName = $('#error_manager_last_name');
+                let errorManagerIdNo = $('#error_manager_id_no');
+                let errorManagerIdExpDate = $('#error_manager_id_exp_date');
+                let errorTradeLicenseFile = $('#error_trade_license_file');
+                let errorTradeLicenseNo = $('#error_trade_license_no');
+                let errorTradeLicenseExpDate = $('#error_trade_license_exp_date');
+                let isTradeLicense = '{{ distributor.tradeLicense }}' ? '{{ distributor.tradeLicense }}' : false;
+
+                errorCompanyName.hide();
+                errorEmail.hide();
+                errorTelephone.hide();
+                errorCountry.hide();
+                errorStreetAddress.hide();
+                errorCity.hide();
+                errorPostalCode.hide();
+                errorState.hide();
+                errorManagerFirstName.hide();
+                errorManagerLastName.hide();
+                errorManagerIdNo.hide();
+                errorManagerIdExpDate.hide();
+                errorTradeLicenseNo.hide();
+                errorTradeLicenseExpDate.hide();
+
+                if(companyName == '' || companyName == 'undefined'){
+
+                    error_companyName.show();
+                    isValid = false;
+                }
+
+                if(email == '' || email == 'undefined'){
+
+                    errorEmail.show();
+                    isValid = false;
+                }
+
+                if(telephone == '' || telephone == 'undefined'){
+
+                    errorTelephone.show();
+                    isValid = false;
+                }
+
+                if(country == '' || country == 'undefined'){
+
+                    errorCountry.show();
+                    isValid = false;
+                }
+
+                if(streetAddress == '' || streetAddress == 'undefined'){
+
+                    errorStreetAddress.show();
+                    isValid = false;
+                }
+
+                if(city == '' || city == 'undefined'){
+
+                    error_city.show();
+                    isValid = false;
+                }
+
+                if(postalCode == '' || postalCode == 'undefined'){
+
+                    errorPostalCode.show();
+                    isValid = false;
+                }
+
+                if(state == '' || state == 'undefined'){
+
+                    error_state.show();
+                    isValid = false;
+                }
+
+                if(managerFirstName == '' || managerFirstName == 'undefined')
+                {
+                    errorManagerFirstName.show();
+                    isValid = false;
+                }
+
+                if(managerLastName == '' || managerLastName == 'undefined')
+                {
+                    errorManagerLastName.show();
+                    isValid = false;
+                }
+
+                if(managerIdNo == '' || managerIdNo == 'undefined')
+                {
+                    errorManagerIdNo.show();
+                    isValid = false;
+                }
+
+                if(managerIdExpDate == '' || managerIdExpDate == 'undefined')
+                {
+                    errorManagerIdExpDate.show();
+                    isValid = false;
+                }
+
+                if((tradeLicenseFile == '' || tradeLicenseFile == 'undefined') && !isTradeLicense)
+                {
+                    errorTradeLicenseFile.show();
+                    isValid = false;
+                }
+
+                if(tradeLicenseNo == '' || tradeLicenseNo == 'undefined')
+                {
+                    errorTradeLicenseNo.show();
+                    isValid = false;
+                }
+
+                if(tradeLicenseExpDate == '' || tradeLicenseExpDate == 'undefined')
+                {
+                    errorTradeLicenseExpDate.show();
+                    isValid = false;
+                }
+
+                if(isValid == true){
+
+                    let iso = iti.getSelectedCountryData().iso2;
+                    let intlCode = iti.getSelectedCountryData().dialCode
+
+                    $('<input />').attr('type', 'hidden').attr('name', 'distributor_form[iso-code]')
+                        .attr('value', iso).appendTo('#form_company_information');
+                    $('<input />').attr('type', 'hidden').attr('name', 'distributor_form[intl-code]')
+                        .attr('value', intlCode).appendTo('#form_company_information');
+
+                    // Create an FormData object
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_company_information') }}",
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function () {
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+                            isLoading(false);
+                            getFlash(response.message);
+
+                            if(response.logo != null && response.logo != ''){
+
+                                $('#logo_img').attr('src', '/images/logos/' + response.logo);
+                            }
+
+                            if(tradeLicenseFile != '' || tradeLicenseNo != '{{ nzo_decrypt(distributor.tradeLicenseNo) }}' || tradeLicenseExpDate != '{{ distributor.tradeLicenseExpDate|date('Y-m-d') }}')
+                            {
+                                location.reload(true);
+                            }
+                        }
+                    });
+                }
+            });
+            {# End Update Company Information #}
+
+            {# About Us #}
+            $('#form_about_us').submit(function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let about_us = CKEDITOR.instances.about_us.getData();
+                let error_about_us = $('#error_about_us');
+
+                error_about_us.hide();
+
+                if(about_us == '' || about_us == 'undefined'){
+
+                    error_about_us.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    // Create an FormData object
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_about_us') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            about_us: about_us
+                        },
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            isLoading(false);
+                            getFlash(response);
+                        }
+                    });
+                }
+            });
+            {# End About Us #}
+
+            {# Operating Hours #}
+            $(document).on('click', '#btn_operating_hours', function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let operating_hours = CKEDITOR.instances.operating_hours_field.getData();
+                let error_operating_hours = $('#error_operating_hours');
+
+                error_operating_hours.hide();
+
+                if(operating_hours == '' || operating_hours == 'undefined'){
+
+                    error_operating_hours.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_operating_hours') }}",
+                        type: 'POST',
+                        data: {
+                            operating_hours: operating_hours
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+                            getFlash(response);
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+            {# End About Us #}
+
+            {# Refund Policy #}
+            $(document).on('click', '#btn_refund_policy', function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let refund_policy = CKEDITOR.instances.refund_policy_field.getData();
+                let error_refund_policy = $('#error_about_us');
+
+                error_refund_policy.hide();
+
+                if(refund_policy == '' || refund_policy == 'undefined'){
+
+                    error_refund_policy.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_refund_policy') }}",
+                        type: 'POST',
+                        data: {
+                            refund_policy: refund_policy
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            getFlash(response);
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+            {# End Refund Policy #}
+
+            {# Sales Tax Policy #}
+            $(document).on('click', '#btn_sales_tax_policy', function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let sales_tax_policy = CKEDITOR.instances.sales_tax_policy_field.getData();
+                let error_sales_tax_policy = $('#error_sales_tax_policy');
+
+                error_sales_tax_policy.hide();
+
+                if(sales_tax_policy == '' || sales_tax_policy == 'undefined'){
+
+                    error_sales_tax_policy.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_sales_tax_policy') }}",
+                        type: 'POST',
+                        data: {
+                            sales_tax_policy: sales_tax_policy
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            isLoading(false);
+                            getFlash(response);
+                        }
+                    });
+                }
+            });
+            {# End Sales Tax Policy #}
+
+            {# Shipping Policy #}
+            $(document).on('click', '#btn_shipping_policy', function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let shipping_policy = CKEDITOR.instances.shipping_policy_field.getData();
+                let error_shipping_policy = $('#error_shipping_policy');
+
+                error_shipping_policy.hide();
+
+                if(shipping_policy == '' || shipping_policy == 'undefined'){
+
+                    error_shipping_policy.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $.ajax({
+                        url: "{{ path('distributor_update_shipping_policy') }}",
+                        type: 'POST',
+                        data: {
+                            shipping_policy: shipping_policy
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            isLoading(false);
+                            getFlash(response);
+                        }
+                    });
+                }
+            });
+            {# End Shipping Policy #}
+
+            {# Invenory / Distributor Products #}
+            let trackingId = '{{ distributor.tracking.id|default(0) }}';
+
+            if(trackingId == 1)
+            {
+                $('#unit_price').attr('disabled', true);
+                $('#stock_count').attr('disabled', true);
+            }
+            $('#form_inventory_item').submit(function(e){
+
+                e.preventDefault();
+
+                let isValid = true;
+                let unitPrice = $('#unit_price').val();
+                let itemId = $('#item_id').val();
+                let errorUnitPrice = $('#error_unit_price');
+                let errorItemId = $('#error_item_id');
+                let trackingId = $('#tracking_id').val();
+
+                errorUnitPrice.hide();
+                errorItemId.hide();
+
+                if((unitPrice == '' || unitPrice == 'undefined') && trackingId > 1){
+
+                    errorUnitPrice.show();
+                    isValid = false;
+                }
+
+                if(itemId == '' || itemId == 'undefined'){
+
+                    errorItemId.show();
+                    isValid = false;
+                }
+
+                if(isValid == true){
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('distributor_inventory_update') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        beforeSend: function () {
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+                            getFlash(response.flash);
+                            $('#unit_price').val(response.unitPrice);
+                            $('#stock_count').val(response.stockLevel);
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '#import_products', function(e){
+
+                e.preventDefault();
+
+                $.ajax({
+                    url: "{{ path('distributor_import_products') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    beforeSend: function (){
+                        isLoading(true);
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('distributor_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+
+                        isLoading(false);
+                        getFlash(response.flash);
+                    }
+                });
+            });
+            $("#search_field").keyup(function(){
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('distributor_inventory_search') }}",
+                    data:'keyword='+$(this).val(),
+                    success: function(data){
+                        $("#suggestion_field").show();
+                        $("#suggestion_field").html(data);
+                    }
+                });
+            });
+            $(document).on('click', '.search-item', function () {
+
+                $('.clear-search').removeClass('hidden');
+                $('.search-div').removeClass('col-12').addClass('col-11');
+            });
+            $(document).on('submit', '#upload_csv', function (e) {
+
+                e.preventDefault();
+
+                let file = $('#file').val();
+                let errorFile = $('#error_file');
+                let isValid = true;
+
+                errorFile.hide();
+
+                if(file == '' || file == 'undefined'){
+
+                    errorFile.show();
+                    isValid = false;
+                }
+
+                if(isValid) {
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('upload_inventory_csv') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        beforeSend: function () {
+                            isLoading(true);
+                        },
+                        complete: function (e) {
+                            if (e.status === 500) {
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            $('#modal_upload_file').modal('toggle');
+                            $('#file').val('');
+                            getFlash(response.flash, response.flashStyle);
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+            $(document).on('change', '#tracking_id', function () {
+
+                let trackingId = $(this).val();
+
+                if(trackingId > 0){
+
+                    $.ajax({
+                        url: "{{ path('update_tracking_id') }}",
+                        type: 'POST',
+                        data: {
+                            'distributor-id': '{{ app.user.distributor.id|default(0) }}',
+                            'tracking-id': trackingId,
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            if(trackingId == 1)
+                            {
+                                $('#semi_tracked_row').hide(700);
+                                $('#unit_price').attr('disabled', true);
+                                $('#stock_count').attr('disabled', true);
+                                $('#zoho_container').hide(700);
+                                $('#import_products_row').show(700);
+
+                            }
+
+                            if(trackingId == 2)
+                            {
+                                $('#semi_tracked_row').show(700);
+                                $('#unit_price').attr('disabled', true);
+                                $('#stock_count').attr('disabled', true);
+                                $('#import_products_row').hide(700);
+                            }
+
+                            if(trackingId == 3)
+                            {
+                                $('#semi_tracked_row').hide(700);
+                                $('#unit_price').attr('disabled', false);
+                                $('#stock_count').attr('disabled', false);
+                                $('#zoho_container').hide(700);
+                                $('#import_products_row').hide(700);
+                            }
+
+                            getFlash(response);
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+            {# End Invenory / Distributor Products #}
+
+            {# Users #}
+            $('#users_link').click(function (e){
+
+                e.preventDefault();
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                
+                
+                
+                inventory_item.hide();
+                users.show();
+                order_container.hide();
+                customerContainer.hide();
+            });
+            $(document).on('click', '.user-pagination', function (e){
+
+                e.preventDefault();
+                let page_id = $(this).data('page-id');
+
+                $.ajax({
+                    url: "{{ path('distributor_refresh_users') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        page_id: page_id
+                    },
+                    beforeSend: function (){
+                        $("div.spanner").addClass("show");
+                        $("div.overlay").addClass("show");
+                    },
+                    success: function (response) {
+                        $('#users_list').empty().append(response);
+                        $("div.spanner").removeClass("show");
+                        $("div.overlay").removeClass("show");
+                    }
+                });
+            });
+            {# End Users #}
+
+            {# Customers #}
+            $('#customers_link').click(function (e){
+
+                e.preventDefault();
+
+                account_settings.hide();
+                about.hide();
+                operating_hours.hide();
+                refund_policy.hide();
+                sales_tax_policy.hide();
+                shipping_policy.hide();
+                inventory_item.hide();
+                users.hide();
+                order_container.hide();
+                customerContainer.show();
+
+                getCustomersList();
+            });
+            $(document).on('click', '.customer-pagination', function (e){
+
+                e.preventDefault();
+                let page_id = $(this).data('page-id');
+
+                $.ajax({
+                    url: "{{ path('distributor_refresh_users') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        page_id: page_id
+                    },
+                    beforeSend: function (){
+                        $("div.spanner").addClass("show");
+                        $("div.overlay").addClass("show");
+                    },
+                    success: function (response) {
+                        $('#users_list').empty().append(response);
+                        $("div.spanner").removeClass("show");
+                        $("div.overlay").removeClass("show");
+                    }
+                });
+            });
+            $(document).on('click', '.modal-customer-connect', function (e) {
+
+                e.preventDefault();
+
+                let clinicId = $(this).attr('data-clinic-id');
+                let distributorId = $(this).attr('data-distributor-id');
+                let clinic = $(this).attr('data-clinic');
+                let customerId = $(this).attr('data-customer-id');
+
+                $('#btn_save_customer_connect').attr('data-clinic-id', clinicId);
+                $('#btn_save_customer_connect').attr('data-distributor-id', distributorId);
+                $('#btn_save_customer_connect').attr('data-clinic-name', clinic);
+                $('#connect_clinic_name').empty().append(clinic);
+                $('#customer_id').val(customerId);
+            });
+            $(document).on('click', '#btn_save_customer_connect', function (){
+
+                let customerId = $('#customer_id').val();
+                let clinicId = $(this).attr('data-clinic-id');
+                let distributorId = $(this).attr('data-distributor-id');
+                let errorCustomerId = $('#error_customer_id');
+                let isValid = true;
+
+                errorCustomerId.hide();
+
+                if(customerId == '' || customerId == 'undefined'){
+
+                    errorCustomerId.show();
+                    isValid = false;
+                }
+
+                if(isValid){
+
+                    $.ajax({
+                        url: "{{ path('distributors_activate_connection') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'customer-id': customerId,
+                            'distributor-id': distributorId,
+                            'clinic-id': clinicId
+                        },
+                        beforeSend: function (){
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function (response) {
+
+                            getFlash(response);
+                            isLoading(false);
+                            $('#modal_connect_customer').modal('toggle');
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.ignore-icon', function (e) {
+
+                e.preventDefault();
+
+                let clinicId = $(this).attr('data-clinic-id');
+                let distributorId = $(this).attr('data-distributor-id');
+                let link = $(this);
+
+                if((clinicId != '' || clinicId != 'undefined') && (distributorId != '' || distributorId != 'undefined')){
+
+                    $.ajax({
+                        url: "{{ path('distributors_ignore_connection') }}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'distributor-id': distributorId,
+                            'clinic-id': clinicId
+                        },
+                        beforeSend: function (){
+                            $("div.spanner").addClass("show");
+                            $("div.overlay").addClass("show");
+                        },
+                        success: function (response) {
+
+                            link.find('.fa-bell-slash').replaceWith(response.icon);
+
+                            getFlash(response.flash);
+                            isLoading(false);
+                        }
+                    });
+
+                } else {
+
+                    alert('An error occurred');
+                }
+            });
+            {# End Customers #}
+
+            {# Clear Search #}
+            $(document).on('click', '#inventory_clear', function (e){
+
+                e.preventDefault();
+                $('#search_field').val('');
+                $('#product_name').empty().append('Manage Your Inventory');
+                $('#inventory_item').hide();
+                $('#inventory_btn').hide();
+            });
+
+            {# Create User Btn #}
+            $('#user_new').click(function (){
+
+                $('#create_user').empty().append('CREATE USER');
+                $('#user_modal_label').empty().append('Create a User');
+                $('#user_id').val(0);
+                $('#user_first_name').val('');
+                $('#user_last_name').val('');
+                $('#user_email').val('');
+                $('#user_mobile').val('');
+                $('#user_telephone').val('');
+                $('#user_iso_code').val('');
+                $('#user_intl_code').val('');
+                $('#user_position').val('');
+
+                $('.form-check-input').each(function () {
+
+                    $(this).attr('checked', false);
+                });
+
+                let input = document.querySelector("#user_mobile");
+
+                iti = window.intlTelInput(input, {
+                    preferredCountries: ['za','ae','qa', 'bh', 'om', 'sa'],
+                    autoPlaceholder: "polite",
+                    nationalMode: true,
+                    utilsScript: "{{ asset('js/utils.min.js') }}", // just for formatting/placeholders etc
+                    separateDialCode: true,
+                    utilsScript: "/js/utils.js",
+                });
+            });
+
+            {# Update User #}
+            $(document).on('click', '.update-user', function () {
+
+                $('#create_user').empty().append('UPDATE USER');
+
+                let user_id = $(this).data('user-id');
+
+                $.ajax({
+                    url: "{{ path('distributor_get_user') }}",
+                    type: 'POST',
+                    data: {
+                        id: user_id
+                    },
+                    success: function (response) {
+
+                        $('#telephone_container').empty().append('<input type="text" class="form-control" name="distributor_users_form[mobile]" id="user_mobile" value="" placeholder="(123) 456-7890*">');
+                        $('#user_first_name').val(response.first_name);
+                        $('#user_last_name').val(response.last_name);
+                        $('#user_email').val(response.email);
+                        $('#user_telephone').val(response.telephone);
+                        $('#user_mobile').val(response.telephone);
+                        $('#user_position').val(response.position);
+                        $('#user_iso_code').val(response.iso_code);
+                        $('#user_intl_code').val(response.intl_code);
+
+                        let input = document.querySelector("#user_mobile");
+
+                        iti = window.intlTelInput(input, {
+                            preferredCountries: ['za','ae','qa', 'bh', 'om', 'sa'],
+                            initialCountry: response.iso_code,
+                            autoPlaceholder: "polite",
+                            nationalMode: true,
+                            utilsScript: "{{ asset('js/utils.min.js') }}", // just for formatting/placeholders etc
+                            separateDialCode: true,
+                            utilsScript: "/js/utils.js",
+                        });
+
+                        $('#form_users input[type="checkbox"]').attr('checked', false);
+
+                        for(i = 0; i < response.user_permissions.length; i++){
+
+                            $('#permission_'+ response.user_permissions[i]).attr('checked', true);
+                        };
+                    }
+                });
+
+                $('#user_id').val(user_id);
+                $('#user_modal_label').empty().append('Update a User');
+            });
+            $(document).on('keyup','#user_mobile', function (){
+
+                let input = document.querySelector("#user_mobile");
+
+                let handleChange = function() {
+                    let mobile = $('#user_telephone');
+                    let mobile_number = (iti.isValidNumber()) ? iti.getNumber() : false;
+                    let textNode = document.createTextNode(mobile_number);
+
+                    if(mobile_number != false){
+
+                        $('#user_telephone').val('');
+                        $('#user_iso_code').val('');
+                        $('#user_intl_code').val('');
+
+                        let iso_code = iti.getSelectedCountryData().iso2;
+                        let intl_code = iti.getSelectedCountryData().dialCode;
+
+                        mobile.val(mobile_number.substring(1));
+                        $('#user_iso_code').val(iso_code);
+                        $('#user_intl_code').val(intl_code);
+
+                    }
+                };
+
+                // listen to "keyup", but also "change" to update when the user selects a country
+                input.addEventListener('change', handleChange);
+                input.addEventListener('keyup', handleChange);
+            });
+
+            {# Delete User #}
+            $(document).on('click', '.delete-user', function () {
+
+                $('#delete_user').data('user-id', $(this).data('user-id'));
+            });
+
+            $(document).on('click', '#delete_user', function () {
+
+                let user_id = $(this).data('user-id');
+
+                $.ajax({
+                    url: "{{ path('distributor_user_delete') }}",
+                    type: 'POST',
+                    data: {
+                        id: user_id
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('distributor_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+
+                        getFlash(response);
+                        $('#modal_user_delete').modal('hide');
+
+                        $.ajax({
+                            url: "{{ path('distributor_refresh_users') }}",
+                            type: 'POST',
+                            contentType: false,
+                            processData: false,
+                            cache: false,
+                            timeout: 600000,
+                            dataType: 'json',
+                            success: function (response) {
+
+                                $('#users_list').empty().append(response);
+                            }
+                        });
+                    }
+                });
+            });
+
+            {# Create User #}
+            $('#form_users').submit(function(e){
+
+                e.preventDefault();
+
+                let is_valid = true;
+                let user_first_name = $('#user_first_name').val()
+                let user_last_name = $('#user_last_name').val();
+                let user_email = $('#user_email').val();
+                let user_telephone = $('#user_telephone').val();
+                let user_mobile = $('#user_mobile');
+                let error_user_first_name = $('#error_user_first_name');
+                let error_user_last_name = $('#error_user_last_name');
+                let error_user_email = $('#error_user_email');
+                let error_user_telephone = $('#error_user_telephone');
+
+                error_user_first_name.hide();
+                error_user_last_name.hide();
+                error_user_email.hide();
+                error_user_telephone.hide();
+
+                if(user_first_name == '' || user_first_name == 'undefined'){
+
+                    error_user_first_name.show();
+                    is_valid = false;
+                }
+
+                if(user_last_name == '' || user_last_name == 'undefined'){
+
+                    error_user_last_name.show();
+                    is_valid = false;
+                }
+
+                if(user_email == '' || user_email == 'undefined'){
+
+                    error_user_email.show();
+                    is_valid = false;
+                }
+
+                if(user_telephone == '' || user_telephone == 'undefined'){
+
+                    error_user_telephone.show();
+                    user_mobile.val('');
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    $("<input />").attr("type", "hidden").attr("name", "page_id").attr("value", $('#page_id').val()).appendTo("#form_users");
+
+                    let data = new FormData(this);
+
+                    $('#create_user').empty().attr('disabled', true).append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> PROCESSING...');
+
+                    $.ajax({
+                        url: "{{ path('distributor_users') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                window.location.href = '{{ path('distributor_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+
+                            if (response.response) {
+                                getFlash(response.message);
+                                $('#modal_user').modal('hide');
+                                $('#user_first_name').val('');
+                                $('#user_last_name').val('');
+                                $('#user_email').val('');
+                                $('#user_telephone').val('');
+                                $('#user_mobile').val('');
+                                $('#user_iso_code').val('');
+                                $('#user_intl_code').val('');
+                                $('#user_position').val('');
+                                $('#create_user').empty().append('SAVE').attr('disabled', false);
+
+                                $.ajax({
+                                    url: "{{ path('distributor_refresh_users') }}",
+                                    type: 'POST',
+                                    contentType: false,
+                                    processData: false,
+                                    cache: false,
+                                    timeout: 600000,
+                                    dataType: 'json',
+                                    data: data,
+                                    success: function (response) {
+                                        $('#users_list').empty().append(response);
+                                    }
+                                });
+                            } else {
+
+                                $('#error_user_email').empty();
+                                $('#error_user_email').append('Email address exists.');
+                                $('#error_user_email').show();
+                                $('#create_user').empty().append('SAVE').attr('disabled', false);
+                            }
+                        }
+                    });
+                }
+            });
+            {# End Users #}
+
+            {# Notifications #}
+            $('#notifications_panel').hide();
+            $(document).on('click', 'a', function (){
+
+                let name = $(this).attr('name');
+
+                if(name != 'notifications'){
+
+                    $('#notifications_panel').hide();
+                }
+
+            });
+            $(document).on('click', '.btn-notifications', function (e){
+
+                e.preventDefault();
+                getNotifications();
+
+                $('#notifications_panel').slideToggle(700);
+            });
+            $(document).on('click', '.order_notification_alert', function (e){
+
+                e.preventDefault();
+
+                order_id = $(this).data('order-id');
+                distributor_id = $(this).data('distributor-id');
+                let clinic_id = $(this).data('clinic-id');
+
+                getOrderDetails(order_id, distributor_id, clinic_id);
+
+                let notificationId = $(this).data('notification-id');
+
+                $.ajax({
+                    url: "{{ path('delete_notifications') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'notification-id': notificationId,
+                        'type': 'clinic',
+                    }
+                });
+
+                window.history.pushState(null, "Fluid", '/distributors/order/'+ order_id +'/'+ distributor_id);
+            });
+            $(document).on('click', '.notification-panel', function (e){
+
+                e.preventDefault();
+
+                let notificationId = $(this).data('notification-id');
+
+                $.ajax({
+                    url: "{{ path('delete_notifications') }}",
+                    type: 'POST',
+                    cache: false,
+                    timeout: 600000,
+                    dataType: 'json',
+                    data: {
+                        'notification-id': notificationId,
+                        'type': 'distributor'
+                    },
+                    success: function (response) {
+
+                        getNotifications();
+                    }
+                });
+            });
+
+            function getNotifications(){
+
+                $.ajax({
+                    url: "{{ path('get_order_notification') }}",
+                    type: 'GET',
+                    cache: false,
+                    timeout: 600000,
+                    dataType: 'json',
+                    data: {
+                        'type': 'distributor',
+                        'id': '{{ app.user.distributor.id|default(0) }}'
+                    },
+                    success: function (response) {
+
+                        if(response.count > 0){
+
+                            $('#notifications_icon').addClass('text-secondary');
+
+                        } else {
+
+                            $('#notifications_icon').removeClass('text-secondary');
+                        }
+
+                        $('#notifications_panel').empty().append(response.alert);
+                    }
+                });
+            }
+
+            {# Popovers #}
+            function popOver() {
+                var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                    return new bootstrap.Popover(popoverTriggerEl)
+                })
+            }
+
+            {# Clode Flash Message #}
+            $('#flash').click(function (){
+                $('#flash').addClass('hidden');
+            });
+
+            function isLoading(status){
+
+                if(status) {
+
+                    $("div.spanner").addClass("show");
+                    $("div.overlay").addClass("show");
+
+                } else {
+
+                    $("div.spanner").removeClass("show");
+                    $("div.overlay").removeClass("show");
+                }
+            }
+
+            {# Popovers #}
+            function popOver() {
+                var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                    return new bootstrap.Popover(popoverTriggerEl)
+                })
+            }
+        });
+
+        function selectProduct(id, name) {
+
+            if (id > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('distributor_inventory_get') }}",
+                    data: {
+                        product_id: id,
+                    },
+                    success: function (data) {
+
+                        $("#suggestion_field").show();
+                        $("#suggestion_field").html(data);
+                        $('#product_id').val(id);
+                        $('#distributor_id').val(data.distributor_id);
+                        $('#item_id').val(data.itemId);
+                        $('#sku').val(data.sku);
+                        $('#distributor_no').val(data.distributor_no);
+                        $('#unit_price').val(data.unit_price);
+                        $('#stock_count').val(data.stock_count);
+                        $('#expiry_date').val(data.expiry_date);
+                        $('#dosage').val(data.product.dosage);
+                        $('#size').val(data.product.size);
+                        $('#pack_type').val(data.product.packType);
+                        $('#unit').val(data.product.unit);
+                        $('#active_ingredient').val(data.product.activeIngredient);
+                        $('#btn_inventory').empty();
+                        $('#btn_inventory').append('UPDATE ' + name.toUpperCase()).show();
+                        $('#product_name').empty();
+                        $('#product_name').append(name + data.product.dosage + data.product.unit + data.product.size);
+                        $('#inventory_item').show();
+                        $('#inventory_btn').show();
+
+                        $('#taxExempt_0').attr('checked', false);
+                        $('#taxExempt_1').attr('checked', false);
+
+                        if(data.tax_exempt == 0){
+
+                            $('#taxExempt_0').attr('checked', true);
+
+                        } else {
+
+                            $('#taxExempt_1').attr('checked', true);
+                        }
+                    }
+                });
+
+                $("#search_field").val(name);
+                $("#suggestion_field").hide();
+            }
+        }
+
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    </script>
+{% endblock %}

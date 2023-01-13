@@ -1,0 +1,101 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="comments_form" id="comments_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="comment-id" id="comment_id" value="{{ comment.id ? comment.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4 class="text-truncate">
+                        Comment By {{ nzo_decrypt(comment.clinicUser.firstName) ~' '~ nzo_decrypt(comment.clinicUser.lastName) }}
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                        class="btn-comment btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end text-truncate"
+                        type="submit"
+                        name="decline-comment"
+                        data-comment-id="{{ app.request.get('commentId')|default(0) }}"
+                        data-is-approved="2"
+                    >
+                        <i class="action-icon fa-light fa-thumbs-down"></i>
+                        <span class="btn-label">Decline</span>
+                    </button>
+                    <button
+                        class="btn-comment btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                        type="submit"
+                        name="approve-comment"
+                        data-comment-id="{{ app.request.get('commentId')|default(0) }}"
+                        data-is-approved="1"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon fa-light fa-thumbs-up"></i>
+                            Approve
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+                {# Tag Name #}
+                <div class="col-12">
+                    <label class="ms-2 text-primary">
+                        Comment <span class="text-danger">*</span>
+                    </label>
+                    <div
+                        name="comment"
+                        id="comment"
+                        class="form-control"
+                    >{{ comment.comment }}</div>
+                </div>
+            </div>
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            {# Save Tag #}
+            $(document).on('click', '.btn-comment', function (e){
+
+                e.preventDefault();
+
+                let commentId = $(this).attr('data-comment-id');
+                let isApproved = $(this).attr('data-is-approved')
+
+                $.ajax({
+                    url: "{{ path('comment_crud') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'comment-id': commentId,
+                        'is-approved': isApproved,
+                    },
+                    beforeSend: function () {
+
+                        isLoading(true)
+                    },
+                    success: function (response) {
+
+                        getFlash(response.flash);
+                        window.location.assign('{{ path('comments_list',{ 'page_id':1 }) }}');
+                    }
+                });
+            });
+            {# End Save Products #}
+        });
+
+    </script>
+{% endblock %}

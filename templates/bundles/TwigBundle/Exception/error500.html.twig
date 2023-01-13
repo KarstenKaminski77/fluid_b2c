@@ -1,0 +1,67 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html,body{
+            width:100%;
+            margin:0;
+            height:100%;
+            background: #fff !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid ontainer w-100 error-container">
+        <div class="row align-items-center h-100">
+            <div class="col-12 col-md-4 offset-xs-0 offset-md-4 text-center">
+                <table class="w-100">
+                    <tbody><tr>
+                        <td class="text-center">
+                            <table class="w-100" align="center">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <h1>An Error Occurred</h1>
+
+                                        <p>
+                                            {% set url = '' %}
+                                            {% if type == 'clinics' %}
+                                                {% set url = path('clinic_orders_list',{'clinic_id': app.user.clinic.id}) %}
+                                            {% elseif type == 'distributors' %}
+                                                {% set url = path('distributor_order_list',{'distributor_id': app.user.distributor.id}) %}
+                                            {% elseif type == 'admin' %}
+                                                {% set url = path('products_list',{'page_id': 1}) %}
+                                            {% elseif type == 'frontend' %}
+                                                {% set url = path('home_page') %}
+                                            {% elseif type == 'retail' %}
+                                                {% set url = path('home_page') %}
+                                            {% endif %}
+                                            There was an loading the requested page. <a href="{{ url }}">Return to the homepage</a>.
+                                        </p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('.error-container').css({'height': 'calc(100% - '+ $('footer').innerHeight() +'px)'});
+        });
+
+    </script>
+{% endblock %}

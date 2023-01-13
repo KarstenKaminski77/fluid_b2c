@@ -1,0 +1,252 @@
+{% extends 'layout_retail.html.twig' %}
+
+{% block title %}Fluid!{% endblock %}
+
+{% block body %}
+    <div class="hidden users-flash mb-0" id="flash"></div>
+
+    <main class="flex-shrink-0">
+        <div class="container-fluid pe-sm-4">
+        <div class="row flex-nowrap h-100">
+            <div class="col-2 col-sm-2 col-md-3 col-xl-2 px-sm-2 px-0 mt-5 pt-4 bg-light border-right left-col">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-truncate overflow-hidden">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100 mt-4" id="menu">
+
+                        {% if retailUser.clinic is null %}
+                            {% set id = 'retail_clinic_link' %}
+                        {% else %}
+                            {% set id = '' %}
+                        {% endif %}
+
+                        <li class="nav-item py-3 w-100">
+                            <a href="#" class="align-middle px-0 text-primary nav-icon text-truncate" id="{{ id }}">
+                                <i class="fa-regular fa-house fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li class="w-100">
+                            <a
+                                href="#submenu1"
+                                data-bs-toggle="collapse"
+                                class="px-0 align-middle text-primary collapsed text-center text-sm-start nav-icon mb-3 text-truncate dropdown-link"
+                                aria-expanded="false"
+                                data-action="click->retail#onClickDropDownLink"
+                            >
+                                <i class="fa-regular fa-user fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">My Account</span>
+                                <span class="float-end d-none d-sm-block">
+                                    <i class="fa-solid fa-caret-right"></i>
+                                </span>
+                            </a>
+                            <ul class="nav flex-column collapse" id="submenu1" data-bs-parent="#menu" style="">
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate"
+                                        id="personal_information_link"
+                                        data-action="click->retail#personalInformation"
+                                    >
+                                        <i class="fa-regular fa-circle-info fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Personal Information</span>
+                                    </a>
+                                </li>
+                                {# Addresses #}
+                                <li class="w-100">
+                                    <a
+                                        href="#submenu2"
+                                        data-bs-toggle="collapse"
+                                        class="px-0 align-middle
+                                        text-primary text-center dropdown-link
+                                        text-sm-start nav-icon mb-3 text-truncate"
+                                        aria-expanded="true"
+                                        data-action="click->retail#onClickDropDownLink"
+                                    >
+                                        <i class="fa-regular fa-address-book fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Addresses</span>
+                                        <span class="float-end d-none d-sm-inline">
+                                            <i class="fa-solid fa-caret-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="nav flex-column collapse" id="submenu2" style="">
+                                        <li class="w-100 mb-3">
+                                            <a
+                                                href="#" class="align-middle text-primary nav-icon text-truncate"
+                                                id="address_new"
+                                                data-action="click->retail#addressNew"
+                                            >
+                                                <i class="fa-regular fa-square-plus fa-fw"></i>
+                                                <span class="ms-1 d-none d-sm-inline">Create New</span>
+                                            </a>
+                                        </li>
+                                        <li class="w-100 mb-3">
+                                            <a
+                                                href="#" class="align-middle text-primary nav-icon text-truncate"
+                                                id="addresses_link"
+                                                data-action="click->retail#addressesList"
+                                            >
+                                                <i class="fa-light fa-list-dropdown fa-fw"></i>
+                                                <span class="ms-1 d-none d-sm-inline">List</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="w-100">
+                            <a
+                                href="#submenu3"
+                                data-bs-toggle="collapse"
+                                class="px-0 align-middle text-primary collapsed text-center text-sm-start nav-icon mb-3 text-truncate dropdown-link"
+                                aria-expanded="false"
+                                data-action="click->retail#onClickDropDownLink"
+                            >
+                                <i class="fa-regular fa-house-chimney-medical fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline text-truncate">{{ nzo_decrypt(retailUser.clinic.clinicName) }}</span>
+                                <span class="float-end d-none d-sm-inline">
+                                    <i class="fa-solid fa-caret-right"></i>
+                                </span>
+                            </a>
+                            <ul class="nav flex-column collapse" id="submenu3" data-bs-parent="#menu" style="">
+                                {# About #}
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate copy-link"
+                                        id="about_link"
+                                        data-method="getAbout"
+                                        data-name="about"
+                                        data-action="click->retail#onLinkClick"
+                                    >
+                                        <i class="fa-regular fa-circle-question fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">About</span>
+                                    </a>
+                                </li>
+                                {# Operating Hours #}
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate copy-link"
+                                        id="operating_hours_link"
+                                        data-method="getOperatingHours"
+                                        data-name="Operating Hours"
+                                        data-action="click->retail#onLinkClick"
+                                    >
+                                        <i class="fa-regular fa-clock fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Operating Hours</span>
+                                    </a>
+                                </li>
+                                {# Refund Polict #}
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate copy-link"
+                                        id="refund_policy_link"
+                                        data-method="getRefundPolicy"
+                                        data-name="Refund Policy"
+                                        data-action="click->retail#onLinkClick"
+                                    >
+                                        <i class="fa-regular fa-rotate-left fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Refund Policy</span>
+                                    </a>
+                                </li>
+                                {# Sales Tax Policy #}
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate copy-link"
+                                        id="sales_tax_link"
+                                        data-method="getSalesTaxPolicy"
+                                        data-name="Sales Tax Policy"
+                                        data-action="click->retail#onLinkClick"
+                                    >
+                                        <i class="fa-regular fa-scale-unbalanced fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Sales Tax Policy</span>
+                                    </a>
+                                </li>
+                                {# Shipping Policy #}
+                                <li class="w-100 mb-3">
+                                    <a
+                                        href="#"
+                                        class="align-middle px-0 text-primary nav-icon text-truncate copy-link"
+                                        id="shipping_policy_link"
+                                        data-method="getShippingPolicy"
+                                        data-name="Shipping Policy"
+                                        data-action="click->retail#onLinkClick"
+                                    >
+                                        <i class="fa-regular fa-truck-ramp-box fa-fw"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Shipping Policy</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="align-middle text-primary nav-icon text-truncate" href="#">
+                                <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                <span class="ms-1 d-none d-sm-inline">Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-10 col-sm-10 pb-3 retail-right-col">
+
+                {# Main Container #}
+                <div class="row">
+                    <div class="col-12 ps-4" id="retail_container">
+                        {{ html|default('An error occurred...')|raw }}
+                    </div>
+                </div>
+                {# End Main Container #}
+
+            </div>
+        </div>
+    </div>
+    </main>
+    <div class="overlay"></div>
+    <div class="spanner">
+        <div class="loader"></div>
+        <p>Loading...</p>
+    </div>
+    <div class="hidden users-flash m-0 save-all-items" id="flash" data-action="click->retail#onClickFlash"></div>
+{% endblock %}
+
+{% block footer %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function()
+        {
+            $(document).on('click', 'a', function ()
+            {
+                let name = $(this).attr('name');
+
+                if(name != 'notifications')
+                {
+                    $('#notifications_panel').hide();
+                }
+            });
+
+            adjustSideNavHeight();
+
+            {# Adjust SideNav Height #}
+            function adjustSideNavHeight()
+            {
+                let topNavHeight = $('nav').outerHeight();
+                let footerHeight = $('footer').outerHeight();
+                let windowHeight = document.documentElement.scrollHeight;
+                let leftColHeight = windowHeight - (topNavHeight + footerHeight) + 16;
+
+                $('.retail-right-col').css(
+                {
+                    'margin-top': topNavHeight
+                });
+            }
+        });
+    </script>
+{% endblock %}
+

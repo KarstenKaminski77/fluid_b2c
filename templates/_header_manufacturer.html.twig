@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white distributor-nav border-bottom">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav"  aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar nav">
+                <a href="{{ path('manufacturer_analytics', {'distributor_id':app.user.manufacturer.id }) }}">
+                    <img src="{{ asset('images/logo.png') }}" class="img-fluid" style="max-height: 60px">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="main_nav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link  dropdown-toggle" href="{{ path('manufacturers_logout') }}" data-bs-toggle="dropdown">
+                            {{ nzo_decrypt(app.user.manufacturer.name) }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('manufacturers_logout') }}">
+                                    <i class="fa-solid fa-ban"></i>&nbsp;&nbsp;Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>

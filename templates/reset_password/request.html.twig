@@ -1,0 +1,71 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus,
+        select:-webkit-autofill,
+        select:-webkit-autofill:hover,
+        select:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+        }
+        body {
+            background: none !important;
+        }
+        .form-control:focus {
+            border: solid 1px #7796a8;
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row mt-0 mt-md-5">
+            <div class="col-12 text-center mt-1 pt-3 pb-3" id="order_header">
+                <h4 class="text-primary">Forgot Password</h4>
+                <span class="text-primary">
+                    Please enter your email address in the field below and we'll send instructions on
+                    how to reset your password to your inbox.
+                </span>
+            </div>
+        </div>
+        <div class="row">
+
+            {% for flashError in app.flashes('reset_password_error') %}
+                <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+            {% endfor %}
+
+            <div class="col-12 col-md-4 offset-md-3">
+                {{ form_start(requestForm) }}
+                {{ form_row(requestForm.email) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <button class="btn btn-primary w-sm-100 w-md-auto my-3 my-md-auto">
+                    Reset Password
+                </button>
+                {{ form_end(requestForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        $(document).ready(function () {
+
+            $('body').addClass('d-flex flex-column h-100');
+        });
+
+    </script>
+{% endblock %}

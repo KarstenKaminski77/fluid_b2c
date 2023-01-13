@@ -1,0 +1,151 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="species_form" id="species_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="speciesId" id="species_id" value="{{ species.id ? species.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4 class="text-truncate">
+                        {% if species.id > 0 %}
+                            Editing <b>{{ species.name }}</b>
+                        {% else %}
+                            New Species
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                            class="action-saveAndReturn btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end text-truncate"
+                            type="submit"
+                            name="save_return"
+                    >
+                        <span class="btn-label">Save and exit</span>
+                    </button>
+                    <button
+                            class="action-saveAndContinue btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                            type="submit"
+                            name="save_continue"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon far fa-edit"></i>
+                            Save
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+
+                {# Name #}
+                <div class="col-12 col-md-6">
+                    <label class="ms-2 text-primary">
+                        Species <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        name="species-name"
+                        id="species_name"
+                        class="form-control"
+                        type="text"
+                        value="{{ species.name }}"
+                        placeholder="Name"
+                    >
+                    <div class="hidden_msg" id="error_species_name">
+                        Required Field
+                    </div>
+                </div>
+
+                {# Icon #}
+                <div class="col-12 col-md-6">
+                    <label class="ms-2 text-primary">
+                        Icon <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        name="species-icon"
+                        id="species_icon"
+                        class="form-control"
+                        type="text"
+                        value="{{ species.icon }}"
+                        placeholder="Fontawesome Icon"
+                    >
+                    <div class="hidden_msg" id="error_species_icon">
+                        Required Field
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            {# Save Species #}
+            $(document).on('submit', '#species_form', function (e){
+
+                e.preventDefault();
+
+                let species = $('#species_name').val();
+                let icon = $('#species_icon').val();
+                let isValid = true;
+                let btn = document.activeElement.getAttribute('name');
+                let errorSpecies = $('#error_species_name');
+                let errorIcon = $('#error_species_icon');
+
+                errorSpecies.hide();
+                errorIcon.hide();
+
+                if(species == '' || species == 'undefined'){
+
+                    errorSpecies.show();
+                    isValid = false;
+                }
+
+                if(icon == '' || icon == 'undefined'){
+
+                    errorIcon.show();
+                    isValid = false;
+                }
+
+                if(isValid) {
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('species_crud') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        success: function (response) {
+
+                            getFlash(response.flash);
+                            $('.content-header-title').empty().append('<h4>Editing '+ response.species +'</h4>');
+
+                            if(btn == 'save_return'){
+
+                                window.location.assign('{{ path('species_list',{ 'page_id':1 }) }}');
+                            }
+                        }
+                    });
+                }
+            });
+            {# End Save Species #}
+        });
+
+    </script>
+{% endblock %}

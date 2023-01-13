@@ -1,0 +1,139 @@
+{% extends 'Admin/layout_list.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row border-bottom admin-header" style="left: 16.8%">
+        <div class="col-12 col-sm-3 text-truncate mt-1 pt-3 pb-3 ps-4">
+            <h4 class="text-truncate m-0">Product Comments</h4>
+        </div>
+        <div class="col-12 col-sm-9 text-truncate mt-1 pt-3 pb-3 px-4">
+            <div class="input-group">
+                <select name="comment-status" id="comment_status" class="form-control comment-status">
+                    <option value="">Select a Status</option>
+                    <option value="0">Awaiting Approval</option>
+                    <option value="1">Approved</option>
+                    <option value="2">Declined</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-3 pt-2 pt-sm-4 mt-sm-5 border-left border-right">
+        <div class="row pb-3 border-bottom d-none d-md-flex">
+            <div class="col-1 fw-bold ps-4 text-truncate">
+                #ID
+            </div>
+            <div class="col-5 fw-bold text-truncate">
+                Product
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Reviewed By
+            </div>
+            <div class="col-2 fw-bold text-truncate">
+                Modified
+            </div>
+            <div class="col-1 fw-bold text-truncate">
+                Created
+            </div>
+            <div class="col-1 fw-bold text-truncate">
+            </div>
+        </div>
+        <div class="row" id="comments">
+        {% if comments|length > 0 %}
+            {% for comment in comments %}
+            <div class="col-12">
+                <div class="row py-3 border-bottom-dashed" id="row_{{ comment.id }}">
+                <div class="col-4 fw-bold ps-4 d-block d-md-none text-truncate">
+                    #ID
+                </div>
+                <div class="col-8 col-md-1 ps-4 text-truncate">
+                    #{{ comment.id }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Product
+                </div>
+                <div class="col-8 col-md-5 text-truncate">
+                    {{ comment.review.product.name }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Reviewed By
+                </div>
+                <div class="col-8 col-md-2 text-truncate">
+                    {{ nzo_decrypt(comment.clinicUser.firstName) ~' '~ nzo_decrypt(comment.clinicUser.lastName) }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Modified
+                </div>
+                <div class="col-8 col-md-2 text-truncate">
+                    {{ comment.modified|date('Y-m-d H:i:s') }}
+                </div>
+                <div class="col-4 ps-4 d-block d-md-none fw-bold text-truncate">
+                    Created
+                </div>
+                <div class="col-8 col-md-1 text-truncate">
+                    {{ comment.created|date('Y-m-d') }}
+                </div>
+                <div class="col-12 col-md-1 text-truncate mt-3 mt-md-0">
+                    <a
+                        href="{{ path('comments', {'commentId':comment.id} ) }}"
+                        class="float-end"
+                    >
+                        <i class="fa-solid fa-pen-to-square edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="row">
+                <div class="col-12 pt-3 ps-4 text-truncate">
+                    No Results Found
+                </div>
+            </div>
+        {% endif %}
+        </div>
+        <div class="row py-3">
+            <div class="col-12">
+                {{ pagination|raw }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            $(document).on('change', '.comment-status', function () {
+
+                let statusId = $(this).val();
+
+                $.ajax({
+                    url: "{{ path('comments_list', {'page_id':1}) }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'is-status-change': 1,
+                        'is-approved': statusId,
+                    },
+                    beforeSend: function () {
+
+                        isLoading(true)
+                    },
+                    success: function (response) {
+
+                        $('#comments').empty().append(response);
+                        isLoading(false);
+                    }
+                });
+            })
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#545659"/>
+
+        <title>
+            {%- block meta_title -%}
+                Fluid
+            {%- endblock %}
+        </title>
+
+        {% block meta_decription %}
+            <meta name="description" content="Fluid Commerce">
+        {% endblock %}
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <link rel="icon" href="{{ asset('images/logo.png') }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('images/icons/icon-144x144.png') }}" />
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/icons/icon-152x152.png') }}" />
+        <link rel="manifest" href="{{ asset('manifest.json') }}" />
+
+        <script type="module">
+            import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+            const el = document.createElement('pwa-update');
+            document.body.appendChild(el);
+        </script>
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/style.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/fontawesome-pro/css/all.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/intlTelInput.min.css') }}">
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %}{% endblock %}
+        {% block body %}{% endblock %}
+        {% block footer %}{% endblock %}
+
+        {% block javascripts %}
+            <script src="https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.umd.min.js"></script>
+
+            <!-- jQuery -->
+            <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.session.min.js') }}"></script>
+            <script src="{{ asset('js/intlTelInput.min.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

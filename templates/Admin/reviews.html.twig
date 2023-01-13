@@ -1,0 +1,105 @@
+{% extends 'Admin/layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <form name="reviews_form" id="reviews_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="reviewId" id="review_id" value="{{ review.id ? review.id : 0 }}">
+        <section class="content-header border-bottom ps-4 py-4 admin-header">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <h4 class="text-truncate">
+                        {% if review.id > 0 %}
+                            Review By {{ nzo_decrypt(review.clinicUser.firstName) ~' '~ nzo_decrypt(review.clinicUser.lastName) }}
+                        {% else %}
+                            New Tag
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button
+                        class="btn-review btn btn-primary action-save w-sm-100 mb-3 mb-sm-0 float-end text-truncate"
+                        type="submit"
+                        name="decline-review"
+                        data-review-id="{{ app.request.get('reviewId')|default(0) }}"
+                        data-is-approved="2"
+                    >
+                        <i class="action-icon fa-light fa-thumbs-down"></i>
+                        <span class="btn-label">Decline</span>
+                    </button>
+                    <button
+                        class="btn-review btn btn-secondary action-save w-sm-100 mb-3 mb-sm-0 me-0 me-md-3 float-end text-truncate"
+                        type="submit"
+                        name="approve-review"
+                        data-review-id="{{ app.request.get('reviewId')|default(0) }}"
+                        data-is-approved="1"
+                    >
+                        <span class="btn-label">
+                            <i class="action-icon fa-light fa-thumbs-up"></i>
+                            Approve
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4" style="margin-top: 105px">
+            <div class="row mt-4">
+                {# Tag Name #}
+                <div class="col-12">
+                    <label class="ms-2 text-primary">
+                        Review <span class="text-danger">*</span>
+                    </label>
+                    <div
+                        name="review"
+                        id="review"
+                        class="form-control"
+                    >{{ review.review }}</div>
+                </div>
+            </div>
+        </section>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            {# Save Tag #}
+            $(document).on('click', '.btn-review', function (e){
+
+                e.preventDefault();
+
+                let reviewId = $(this).attr('data-review-id');
+                let isApproved = $(this).attr('data-is-approved')
+
+                $.ajax({
+                    url: "{{ path('review_crud') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'review-id': reviewId,
+                        'is-approved': isApproved,
+                    },
+                    beforeSend: function () {
+
+                        isLoading(true)
+                    },
+                    success: function (response) {
+
+                        getFlash(response.flash);
+                        window.location.assign('{{ path('reviews_list',{ 'page_id':1 }) }}');
+                    }
+                });
+            });
+            {# End Save Products #}
+        });
+
+    </script>
+{% endblock %}

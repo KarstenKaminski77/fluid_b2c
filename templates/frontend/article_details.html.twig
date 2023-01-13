@@ -1,0 +1,60 @@
+{% extends 'layout.html.twig' %}
+{% block meta_decription %}
+    {{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html,body{
+            background: #f4f4f4 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hidden users-flash mb-0" id="flash"></div>
+<div class="container mb-3">
+    <div class="row mb-3 px-3 px-sm-0">
+        <div class="col-12">
+            <h4 class="pb-1 text-truncate">{{ articleDetails.name }}</h4>
+            <span class="d-block mb-1 fs-5">{{ articleDetails.description }}</span>
+            <span class="d-block">
+                Written By: {{ nzo_decrypt(articleDetails.user.firstName) ~' '~ nzo_decrypt(articleDetails.user.lastName) }}
+                {{ render(controller(
+                    'App\\Controller\\ArticlesController::articleListAuthorsAction', {
+                        'articleDetailId':articleDetails.id,
+                        'showAuthors':0
+                    }
+                )) }}
+            </span>
+        </div>
+    </div>
+    <div class="row mb-3 px-3 px-sm-0">
+        <div class="col-12  p-3 p-sm-5 bg-white border-xy">
+            <span>
+                {{ articleDetails.copy|raw }}
+            </span>
+
+        </div>
+    </div>
+</div>
+
+<div class="overlay"></div>
+<div class="spanner">
+    <div class="loader"></div>
+    <p class="text-light fw-bold" style="font-size: 36px;">Loading...</p>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('body').addClass('form-control-bg-grey');
+        });
+    </script>
+{% endblock %}

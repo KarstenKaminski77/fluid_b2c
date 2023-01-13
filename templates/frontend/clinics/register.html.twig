@@ -1,0 +1,367 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Hello DistributorsController!{% endblock %}
+
+{% block body %}
+<form name="register_form" id="register_form" method="post" autocomplete="off">
+    <div class="container mb-5">
+        <div class="row pt-3">
+            <div class="col-12 text-center mt-1 pt-3 pb-3" id="order_header">
+                <h4 class="text-primary">Let's Create Your Account.</h4>
+                <span class="text-primary">
+                    Signing up for your Fluid is fast and free - be up and running in under a minute.
+                </span>
+            </div>
+        </div>
+        <div class="row pb-3 bg-light border-left border-right border-top pt-3" id="row_1">
+            <input type="checkbox" name="call_back_form[contact_me_by_fax_only]" value="1" tabindex="-1" class="hidden" autocomplete="off">
+            {# First Name #}
+            <div class="col-12 col-sm-6">
+                <label>First Name <span class="text-danger">*</span></label>
+                <input type="text" name="firstName" id="first_name" class="form-control" placeholder="First Name">
+                <div class="hidden_msg" id="error_first_name">
+                    Required Field
+                </div>
+            </div>
+
+            {# Last Name #}
+            <div class="col-12 col-sm-6">
+                <label>Last Name <span class="text-danger">*</span></label>
+                <input type="text" name="lastName" id="last_name" class="form-control" placeholder="Last Name">
+                <div class="hidden_msg" id="error_last_name">
+                    Required Field
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3 bg-light border-left border-right" id="row_2">
+            {# Postionn #}
+            <div class="col-12 col-sm-6">
+                <label>Your Position <span class="text-danger">*</span></label>
+                <input type="text" name="position" id="position" class="form-control" placeholder="Veterinarian, Office Manager, Inventory Manager .etc">
+                <div class="hidden_msg" id="error_position">
+                    Required Field
+                </div>
+            </div>
+
+            {# Country #}
+            <div class="col-12 col-sm-6">
+                <label>Located In <span class="text-danger">*</span></label>
+                <select name="country" style="color:#b1abb0 !important" id="country" class="form-control">
+                    <option value="">Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.id }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="hidden_msg" id="error_country">
+                    Required Field
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3 bg-light border-left border-right" id="row_3">
+
+            {# Email #}
+            <div class="col-12 col-sm-6">
+                <label>Business Email <span class="text-danger">*</span></label>
+                <input type="text" name="email" id="email" class="form-control" placeholder="Email Address" autocomplete="off">
+                <div class="hidden_msg" id="error_email">
+                    Required Field
+                </div>
+            </div>
+
+            {# Telephone #}
+            <div class="col-12 col-sm-6">
+                <label>Business Telephone <span class="text-danger">*</span></label>
+                <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Telephone" autocomplete="off">
+                <input type="hidden" value="0" name="user-telephone" id="user_telephone">
+                <input type="hidden" name="user-iso-code" id="user_iso_code" value="">
+                <input type="hidden" name="user-intl-code" id="user_intl_code" value="">
+                <div class="hidden_msg" id="error_telephone">
+                    Required Field
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3 bg-light border-left border-right border-bottom" id="row_4">
+            {# Clinic Name #}
+            <div class="col-12 col-sm-6">
+                <label>Business Name <span class="text-danger">*</span></label>
+                <input type="text" name="clinicName" id="clinic_name" class="form-control" placeholder="Clinic Name">
+                <div class="hidden_msg" id="error_clinic_name">
+                    Required Field
+                </div>
+            </div>
+            {# Telephone #}
+            <div class="col-12 col-sm-6 pb-3">
+                <label>Business Phone Number <span class="text-danger">*</span></label>
+                <input type="text" name="mobile_clinic" id="mobile_clinic" class="form-control" placeholder="Clinic Phone Number">
+                <input type="hidden" value="0" name="clinic-telephone" id="clinic_telephone">
+                <input type="hidden" name="clinic-iso-code" id="clinic_iso_code" value="">
+                <input type="hidden" name="clinic-intl-code" id="clinic_intl_code" value="">
+                <div class="hidden_msg" id="error_clinic_telephone">
+                    Required Field
+                </div>
+            </div>
+        </div>
+        <div class="row" id="row_5">
+            <div class="col-12 ps-0 pe-0">
+                <button id="form_save" type="submit" class="btn btn-primary w-100">CREATE ACCOUNT</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="overlay"></div>
+<div class="spanner">
+    <div class="loader"></div>
+    <p class="text-light fw-bold" style="font-size: 36px;">Loading...</p>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function (){
+
+            // International Numbers Personal
+            let input = document.querySelector('#mobile');
+            iti = window.intlTelInput(input, {
+                initialCountry: "auto",
+                geoIpLookup: function(success, failure) {
+                    $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "ae";
+                        success(countryCode);
+                    });
+                },
+                preferredCountries: ['ae','qa', 'bh', 'om', 'sa'],
+                autoPlaceholder: "polite",
+                nationalMode: true,
+                utilsScript: "{{ asset('js/utils.min.js') }}", // just for formatting/placeholders etc
+                separateDialCode: true,
+                utilsScript: "/js/utils.js",
+            });
+
+            $(document).on('change keyup', '#mobile', function (){
+
+                let handleChange = function() {
+                    let mobile = $('#user_telephone');
+                    let mobile_number = (iti.isValidNumber()) ? iti.getNumber() : false;
+                    let textNode = document.createTextNode(mobile_number);
+
+                    if(mobile_number != false){
+
+                        let iso_code = iti.getSelectedCountryData().iso2;
+                        let intl_code = iti.getSelectedCountryData().dialCode;
+
+                        mobile.val(mobile_number.substring(1));
+                        $('#user_iso_code').val(iso_code);
+                        $('#user_intl_code').val(intl_code);
+
+                    }
+                };
+
+                // listen to "keyup", but also "change" to update when the user selects a country
+                input.addEventListener('change', handleChange);
+                input.addEventListener('keyup', handleChange);
+            });
+
+            // International Numbers Personal
+            let input_clinic = document.querySelector('#mobile_clinic');
+            iti_clinic = window.intlTelInput(input_clinic, {
+                initialCountry: "auto",
+                geoIpLookup: function(success, failure) {
+                    $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "ae";
+                        success(countryCode);
+                    });
+                },
+                preferredCountries: ['ae','qa', 'bh', 'om', 'sa'],
+                autoPlaceholder: "polite",
+                nationalMode: true,
+                utilsScript: "{{ asset('js/utils.min.js') }}", // just for formatting/placeholders etc
+                separateDialCode: true,
+                utilsScript: "/js/utils.js",
+            });
+
+            $(document).on('change keyup', '#mobile_clinic', function (){
+
+                let handleChange = function() {
+                    let mobile = $('#clinic_telephone');
+                    let mobile_number = (iti_clinic.isValidNumber()) ? iti_clinic.getNumber() : false;
+                    let textNode = document.createTextNode(mobile_number);
+
+                    if(mobile_number != false){
+
+                        let iso_code = iti.getSelectedCountryData().iso2;
+                        let intl_code = iti.getSelectedCountryData().dialCode;
+
+                        mobile.val(mobile_number.substring(1));
+                        $('#clinic_iso_code').val(iso_code);
+                        $('#clinic_intl_code').val(intl_code);
+
+                    }
+                };
+
+                // listen to "keyup", but also "change" to update when the user selects a country
+                input_clinic.addEventListener('change', handleChange);
+                input_clinic.addEventListener('keyup', handleChange);
+            });
+
+            $(document).on('change', '#email', function (){
+
+                let email = $('#email').val();
+                let errorEmail = $('#error_email');
+
+                errorEmail.hide();
+
+                $.ajax({
+                    url: "{{ path('clinic_check_email') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        email: email
+                    },
+                    complete: function(e, xhr, settings){
+                        if(e.status === 500){
+                            window.location.href = '{{ path('clinic_error_500') }}';
+                        }
+                    },
+                    success: function (response) {
+
+                        if(!response.response)
+                        {
+                            if(response.restricted)
+                            {
+                                errorEmail.empty().append('Domain name is not allowed').show();
+
+                            } else
+                            {
+                                errorEmail.empty().append('Your business is already registered, please contact '+ response.firstName).show();
+                            }
+                        }
+                    }
+                });
+            });
+            $('#register_form').submit(function(e){
+
+                e.preventDefault();
+
+                var is_valid = true;
+                var position = $('#position').val();
+                var first_name = $('#first_name').val();
+                var last_name = $('#last_name').val();
+                var email = $('#email').val();
+                var telephone = $('#telephone').val();
+                var clinic_name = $('#clinic_name').val();
+                var clinic_telephone = $('#clinic_telephone').val();
+                var error_position = $('#error_position');
+                var error_first_name = $('#error_first_name');
+                var error_last_name = $('#error_last_name');
+                var error_email = $('#error_email');
+                var error_telephone = $('#error_telephone');
+                var error_clinic_name = $('#error_clinic_name');
+                var error_clinic_telephone = $('#error_clinic_telephone')
+
+                error_position.hide();
+                error_first_name.hide();
+                error_last_name.hide();
+                error_email.hide();
+                error_telephone.hide();
+                error_clinic_name.hide();
+                error_clinic_telephone.hide();
+
+                if(position == '' || position == 'undefined'){
+
+                    error_position.show();
+                    is_valid = false;
+                }
+
+                if(first_name == '' || first_name == 'undefined'){
+
+                    error_first_name.show();
+                    is_valid = false;
+                }
+
+                if(last_name == '' || last_name == 'undefined'){
+
+                    error_last_name.show();
+                    is_valid = false;
+                }
+
+                if(email == '' || email == 'undefined'){
+
+                    error_email.empty().append('Required Field');
+                    error_email.show();
+                    is_valid = false;
+                }
+
+                if(telephone == '' || telephone == 'undefined' || telephone == 0){
+
+                    error_telephone.show();
+                    is_valid = false;
+                }
+
+                if(clinic_name == '' || clinic_name == 'undefined'){
+
+                    error_clinic_name.show();
+                    is_valid = false;
+                }
+
+                if(clinic_telephone == '' || clinic_telephone == 'undefined'){
+
+                    error_clinic_telephone.show();
+                    is_valid = false;
+                }
+
+                if(is_valid == true){
+
+                    let data = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ path('clinic_create') }}",
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        timeout: 600000,
+                        dataType: 'json',
+                        data: data,
+                        beforeSend: function (){
+                            isLoading(true);
+                        },
+                        complete: function(e, xhr, settings){
+                            if(e.status === 500){
+                                //window.location.href = '{{ path('clinic_error_500') }}';
+                            }
+                        },
+                        success: function (response) {
+                            $('#row_1').empty().addClass('border-bottom');
+                            $('#row_2').remove();
+                            $('#row_3').remove();
+                            $('#row_4').remove();
+                            $('#row_5').remove();
+                            $('#row_1').append('<div class="col-12 text-center text-primary pt-3 pb-3">'+response+'</div>');
+                            $('#error_email').hide();
+                            isLoading(false);
+                        }
+                    });
+                }
+            });
+
+            function isLoading(status){
+
+                if(status) {
+
+                    $("div.spanner").addClass("show");
+                    $("div.overlay").addClass("show");
+
+                } else {
+
+                    $("div.spanner").removeClass("show");
+                    $("div.overlay").removeClass("show");
+                }
+            }
+
+        });
+
+    </script>
+{% endblock %}
