@@ -382,7 +382,8 @@ export default class extends Controller
         let addressId = $(clickedElement).attr('data-address-id');
         let self = this;
 
-        $.ajax({
+        $.ajax(
+            {
             async: "true",
             url: "/clinics/address/delete",
             type: 'POST',
@@ -391,8 +392,7 @@ export default class extends Controller
                 id: addressId,
                 page_id: 1
             },
-            beforeSend: function ()
-            {
+            beforeSend: function () {
                 self.isLoading(true);
             },
             success: function (response)

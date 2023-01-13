@@ -30,59 +30,21 @@
             </div>
             <div class="navbar-nav">
                 <ul class="navbar-nav ms-auto ms-md-auto ms-sm-0">
-                    <li class="nav-item dropdown pt-1 pb-1 pt-sm-0 pb-sm-0">
-                        <a class="nav-link account-dropdown-toggle" href="{{ path('clinics_logout') }}" data-bs-toggle="dropdown">
+                    <li class="nav-item pt-1 pb-1 pt-sm-0 pb-sm-0">
+                        <a
+                            class="nav-link"
+                            href="{{ path('retail_login') }}"
+                        >
                             Sign In
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" id="account_menu" style="min-width: 250px">
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('clinics_login') }}" class="dropdown-item">
-                                    Clinic Sign In
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('distributor_login') }}" class="dropdown-item">
-                                    Distributor Sign In
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('manufacturer_login') }}" class="dropdown-item">
-                                    Manufacturer Sign In
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('retail_login') }}" class="dropdown-item">
-                                    Retail Sign In
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-                    <li class="nav-item dropdown pt-1 pb-1 pt-sm-0 pb-sm-0">
-                        <a class="signup-toggle btn btn-primary btn-sm ms-0 ms-md-3" href="{{ path('clinics_logout') }}" data-bs-toggle="dropdown">
+                    <li class="nav-item pt-1 pb-1 pt-sm-0 pb-sm-0">
+                        <a
+                            class="signup-toggle btn btn-primary btn-sm ms-0 ms-md-3"
+                            href="{{ path('retail_reg') }}"
+                        >
                             Sign Up
                         </a>
-                        <ul class="dropdown-menu dropdown-menu" id="signup_toggle" style="min-width: 250px">
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('clinic_reg') }}" class="dropdown-item">
-                                    Clinic Sign Up
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('distributor_reg') }}" class="dropdown-item">
-                                    Distributor Sign Up
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('manufacturer_reg') }}" class="dropdown-item">
-                                    Manufacturer Sign Up
-                                </a>
-                            </li>
-                            <li class="pt-1 pb-1 pt-md-0 pb-md-0">
-                                <a href="{{ path('retail_reg') }}" class="dropdown-item">
-                                    Retail Sign Up
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>
