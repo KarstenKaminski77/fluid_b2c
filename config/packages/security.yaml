@@ -9,72 +9,14 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_distributor_provider:
-            entity:
-                class: App\Entity\DistributorUsers
-                property: email
-        app_clinic_provider:
-            entity:
-                class: App\Entity\ClinicUsers
-                property: email
-        app_manufacturer_provider:
-            entity:
-                class: App\Entity\ManufacturerUsers
-                property: email
         app_retail_provider:
             entity:
                 class: App\Entity\RetailUsers
-                property: email
-        app_admin_provider:
-            entity:
-                class: App\Entity\User
                 property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        clinic:
-            pattern: ^/clinics
-            form_login:
-                login_path: clinic_login
-                check_path: clinic_login
-            access_denied_url: /clinics/login
-            lazy: true
-            provider: app_clinic_provider
-            custom_authenticator: App\Security\ClinicsAuthenticator
-            entry_point: App\Security\ClinicsAuthenticator
-            logout:
-                path: clinics_logout
-                # where to redirect after logout
-                target: home_page
-        distributor:
-            pattern: ^/distributors
-            form_login:
-                login_path: distributor_login
-                check_path: distributor_login
-            access_denied_url: /distributors/login
-            lazy: true
-            provider: app_distributor_provider
-            custom_authenticator: App\Security\DistributorsAuthenticator
-            entry_point: App\Security\DistributorsAuthenticator
-            logout:
-                path: distributors_logout
-                # where to redirect after logout
-                target: home_page
-        manufacturer:
-            pattern: ^/manufacturers
-            form_login:
-                login_path: manufacturer_login
-                check_path: manufacturer_login
-            access_denied_url: /manufacturers/login
-            lazy: true
-            provider: app_manufacturer_provider
-            custom_authenticator: App\Security\ManufacturersAuthenticator
-            entry_point: App\Security\ManufacturersAuthenticator
-            logout:
-                path: manufacturers_logout
-                # where to redirect after logout
-                target: home_page
         Retail:
             pattern: ^/retail
             form_login:
@@ -89,20 +31,6 @@ security:
                 path: retail_logout
                 # where to redirect after logout
                 target: home_page
-        admin:
-            pattern: ^/admin
-            form_login:
-                login_path: admin_login
-                check_path: admin_login
-            access_denied_url: /admin/login
-            lazy: true
-            provider: app_admin_provider
-            custom_authenticator: App\Security\AdminAuthenticator
-            entry_point: App\Security\AdminAuthenticator
-            logout:
-                path: admin_logout
-                # where to redirect after logout
-                target: '/admin/login'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -113,15 +41,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/clinics/dashboard, roles: ROLE_CLINIC }
-        - { path: ^/clinics/inventory, roles: ROLE_CLINIC }
-        - { path: ^/clinics/get-clinic-users, roles: ROLE_CLINIC  }
-        - { path: ^/distributors/dashboard, roles: ROLE_DISTRIBUTOR }
-        - { path: ^/distributors/inventory-get, roles: ROLE_DISTRIBUTOR }
-        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
-        - { path: ^/manufacturers/login, roles: PUBLIC_ACCESS }
-        - { path: ^/manufacturers, roles: ROLE_MANUFACTURER }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        #- { path: ^/retail, roles: ROLE_RETAIL }
 
 when@test:
     security:

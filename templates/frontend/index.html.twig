@@ -421,7 +421,7 @@
                         },
                         complete: function(e, xhr, settings){
                             if(e.status === 500){
-                                window.location.href = '{{ path('clinic_error_500') }}';
+                                window.location.href = '/retail/error';
                             }
                         },
                         success: function (response) {

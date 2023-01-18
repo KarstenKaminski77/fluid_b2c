@@ -6,6 +6,7 @@
 parameters:
     app.email_from: '%env(EMAIL_FROM)%'
     app.base_url: '%env(BASE_URL)%'
+    app.base_url_remote: '%env(BASE_URL_REMOTE)%'
     app.zoho_client_id: '%env(ZOHO_CLIENT_ID)%'
     app.zoho_client_secret: '%env(ZOHO_CLIENT_SECRET)%'
     app.zoho_organization_id: '%env(ZOHO_ORGANIZATION_ID)%'

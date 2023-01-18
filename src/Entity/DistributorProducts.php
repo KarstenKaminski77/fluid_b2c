@@ -65,12 +65,6 @@ class DistributorProducts
     private $created;
 
     /**
-     * @ORM\OneToMany(targetEntity=DistributorClinicPrices::class, mappedBy="product")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="product")
-     */
-    private $distributorClinicPrices;
-
-    /**
      * @ORM\OneToMany(targetEntity=ListItems::class, mappedBy="distributorProduct")
      */
     private $listItems;
@@ -205,36 +199,6 @@ class DistributorProducts
     public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|DistributorClinicPrices[]
-     */
-    public function getDistributorClinicPrices(): Collection
-    {
-        return $this->distributorClinicPrices;
-    }
-
-    public function addDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if (!$this->distributorClinicPrices->contains($distributorClinicPrice)) {
-            $this->distributorClinicPrices[] = $distributorClinicPrice;
-            $distributorClinicPrice->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if ($this->distributorClinicPrices->removeElement($distributorClinicPrice)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorClinicPrice->getProduct() === $this) {
-                $distributorClinicPrice->setProduct(null);
-            }
-        }
 
         return $this;
     }

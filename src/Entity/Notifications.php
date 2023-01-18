@@ -48,12 +48,6 @@ class Notifications
     private $created;
 
     /**
-     * @ORM\OneToOne(targetEntity=AvailabilityTracker::class, inversedBy="notifications", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="availability_tracker_id", referencedColumnName="id", nullable=true)
-     */
-    private $availabilityTracker;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="notifications")
      */
     private $orders;
@@ -164,18 +158,6 @@ class Notifications
     public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
-
-        return $this;
-    }
-
-    public function getAvailabilityTracker(): ?AvailabilityTracker
-    {
-        return $this->availabilityTracker;
-    }
-
-    public function setAvailabilityTracker(?AvailabilityTracker $availabilityTracker): self
-    {
-        $this->availabilityTracker = $availabilityTracker;
 
         return $this;
     }

@@ -4,17 +4,12 @@ namespace App\Controller;
 
 use App\Entity\BasketItems;
 use App\Entity\Baskets;
-use App\Entity\ClinicProducts;
 use App\Entity\Clinics;
-use App\Entity\ClinicUsers;
-use App\Entity\DistributorProducts;
-use App\Entity\Distributors;
 use App\Entity\ListItems;
 use App\Entity\ProductImages;
 use App\Entity\Products;
 use App\Entity\RetailUsers;
 use App\Services\PaginationManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Nzo\UrlEncryptorBundle\Encryptor\Encryptor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -107,156 +102,6 @@ class BasketController extends AbstractController
         ];
 
         return new JsonResponse($response);
-    }
-
-    private function getSavedbasketsRightColumn()
-    {
-        $savedBaskets = $this->em->getRepository(Baskets::class)->findBy([
-            'clinic' => $this->getUser()->getClinic()->getId(),
-            'status' => 'active'
-        ]);
-        $response = '';
-
-        if(count($savedBaskets) > 1)
-        {
-            $response .= '
-            <!-- Basket Items -->
-            <div class="row border-bottom bg-secondary d-none d-sm-flex">
-                <div class="col-3 pt-3 pb-3">
-                    <h6 class="text-primary m-0" style="padding-top: 3px">Basket Name</h6>
-                </div>
-                <div class="col-3 pt-3 pb-3">
-                    <h6 class="text-primary m-0" style="padding-top: 3px">Saved By</h6>
-                </div>
-                <div class="col-2 pt-3 pb-3">
-                    <h6 class="text-primary m-0" style="padding-top: 3px">Subtotal</h6>
-                </div>
-                <div class="col-2 pt-3 pb-3">
-                    <h6 class="text-primary m-0" style="padding-top: 3px">Items</h6>
-                </div>
-                <div class="col-2 pt-3 pb-3" style="padding-top: 3px"></div>
-            </div>';
-
-            foreach ($savedBaskets as $basket)
-            {
-                if ($basket->getName() == 'Fluid Commerce')
-                {
-                    continue;
-                }
-
-                $response .= '
-                <!-- Saved Baskets -->
-                <div class="row border-bottom-dashed saved_basket_header" role="button" id="saved_basket_header_' . $basket->getId() . '">
-                    <div class="col-3 pt-3 pb-3 saved-basket-link text-truncate" id="saved_basket_first_' . $basket->getId() . '" data-basket-id="' . $basket->getId() . '">
-                        <span id="basket_name_string_' . $basket->getId() . '">' . $basket->getName() . '</span>
-                        <span id="basket_name_input_' . $basket->getId() . '" style="display:none"><input type="text" class="form-control form-control-sm" id="basket_name_' . $basket->getId() . '" value="' . $basket->getName() . '"></span>
-                    </div>
-                    <div class="col-3 pt-3 pb-3 saved-basket-link text-truncate" data-basket-id="' . $basket->getId() . '">
-                        ' . $this->encryptor->decrypt($basket->getSavedBy()) . '
-                    </div>
-                    <div class="col-2 pt-3 pb-3 saved-basket-link" data-basket-id="' . $basket->getId() . '">
-                       ' . number_format($basket->getTotal(), 2) . '
-                    </div>
-                    <div class="col-1 pt-3 pb-3 saved-basket-link" data-basket-id="' . $basket->getId() . '">
-                        ' . $basket->getBasketItems()->count() . '
-                    </div>
-                    <div class="col-3 pt-3 pb-3">
-                        <a href="" class="basket-edit" data-basket-id="' . $basket->getId() . '">
-                            <i class="fa-solid fa-pencil float-end me-0 me-sm-3"></i>
-                        </a>
-                        <a href="" class="basket-delete" data-basket-id="' . $basket->getId() . '">
-                            <i class="fa-solid fa-trash-can text-danger float-end me-4 me-sm-4"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- Baskets -->
-                <div class="saved-basket-panel" id="saved_basket_panel_' . $basket->getId() . '" style="display: none">This basket is empty...</div>';
-            }
-        }
-        else
-        {
-            $response .= '
-            <div class="row d-none d-sm-flex">
-                <div class="col-12 pt-3 pb-3 text-center">
-                    <p></p>
-                    <h5>You don\'t currently have any saved baskets</h5><br>
-                    Were you expecting to see items here? View copies of the items most recently added<br> 
-                    to your basket and restore a basket if needed.
-                    <p></p>
-                </div>
-            </div>
-            ';
-        }
-
-        return $response;
-    }
-
-    private function getBasketLeftColumn($request)
-    {
-        $clinicId = $this->getUser()->getClinic()->getId();
-        $baskets = $this->em->getRepository(Baskets::class)->findBy([
-            'clinic' => $clinicId,
-            'status' => 'active',
-        ]);
-        $clinicTotals = $this->em->getRepository(Baskets::class)->getClinicTotalItems($clinicId);
-        $totalClinic = number_format($clinicTotals[0]['total'] ?? 0,2);
-        $countClinic = $clinicTotals[0]['item_count'] ?? 0;
-
-        $response = '
-        <div class="row border-bottom text-center pt-2 pb-2">
-            <b>All Baskets</b>
-        </div>
-        <div class="row" style="background: #f4f8fe">
-            <div class="col-6 border-bottom pt-1 pb-1 text-center">
-                <span class="d-block text-primary">'. $countClinic .'</span>
-                <span class="d-block text-truncate">Items</span>
-            </div>
-            <div class="col-6 border-bottom pt-1 pb-1 text-center">
-                <span class="d-block text-primary">$'. number_format($totalClinic,2) .'</span>
-                <span class="d-block text-truncate">Subtotal</span>
-            </div>
-        </div>';
-
-        foreach($baskets as $basket) {
-
-            $active = '';
-            $background = '';
-
-            if($basket->getId() == $request->request->get('basket_id')){
-
-                $active = 'active-basket';
-            }
-
-            if($basket->getBasketItems()->count() > 0){
-
-                $background = 'bg-primary';
-            }
-
-            $response .= '
-            <div class="row">
-                <div class="col-12 border-bottom '. $active .'">
-                    <a href="#" data-basket-id="'. $basket->getId() .'" class=" pt-3 pb-3 d-block basket-link">
-                        <span class="d-inline-block align-baseline">'. $basket->getName() .'</span>
-                        <span class="float-end basket-item-count-empty '. $background .'">
-                            '. $basket->getBasketItems()->count() .'
-                        </span>
-                    </a>
-                </div>
-            </div>';
-        }
-
-        $response .= '
-        <div class="row border-bottom">
-            <div class="col-4 col-sm-12 col-md-4 pt-3 pb-3 saved-baskets">
-                <i class="fa-regular fa-basket-shopping"></i>
-            </div>
-            <div class="col-8 col-sm-12 col-md-8 pt-3 pb-3 text-truncate">
-                <h6 class="text-primary">Saved Baskets</h6>
-                <span class="info">View baskets</span>
-            </div>
-        </div>';
-
-        return $response;
     }
 
     #[Route('/retail/add-to-basket', name: 'retail_add_to_basket')]

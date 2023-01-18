@@ -60,59 +60,14 @@ class Clinics
     private $baskets;
 
     /**
-     * @ORM\OneToMany(targetEntity=ClinicCommunicationMethods::class, mappedBy="clinic")
-     */
-    private $clinicCommunicationMethods;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ClinicUsers::class, mappedBy="clinic", cascade={"persist"}))
-     */
-    private $clinicUsers;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DistributorClinicPrices::class, mappedBy="clinic")
-     */
-    private $distributorClinicPrices;
-
-    /**
      * @ORM\OneToMany(targetEntity=EventLog::class, mappedBy="clinic")
      */
     private $eventLogs;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductNotes::class, mappedBy="clinic")
-     */
-    private $productNotes;
-
-    /**
-     * @ORM\OneToMany(targetEntity=AvailabilityTracker::class, mappedBy="clinic")
-     */
-    private $availabilityTrackers;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ClinicProducts::class, mappedBy="clinic")
-     */
-    private $clinicProducts;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ProductReviewComments::class, mappedBy="clinic")
-     */
-    private $productReviewComments;
-
-    /**
      * @ORM\OneToMany(targetEntity=Notifications::class, mappedBy="clinic")
      */
     private $notifications;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ProductFavourites::class, mappedBy="clinic")
-     */
-    private $productFavourites;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ChatParticipants::class, mappedBy="clinic")
-     */
-    private $chatParticipants;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -123,16 +78,6 @@ class Clinics
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $intlCode;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ClinicUserPermissions::class, mappedBy="clinic")
-     */
-    private $clinicUserPermissions;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DistributorClinics::class, mappedBy="clinic")
-     */
-    private $distributorClinics;
 
     /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="clinics")
@@ -200,11 +145,6 @@ class Clinics
     private $clinicRetailUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductRetail::class, mappedBy="clinic")
-     */
-    private $productRetails;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $PoNumberPrefix;
@@ -249,7 +189,6 @@ class Clinics
         $this->distributorClinicPrices = new ArrayCollection();
         $this->eventLogs = new ArrayCollection();
         $this->productNotes = new ArrayCollection();
-        $this->availabilityTrackers = new ArrayCollection();
         $this->clinicProducts = new ArrayCollection();
         $this->productReviewComments = new ArrayCollection();
         $this->notifications = new ArrayCollection();
@@ -374,96 +313,6 @@ class Clinics
     }
 
     /**
-     * @return Collection|ClinicCommunicationMethods[]
-     */
-    public function getClinicCommunicationMethods(): Collection
-    {
-        return $this->clinicCommunicationMethods;
-    }
-
-    public function addClinicCommunicationMethod(ClinicCommunicationMethods $clinicCommunicationMethod): self
-    {
-        if (!$this->clinicCommunicationMethods->contains($clinicCommunicationMethod)) {
-            $this->clinicCommunicationMethods[] = $clinicCommunicationMethod;
-            $clinicCommunicationMethod->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicCommunicationMethod(ClinicCommunicationMethods $clinicCommunicationMethod): self
-    {
-        if ($this->clinicCommunicationMethods->removeElement($clinicCommunicationMethod)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicCommunicationMethod->getClinic() === $this) {
-                $clinicCommunicationMethod->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ClinicUsers[]
-     */
-    public function getClinicUsers(): Collection
-    {
-        return $this->clinicUsers;
-    }
-
-    public function addClinicUser(ClinicUsers $clinicUser): self
-    {
-        if (!$this->clinicUsers->contains($clinicUser)) {
-            $this->clinicUsers[] = $clinicUser;
-            $clinicUser->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicUser(ClinicUsers $clinicUser): self
-    {
-        if ($this->clinicUsers->removeElement($clinicUser)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicUser->getClinic() === $this) {
-                $clinicUser->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|DistributorClinicPrices[]
-     */
-    public function getDistributorClinicPrices(): Collection
-    {
-        return $this->distributorClinicPrices;
-    }
-
-    public function addDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if (!$this->distributorClinicPrices->contains($distributorClinicPrice)) {
-            $this->distributorClinicPrices[] = $distributorClinicPrice;
-            $distributorClinicPrice->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if ($this->distributorClinicPrices->removeElement($distributorClinicPrice)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorClinicPrice->getClinic() === $this) {
-                $distributorClinicPrice->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|EventLog[]
      */
     public function getEventLogs(): Collection
@@ -493,66 +342,6 @@ class Clinics
         return $this;
     }
 
-    /**
-     * @return Collection|ProductNotes[]
-     */
-    public function getProductNotes(): Collection
-    {
-        return $this->productNotes;
-    }
-
-    public function addProductNote(ProductNotes $productNote): self
-    {
-        if (!$this->productNotes->contains($productNote)) {
-            $this->productNotes[] = $productNote;
-            $productNote->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductNote(ProductNotes $productNote): self
-    {
-        if ($this->productNotes->removeElement($productNote)) {
-            // set the owning side to null (unless already changed)
-            if ($productNote->getClinic() === $this) {
-                $productNote->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|AvailabilityTracker[]
-     */
-    public function getAvailabilityTrackers(): Collection
-    {
-        return $this->availabilityTrackers;
-    }
-
-    public function addAvailabilityTracker(AvailabilityTracker $availabilityTracker): self
-    {
-        if (!$this->availabilityTrackers->contains($availabilityTracker)) {
-            $this->availabilityTrackers[] = $availabilityTracker;
-            $availabilityTracker->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAvailabilityTracker(AvailabilityTracker $availabilityTracker): self
-    {
-        if ($this->availabilityTrackers->removeElement($availabilityTracker)) {
-            // set the owning side to null (unless already changed)
-            if ($availabilityTracker->getClinic() === $this) {
-                $availabilityTracker->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -561,66 +350,6 @@ class Clinics
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ClinicProducts>
-     */
-    public function getClinicProducts(): Collection
-    {
-        return $this->clinicProducts;
-    }
-
-    public function addClinicProduct(ClinicProducts $clinicProduct): self
-    {
-        if (!$this->clinicProducts->contains($clinicProduct)) {
-            $this->clinicProducts[] = $clinicProduct;
-            $clinicProduct->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicProduct(ClinicProducts $clinicProduct): self
-    {
-        if ($this->clinicProducts->removeElement($clinicProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicProduct->getClinic() === $this) {
-                $clinicProduct->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProductReviewComments>
-     */
-    public function getProductReviewComments(): Collection
-    {
-        return $this->productReviewComments;
-    }
-
-    public function addProductReviewComment(ProductReviewComments $productReviewComment): self
-    {
-        if (!$this->productReviewComments->contains($productReviewComment)) {
-            $this->productReviewComments[] = $productReviewComment;
-            $productReviewComment->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductReviewComment(ProductReviewComments $productReviewComment): self
-    {
-        if ($this->productReviewComments->removeElement($productReviewComment)) {
-            // set the owning side to null (unless already changed)
-            if ($productReviewComment->getClinic() === $this) {
-                $productReviewComment->setClinic(null);
-            }
-        }
 
         return $this;
     }
@@ -655,66 +384,6 @@ class Clinics
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProductFavourites>
-     */
-    public function getProductFavourites(): Collection
-    {
-        return $this->productFavourites;
-    }
-
-    public function addProductFavourite(ProductFavourites $productFavourite): self
-    {
-        if (!$this->productFavourites->contains($productFavourite)) {
-            $this->productFavourites[] = $productFavourite;
-            $productFavourite->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductFavourite(ProductFavourites $productFavourite): self
-    {
-        if ($this->productFavourites->removeElement($productFavourite)) {
-            // set the owning side to null (unless already changed)
-            if ($productFavourite->getClinic() === $this) {
-                $productFavourite->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ChatParticipants>
-     */
-    public function getChatParticipants(): Collection
-    {
-        return $this->chatParticipants;
-    }
-
-    public function addChatParticipant(ChatParticipants $chatParticipant): self
-    {
-        if (!$this->chatParticipants->contains($chatParticipant)) {
-            $this->chatParticipants[] = $chatParticipant;
-            $chatParticipant->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChatParticipant(ChatParticipants $chatParticipant): self
-    {
-        if ($this->chatParticipants->removeElement($chatParticipant)) {
-            // set the owning side to null (unless already changed)
-            if ($chatParticipant->getClinic() === $this) {
-                $chatParticipant->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getIsoCode(): ?string
     {
         return $this->isoCode;
@@ -735,66 +404,6 @@ class Clinics
     public function setIntlCode(?string $intlCode): self
     {
         $this->intlCode = $intlCode;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ClinicUserPermissions>
-     */
-    public function getClinicUserPermissions(): Collection
-    {
-        return $this->clinicUserPermissions;
-    }
-
-    public function addClinicUserPermission(ClinicUserPermissions $clinicUserPermission): self
-    {
-        if (!$this->clinicUserPermissions->contains($clinicUserPermission)) {
-            $this->clinicUserPermissions[] = $clinicUserPermission;
-            $clinicUserPermission->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicUserPermission(ClinicUserPermissions $clinicUserPermission): self
-    {
-        if ($this->clinicUserPermissions->removeElement($clinicUserPermission)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicUserPermission->getClinic() === $this) {
-                $clinicUserPermission->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DistributorClinics>
-     */
-    public function getDistributorClinics(): Collection
-    {
-        return $this->distributorClinics;
-    }
-
-    public function addDistributorClinic(DistributorClinics $distributorClinic): self
-    {
-        if (!$this->distributorClinics->contains($distributorClinic)) {
-            $this->distributorClinics[] = $distributorClinic;
-            $distributorClinic->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorClinic(DistributorClinics $distributorClinic): self
-    {
-        if ($this->distributorClinics->removeElement($distributorClinic)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorClinic->getClinic() === $this) {
-                $distributorClinic->setClinic(null);
-            }
-        }
 
         return $this;
     }
@@ -939,36 +548,6 @@ class Clinics
     public function setLogo(?string $logo): self
     {
         $this->logo = $logo;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProductRetail>
-     */
-    public function getProductRetails(): Collection
-    {
-        return $this->productRetails;
-    }
-
-    public function addProductRetail(ProductRetail $productRetail): self
-    {
-        if (!$this->productRetails->contains($productRetail)) {
-            $this->productRetails[] = $productRetail;
-            $productRetail->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductRetail(ProductRetail $productRetail): self
-    {
-        if ($this->productRetails->removeElement($productRetail)) {
-            // set the owning side to null (unless already changed)
-            if ($productRetail->getClinic() === $this) {
-                $productRetail->setClinic(null);
-            }
-        }
 
         return $this;
     }

@@ -90,19 +90,9 @@ class Distributors
     private $baskets;
 
     /**
-     * @ORM\OneToMany(targetEntity=DistributorClinicPrices::class, mappedBy="distributor")
-     */
-    private $distributorClinicPrices;
-
-    /**
      * @ORM\OneToMany(targetEntity=DistributorProducts::class, mappedBy="distributor")
      */
     private $distributorProducts;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DistributorUsers::class, mappedBy="distributor")
-     */
-    private $distributorUsers;
 
     /**
      * @ORM\OneToMany(targetEntity=EventLog::class, mappedBy="distributor")
@@ -115,29 +105,9 @@ class Distributors
     private $listItems;
 
     /**
-     * @ORM\OneToMany(targetEntity=ClinicProducts::class, mappedBy="distributor")
-     */
-    private $clinicProducts;
-
-    /**
-     * @ORM\OneToMany(targetEntity=AvailabilityTracker::class, mappedBy="distributor")
-     */
-    private $availabilityTrackers;
-
-    /**
      * @ORM\Column(type="string", length=3, nullable=true)
      */
     private $poNumberPrefix;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ChatParticipants::class, mappedBy="distributor")
-     */
-    private $chatParticipants;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ChatMessages::class, mappedBy="distributor")
-     */
-    private $chatMessages;
 
     /**
      * @ORM\OneToMany(targetEntity=Notifications::class, mappedBy="distributor")
@@ -190,30 +160,9 @@ class Distributors
     private $intlCode;
 
     /**
-     * @ORM\OneToMany(targetEntity=DistributorUserPermissions::class, mappedBy="distributor")
-     */
-    private $distributorUserPermissions;
-
-    /**
-     * @ORM\OneToOne(targetEntity=ApiDetails::class, mappedBy="distributor", cascade={"persist", "remove"})
-     */
-    private $api;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DistributorClinics::class, mappedBy="distributor")
-     */
-    private $distributorClinics;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $hashedEmail;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Tracking::class, inversedBy="distributors")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $tracking;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -275,7 +224,6 @@ class Distributors
         $this->eventLogs = new ArrayCollection();
         $this->listItems = new ArrayCollection();
         $this->clinicProducts = new ArrayCollection();
-        $this->availabilityTrackers = new ArrayCollection();
         $this->chatParticipants = new ArrayCollection();
         $this->chatMessages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
@@ -477,36 +425,6 @@ class Distributors
     }
 
     /**
-     * @return Collection|DistributorClinicPrices[]
-     */
-    public function getDistributorClinicPrices(): Collection
-    {
-        return $this->distributorClinicPrices;
-    }
-
-    public function addDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if (!$this->distributorClinicPrices->contains($distributorClinicPrice)) {
-            $this->distributorClinicPrices[] = $distributorClinicPrice;
-            $distributorClinicPrice->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorClinicPrice(DistributorClinicPrices $distributorClinicPrice): self
-    {
-        if ($this->distributorClinicPrices->removeElement($distributorClinicPrice)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorClinicPrice->getDistributor() === $this) {
-                $distributorClinicPrice->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|DistributorProducts[]
      */
     public function getDistributorProducts(): Collection
@@ -530,36 +448,6 @@ class Distributors
             // set the owning side to null (unless already changed)
             if ($distributorProduct->getDistributor() === $this) {
                 $distributorProduct->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|DistributorUsers[]
-     */
-    public function getDistributorUsers(): Collection
-    {
-        return $this->distributorUsers;
-    }
-
-    public function addDistributorUser(DistributorUsers $distributorUser): self
-    {
-        if (!$this->distributorUsers->contains($distributorUser)) {
-            $this->distributorUsers[] = $distributorUser;
-            $distributorUser->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorUser(DistributorUsers $distributorUser): self
-    {
-        if ($this->distributorUsers->removeElement($distributorUser)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorUser->getDistributor() === $this) {
-                $distributorUser->setDistributor(null);
             }
         }
 
@@ -626,66 +514,6 @@ class Distributors
         return $this;
     }
 
-    /**
-     * @return Collection<int, ClinicProducts>
-     */
-    public function getClinicProducts(): Collection
-    {
-        return $this->clinicProducts;
-    }
-
-    public function addClinicProduct(ClinicProducts $clinicProduct): self
-    {
-        if (!$this->clinicProducts->contains($clinicProduct)) {
-            $this->clinicProducts[] = $clinicProduct;
-            $clinicProduct->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicProduct(ClinicProducts $clinicProduct): self
-    {
-        if ($this->clinicProducts->removeElement($clinicProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicProduct->getDistributor() === $this) {
-                $clinicProduct->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, AvailabilityTracker>
-     */
-    public function getAvailabilityTrackers(): Collection
-    {
-        return $this->availabilityTrackers;
-    }
-
-    public function addAvailabilityTracker(AvailabilityTracker $availabilityTracker): self
-    {
-        if (!$this->availabilityTrackers->contains($availabilityTracker)) {
-            $this->availabilityTrackers[] = $availabilityTracker;
-            $availabilityTracker->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAvailabilityTracker(AvailabilityTracker $availabilityTracker): self
-    {
-        if ($this->availabilityTrackers->removeElement($availabilityTracker)) {
-            // set the owning side to null (unless already changed)
-            if ($availabilityTracker->getDistributor() === $this) {
-                $availabilityTracker->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getPoNumberPrefix(): ?string
     {
         return $this->poNumberPrefix;
@@ -694,66 +522,6 @@ class Distributors
     public function setPoNumberPrefix(?string $poNumberPrefix): self
     {
         $this->poNumberPrefix = $poNumberPrefix;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ChatParticipants>
-     */
-    public function getChatParticipants(): Collection
-    {
-        return $this->chatParticipants;
-    }
-
-    public function addChatParticipant(ChatParticipants $chatParticipant): self
-    {
-        if (!$this->chatParticipants->contains($chatParticipant)) {
-            $this->chatParticipants[] = $chatParticipant;
-            $chatParticipant->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChatParticipant(ChatParticipants $chatParticipant): self
-    {
-        if ($this->chatParticipants->removeElement($chatParticipant)) {
-            // set the owning side to null (unless already changed)
-            if ($chatParticipant->getDistributor() === $this) {
-                $chatParticipant->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ChatMessages>
-     */
-    public function getChatMessages(): Collection
-    {
-        return $this->chatMessages;
-    }
-
-    public function addChatMessage(ChatMessages $chatMessage): self
-    {
-        if (!$this->chatMessages->contains($chatMessage)) {
-            $this->chatMessages[] = $chatMessage;
-            $chatMessage->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChatMessage(ChatMessages $chatMessage): self
-    {
-        if ($this->chatMessages->removeElement($chatMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($chatMessage->getDistributor() === $this) {
-                $chatMessage->setDistributor(null);
-            }
-        }
 
         return $this;
     }
@@ -914,83 +682,6 @@ class Distributors
         return $this;
     }
 
-    /**
-     * @return Collection<int, DistributorUserPermissions>
-     */
-    public function getDistributorUserPermissions(): Collection
-    {
-        return $this->distributorUserPermissions;
-    }
-
-    public function addDistributorUserPermission(DistributorUserPermissions $distributorUserPermission): self
-    {
-        if (!$this->distributorUserPermissions->contains($distributorUserPermission)) {
-            $this->distributorUserPermissions[] = $distributorUserPermission;
-            $distributorUserPermission->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorUserPermission(DistributorUserPermissions $distributorUserPermission): self
-    {
-        if ($this->distributorUserPermissions->removeElement($distributorUserPermission)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorUserPermission->getDistributor() === $this) {
-                $distributorUserPermission->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getApiDetails(): ?ApiDetails
-    {
-        return $this->api;
-    }
-
-    public function setApiDetails(ApiDetails $api): self
-    {
-        // set the owning side of the relation if necessary
-        if ($api->getDistributor() !== $this) {
-            $api->setDistributor($this);
-        }
-
-        $this->api = $api;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DistributorClinics>
-     */
-    public function getDistributorClinics(): Collection
-    {
-        return $this->distributorClinics;
-    }
-
-    public function addDistributorClinic(DistributorClinics $distributorClinic): self
-    {
-        if (!$this->distributorClinics->contains($distributorClinic)) {
-            $this->distributorClinics[] = $distributorClinic;
-            $distributorClinic->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributorClinic(DistributorClinics $distributorClinic): self
-    {
-        if ($this->distributorClinics->removeElement($distributorClinic)) {
-            // set the owning side to null (unless already changed)
-            if ($distributorClinic->getDistributor() === $this) {
-                $distributorClinic->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getHashedEmail(): ?string
     {
         return $this->hashedEmail;
@@ -999,18 +690,6 @@ class Distributors
     public function setHashedEmail(?string $hashedEmail): self
     {
         $this->hashedEmail = $hashedEmail;
-
-        return $this;
-    }
-
-    public function getTracking(): ?Tracking
-    {
-        return $this->tracking;
-    }
-
-    public function setTracking(?Tracking $tracking): self
-    {
-        $this->tracking = $tracking;
 
         return $this;
     }

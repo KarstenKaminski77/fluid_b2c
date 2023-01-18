@@ -118,12 +118,11 @@ class ListItemsRepository extends EntityRepository
     public function findByKeyword($listId, $keywords)
     {
         $queryBuilder = $this->createQueryBuilder('li')
-            ->select('li', 'l', 'p', 'd', 'dp', 'a')
+            ->select('li', 'l', 'p', 'd', 'dp')
             ->join('li.list', 'l')
             ->join('li.product', 'p')
             ->join('li.distributor', 'd')
             ->join('li.distributorProduct', 'dp')
-            ->join('d.api', 'a')
             ->andWhere('li.list = :listId')
             ->setParameter('listId', $listId);
 

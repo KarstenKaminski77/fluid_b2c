@@ -96,16 +96,6 @@ class Orders
     private $billingAddress;
 
     /**
-     * @ORM\OneToMany(targetEntity=ChatParticipants::class, mappedBy="orders")
-     */
-    private $distributor;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ChatMessages::class, mappedBy="orders")
-     */
-    private $chatMessages;
-
-    /**
      * @ORM\OneToMany(targetEntity=Notifications::class, mappedBy="orders")
      */
     private $notifications;
@@ -352,66 +342,6 @@ class Orders
     public function setBillingAddress(?Addresses $billingAddress): self
     {
         $this->billingAddress = $billingAddress;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ChatParticipants>
-     */
-    public function getDistributor(): Collection
-    {
-        return $this->distributor;
-    }
-
-    public function addDistributor(ChatParticipants $distributor): self
-    {
-        if (!$this->distributor->contains($distributor)) {
-            $this->distributor[] = $distributor;
-            $distributor->setOrders($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDistributor(ChatParticipants $distributor): self
-    {
-        if ($this->distributor->removeElement($distributor)) {
-            // set the owning side to null (unless already changed)
-            if ($distributor->getOrders() === $this) {
-                $distributor->setOrders(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ChatMessages>
-     */
-    public function getChatMessages(): Collection
-    {
-        return $this->chatMessages;
-    }
-
-    public function addChatMessage(ChatMessages $chatMessage): self
-    {
-        if (!$this->chatMessages->contains($chatMessage)) {
-            $this->chatMessages[] = $chatMessage;
-            $chatMessage->setOrders($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChatMessage(ChatMessages $chatMessage): self
-    {
-        if ($this->chatMessages->removeElement($chatMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($chatMessage->getOrders() === $this) {
-                $chatMessage->setOrders(null);
-            }
-        }
 
         return $this;
     }
