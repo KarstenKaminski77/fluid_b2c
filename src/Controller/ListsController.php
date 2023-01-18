@@ -111,7 +111,7 @@ class ListsController extends AbstractController
                         <span class="half-border">
                             <div class="row">
                                 <div class=" col-12 bg-white border-top border-left border-right px-4 pb-3">
-                                    <img src="/images/products/'. $firstImage .'" style="max-height: 120px">
+                                    <img src="'. $this->getParameter('app.base_url_remote') .'/images/products/'. $firstImage .'" style="max-height: 120px">
                                     <h6 class="mt-3">'. $product->getName() .'</h6>
                                     <p class="m-0 pb-3"><h5>'. $country->getCurrency() .' '. number_format($result->getUnitPrice(),2) .'</h5></p>
                                         <p>'. $from .'</p>

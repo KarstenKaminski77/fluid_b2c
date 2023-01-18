@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Products;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,15 +15,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Products[]    findAll()
  * @method Products[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductsRepository extends ServiceEntityRepository
+class ProductsRepository extends EntityRepository
 {
     private $em;
-
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
-    {
-        parent::__construct($registry, Products::class);
-        $this->em = $em;
-    }
 
     /**
     * @return Products[] Returns an array of Products objects
@@ -211,12 +206,9 @@ class ProductsRepository extends ServiceEntityRepository
     public function findByRand()
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->select('p','dp','d','c','pm','pi', 'RAND() as HIDDEN rand')
+            ->select('p','dp','d','pi', 'RAND() as HIDDEN rand')
             ->join('p.distributorProducts', 'dp')
             ->join('dp.distributor', 'd')
-            ->leftJoin('p.category', 'c')
-            ->leftJoin('p.productManufacturers', 'pm')
-            ->leftJoin('p.productFavourites', 'pf')
             ->leftJoin('p.productImages', 'pi')
             ->andWhere('pi.isDefault = 1')
             ->andWhere('p.isActive = 1')

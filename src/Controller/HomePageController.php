@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Banners;
 use App\Entity\Products;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,17 +17,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomePageController extends AbstractController
 {
     private $em;
+    private $emRemote;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $em)
     {
-        $this->em = $em;
+        $this->em = $em->getManager('default');
+        $this->emRemote = $em->getManager('remote');
     }
 
     #[Route('/', name: 'home_page')]
     public function index(): Response
     {
         $banners = $this->em->getRepository(Banners::class)->findHomePage();
-        $products = $this->em->getRepository(Products::class)->findByRand();
+        $products = $this->emRemote->getRepository(Products::class)->findByRand();
 
         foreach($products as $product){
 

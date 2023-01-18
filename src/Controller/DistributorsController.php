@@ -20,7 +20,6 @@ class DistributorsController extends AbstractController
     const ITEMS_PER_PAGE = 10;
     private $pageManager;
     private $requestStack;
-    private $plainPassword;
     private $encryptor;
     private $mailer;
 

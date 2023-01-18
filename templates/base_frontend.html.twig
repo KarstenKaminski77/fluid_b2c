@@ -34,7 +34,10 @@
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
-    <body class="frontend-body-pt d-flex flex-column h-100">
+    <body
+        class="frontend-body-pt d-flex flex-column h-100"
+        data-controller="home-page accept-cookies"
+    >
         {% block header %}{% endblock %}
         <div class="position-relative container-fluid">
             <div class="content-wrap">
@@ -49,134 +52,6 @@
             {{ encore_entry_script_tags('app') }}
             <script src="{{ asset('js/jquery.scrollTo.min.js') }}"></script>
             <script src="{{ asset('js/jquery.ihavecookies.min.js') }}"></script>
-
-            <script>
-                let options = {
-                    title: 'Your Privacy',
-                    message: 'By clicking “Accept Cookies”, you agree Fluid Digital Wholesale can store cookies on your device and disclose information in accordance with our Cookie Policy.',
-                    delay: 600,
-                    expires: 1,
-                    link: '/article/3',
-                    onAccept: function(){
-                        var myPreferences = $.fn.ihavecookies.cookie();
-                        console.log('Yay! The following preferences were saved...');
-                        console.log(myPreferences);
-                    },
-                    uncheckBoxes: true,
-                    acceptBtnLabel: 'Accept Cookies',
-                    moreInfoLabel: 'Privacy Policy',
-                    cookieTypesTitle: 'Select which cookies you want to accept',
-                    fixedCookieTypeLabel: 'Essential',
-                    fixedCookieTypeDesc: 'These are essential for the website to work correctly.'
-                }
-
-                $(document).ready(function() {
-
-                    $('#necessary_msg').hide();
-
-                    $(document).on('click', '#necessary', function () {
-
-                        $('#necessary_msg').slideToggle(700);
-                    });
-
-
-                    $('body').ihavecookies(options);
-
-                    if ($.fn.ihavecookies.preference('marketing') === true) {
-                        console.log('This should run because marketing is accepted.');
-                    }
-
-                    $('#ihavecookiesBtn').on('click', function(){
-                        $('body').ihavecookies(options, 'reinit');
-                    });
-
-                    let uri = '{{ app.request.requestUri }}';
-                    let isContactPage = uri.match('/?contact');
-
-                    if(isContactPage != null){
-
-                        $('body').scrollTo('#contact_container');
-                        $('body').removeClass('frontend-body-pt');
-                    }
-
-                    if(uri != '/'){
-
-                        $('.contact-link').attr('href', 'https://{{ app.request.httpHost }}?contact');
-
-                    } else {
-
-                        $('body').removeClass('frontend-body-pt');
-                    }
-
-                    {# Sign Up Dropdown #}
-                    $(document).mouseup(function(e) {
-
-                        let container = $('#signup_toggle');
-
-                        // if the target of the click isn't the container nor a descendant of the container
-                        let displayValue = $('#signup_toggle').get(0).style.display;
-
-                        if(displayValue == 'block'){
-
-                            container.hide(700);
-
-                        }
-                    });
-                    $(document).on('click', '.signup-toggle', function(e) {
-
-                        let container = $('#signup_toggle');
-
-                        // if the target of the click isn't the container nor a descendant of the container
-                        let displayValue = $('#signup_toggle').get(0).style.display;
-
-                        if(displayValue == 'block'){
-
-                            container.hide(700);
-
-                        } else {
-
-                            container.show(700);
-                        }
-                    });
-
-                    {# Sign In Dropdown #}
-                    $(document).mouseup(function(e) {
-
-                        let container = $('#account_menu');
-
-                        // if the target of the click isn't the container nor a descendant of the container
-                        let displayValue = $('#account_menu').get(0).style.display;
-
-                        if(displayValue == 'block'){
-
-                            container.hide(700);
-
-                        }
-                    });
-                    $(document).on('click', '.account-dropdown-toggle', function(e) {
-
-                        let container = $('#account_menu');
-
-                        // if the target of the click isn't the container nor a descendant of the container
-                        let displayValue = $('#account_menu').get(0).style.display;
-
-                        if(displayValue == 'block'){
-
-                            container.hide(700);
-
-                        } else {
-
-                            container.show(700);
-                        }
-                    });
-
-                    // Toggle Navbar
-                    $(document).on('click', '#btn_navbar_toggle', function () {
-
-                        $('#main_nav').toggle(700);
-                    });
-                });
-            </script>
         {% endblock %}
     </body>
 </html>

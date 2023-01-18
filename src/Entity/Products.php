@@ -150,6 +150,11 @@ class Products
      */
     private $manufacturerIds = [];
 
+    /**
+     * @ORM\OneToMany(targetEntity=DistributorProducts::class, mappedBy="product")
+     */
+    private $distributorProducts;
+
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -542,6 +547,36 @@ class Products
     public function setManufacturerIds(?array $manufacturerIds): self
     {
         $this->manufacturerIds = $manufacturerIds;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DistributorProducts[]
+     */
+    public function getDistributorProducts(): Collection
+    {
+        return $this->distributorProducts;
+    }
+
+    public function addDistributorProduct(DistributorProducts $distributorProduct): self
+    {
+        if (!$this->distributorProducts->contains($distributorProduct)) {
+            $this->distributorProducts[] = $distributorProduct;
+            $distributorProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDistributorProduct(DistributorProducts $distributorProduct): self
+    {
+        if ($this->distributorProducts->removeElement($distributorProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($distributorProduct->getProduct() === $this) {
+                $distributorProduct->setProduct(null);
+            }
+        }
 
         return $this;
     }
