@@ -28,13 +28,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListsController extends AbstractController
 {
     private $em;
+    private $emRemote;
     private $encryptor;
     private $pageManager;
     const ITEMS_PER_PAGE = 4;
 
-    public function __construct(EntityManagerInterface $em, Encryptor $encryptor, PaginationManager $pageManager) {
+    public function __construct(ManagerRegistry $em, Encryptor $encryptor, PaginationManager $pageManager) {
 
-        $this->em = $em;
+        $this->em = $em->getManager('default');
+        $this->emRemote = $em->getManager('remote');
         $this->encryptor = $encryptor;
         $this->pageManager = $pageManager;
     }
@@ -1044,14 +1046,14 @@ class ListsController extends AbstractController
         $keywords = $request->request->get('keywords');
         $retailUserId = $this->getUser()->getId();
         $retailUser = $this->em->getRepository(RetailUsers::class)->find($retailUserId);
-        $clinicId = $this->getUser()->getClinic()->getId();
-        $list = $this->em->getRepository(Lists::class)->findOneBy([
-            'clinic' => $clinicId,
+        $clinicId = $this->getUser()->getClinicId();
+        $list = $this->emRemote->getRepository(Lists::class)->findOneBy([
+            'clinicId' => $clinicId,
             'listType' => 'retail',
         ]);
-        $products = $this->em->getRepository(ListItems::class)->findByKeyword($list->getId(), $keywords);
+        $products = $this->emRemote->getRepository(ListItems::class)->findByKeyword($list->getId(), $keywords);
         $results = $this->pageManager->paginate($products[0], $request, self::ITEMS_PER_PAGE);
-        $country = $this->em->getRepository(Countries::class)->find($retailUser->getCountry()->getId());
+        $country = $this->emRemote->getRepository(Countries::class)->find($retailUser->getCountry()->getId());
 
         if(count($results) > 0)
         {
@@ -1064,7 +1066,7 @@ class ListsController extends AbstractController
                 $product = $result->getProduct();
                 $from = '&nbsp;';
                 $dosage = '&nbsp;';
-                $firstImage = $this->em->getRepository(ProductImages::class)->findOneBy([
+                $firstImage = $this->emRemote->getRepository(ProductImages::class)->findOneBy([
                     'product' => $product->getId(),
                     'isDefault' => 1
                 ]);
@@ -1152,10 +1154,10 @@ class ListsController extends AbstractController
         }
         else
         {
-            $response .= '
+            $response['html'] .= '
             <div class="row">
-                <div class="col-12 text-center border-left border-right border-bottom bg-light p-3">
-                    You have not selected any products yet.
+                <div class="col-12 mt-5 text-center border-xy bg-light p-3">
+                    No results found.
                 </div>
             </div>';
         }

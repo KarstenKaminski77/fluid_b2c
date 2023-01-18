@@ -12,7 +12,7 @@
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-truncate overflow-hidden">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100 mt-4" id="menu">
 
-                        {% if retailUser.clinic is null %}
+                        {% if retailUser.clinicId is null %}
                             {% set id = 'retail_clinic_link' %}
                         {% else %}
                             {% set id = '' %}
@@ -92,6 +92,7 @@
                                 </li>
                             </ul>
                         </li>
+                        {% if clinic is not null %}
                         <li class="w-100">
                             <a
                                 href="#submenu3"
@@ -101,7 +102,7 @@
                                 data-action="click->retail#onClickDropDownLink"
                             >
                                 <i class="fa-regular fa-house-chimney-medical fa-fw"></i>
-                                <span class="ms-1 d-none d-sm-inline text-truncate">{{ nzo_decrypt(retailUser.clinic.clinicName) }}</span>
+                                <span class="ms-1 d-none d-sm-inline text-truncate">{{ nzo_decrypt(clinic.clinicName) }}</span>
                                 <span class="float-end d-none d-sm-inline">
                                     <i class="fa-solid fa-caret-right"></i>
                                 </span>
@@ -179,6 +180,7 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endif %}
                         <li class="nav-item w-100">
                             <a class="align-middle text-primary nav-icon text-truncate" href="#">
                                 <i class="fa-regular fa-boxes-stacked fa-fw"></i>

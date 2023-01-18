@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Clinics;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,15 +13,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Clinics[]    findAll()
  * @method Clinics[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ClinicsRepository extends ServiceEntityRepository
+class ClinicsRepository extends EntityRepository
 {
     private $conn;
-
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Clinics::class);
-        $this->conn = $this->_em->getConnection();
-    }
 
     public function getClinicAddresses($clinic_id): array
     {

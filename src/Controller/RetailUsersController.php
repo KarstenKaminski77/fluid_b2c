@@ -16,6 +16,7 @@ use App\Entity\RetailUsers;
 use App\Form\ResetPasswordRequestFormType;
 use App\Services\PaginationManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Nzo\UrlEncryptorBundle\Encryptor\Encryptor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,6 +31,7 @@ class RetailUsersController extends AbstractController
 {
     private $plainPassword;
     private $em;
+    private $emRemote;
     private $mailer;
     private $encryptor;
     private $passwordHasher;
@@ -38,11 +40,12 @@ class RetailUsersController extends AbstractController
     const ITEMS_PER_PAGE = 10;
 
     public function __construct(
-        EntityManagerInterface $em, MailerInterface $mailer, Encryptor $encryptor,
+        ManagerRegistry $em, MailerInterface $mailer, Encryptor $encryptor,
         UserPasswordHasherInterface $passwordHasher, PaginationManager $pageManager
     )
     {
-        $this->em = $em;
+        $this->em = $em->getManager('default');
+        $this->emRemote = $em->getManager('remote');
         $this->mailer = $mailer;
         $this->encryptor = $encryptor;
         $this->passwordHasher = $passwordHasher;
@@ -162,7 +165,8 @@ class RetailUsersController extends AbstractController
         $retailUser = $this->em->getRepository(RetailUsers::class)->find($retailUserId);
         $firstName = $this->encryptor->decrypt($retailUser->getFirstName());
         $lastName = $this->encryptor->decrypt($retailUser->getLastName());
-        $retailClinic = $retailUser->getClinic() ? $retailUser->getClinic()->getId() : 0;
+        $retailClinicId = $retailUser->getClinicId() ?? 0;
+        $retailClinic = $this->emRemote->getRepository(Clinics::class)->find($retailClinicId);
         $pageId = $request->request->get('page_id') ?? 1;
         $isAjax = $request->request->get('is-ajax') ?? false;
         $html = '';
@@ -181,7 +185,7 @@ class RetailUsersController extends AbstractController
             $basket->setStatus('active');
             $basket->setIsDefault(1);
             $basket->setTotal(0,00);
-            $basket->setClinic($retailUser->getClinic());
+            $basket->setClinicId($retailClinicId);
             $basket->setSavedBy($this->encryptor->encrypt($firstName .' '. $lastName));
 
             $this->em->persist($basket);
@@ -190,9 +194,9 @@ class RetailUsersController extends AbstractController
 
         $basketId = $basket->getId();
 
-        if($retailUser->getClinic() == null)
+        if($retailUser->getClinicId() == null)
         {
-            $retailClinics = $this->em->getRepository(Clinics::class)->adminFindAll(1);
+            $retailClinics = $this->emRemote->getRepository(Clinics::class)->adminFindAll(1);
             $results = $this->pageManager->paginate($retailClinics[0], $request, self::ITEMS_PER_PAGE);
             $pagination = $this->getPagination($pageId, $results);
             $clinicLogo = $this->getParameter('app.base_url') .'/images/logos/image-not-found.jpg';
@@ -234,7 +238,7 @@ class RetailUsersController extends AbstractController
                 <div class="col-12 mx-2">
                     <div class="row">
                         <div class="col-12 col-sm-3 bg-white border-top border-left border-right px-3 pt-3 text-center mx-auto">
-                            <img src="'. $logo .'" style="max-height: 120px">
+                            <img src="'. $logo .'" class="img-fluid" style="max-height: 120px">
                             <h6 class="mt-3">'. $this->encryptor->decrypt($clinic->getClinicName()) .'</h6>
                             <p class="m-0">'. $address .'</p>
                         </div>
@@ -279,6 +283,7 @@ class RetailUsersController extends AbstractController
                                 class="btn btn-primary w-sm-100 mb-sm-0 w-sm-100" 
                                 id="btn_request_connection"
                                 data-retail-user-id="'. $retailUserId .'"
+                                data-action="click->retail#onClickRequestConnection"
                             >CONNECT</button>
                         </div>
                     </div>
@@ -289,9 +294,9 @@ class RetailUsersController extends AbstractController
         {
             $clinicLogo = $this->getParameter('app.base_url') .'/images/logos/image-not-found.jpg';
 
-            if($retailUser->getClinic()->getLogo() != null)
+            if($retailClinic->getLogo() != null)
             {
-                $clinicLogo = $this->getParameter('app.base_url') .'/images/logos/'. $retailUser->getClinic()->getLogo();
+                $clinicLogo = $this->getParameter('app.base_url') .'/images/logos/'. $retailClinic->getLogo();
             }
         }
 
@@ -686,14 +691,14 @@ class RetailUsersController extends AbstractController
     }
 
     #[Route('/retail/request-connection', name: 'retail_request_connection')]
-    public function retailClinicRequestConnetionAction(Request $request): Response
+    public function retailClinicRequestConnectionAction(Request $request): Response
     {
         $data = $request->request;
         $retailUserId = (int) $data->get('retail-user-id') ?? 0;
         $clinicId = (int) $data->get('clinic-id') ?? 0;
         $clinicRetailUser = $this->em->getRepository(ClinicRetailUsers::class)->findOneBy([
             'retailUser' => $retailUserId,
-            'clinic' => $clinicId,
+            'clinicId' => $clinicId,
         ]);
         $response = [];
 
@@ -704,21 +709,21 @@ class RetailUsersController extends AbstractController
                 $clinicRetailUser = new ClinicRetailUsers();
             }
 
-            $clinic = $this->em->getRepository(Clinics::class)->find($clinicId);
+            $clinic = $this->emRemote->getRepository(Clinics::class)->find($clinicId);
             $clinicName = $this->encryptor->decrypt($clinic->getClinicName());
 
             if($clinicRetailUser->getIsIgnored() != 1)
             {
                 $retailUser = $this->em->getRepository(RetailUsers::class)->find($retailUserId);
 
-                $clinicRetailUser->setClinic($clinic);
+                $clinicRetailUser->setClinic($clinicId);
                 $clinicRetailUser->setRetailUser($retailUser);
                 $clinicRetailUser->setIsApproved(1);
                 $clinicRetailUser->setIsIgnored(0);
 
                 $this->em->persist($clinicRetailUser);
 
-                $retailUser->setClinic($clinic);
+                $retailUser->setClinicId($clinicId);
 
                 $this->em->flush();
 
@@ -749,7 +754,8 @@ class RetailUsersController extends AbstractController
         }
 
         $response = [];
-        $clinic = $this->getUser()->getClinic();
+        $clinicId = $this->getUser()->getClinicId();
+        $clinic = $this->emRemote->getRepository(Clinics::class)->find($clinicId);
         $method = $request->request->get('method');
         $name = $request->request->get('name');
         $pieces = explode(' ', $name);

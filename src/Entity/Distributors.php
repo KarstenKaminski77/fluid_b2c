@@ -110,19 +110,9 @@ class Distributors
     private $eventLogs;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItems::class, mappedBy="distributor")
-     */
-    private $orderItems;
-
-    /**
      * @ORM\OneToMany(targetEntity=ListItems::class, mappedBy="distributor")
      */
     private $listItems;
-
-    /**
-     * @ORM\OneToMany(targetEntity=BasketItems::class, mappedBy="distributor")
-     */
-    private $basketItems;
 
     /**
      * @ORM\OneToMany(targetEntity=ClinicProducts::class, mappedBy="distributor")
@@ -283,9 +273,7 @@ class Distributors
         $this->distributorProducts = new ArrayCollection();
         $this->distributorUsers = new ArrayCollection();
         $this->eventLogs = new ArrayCollection();
-        $this->orderItems = new ArrayCollection();
         $this->listItems = new ArrayCollection();
-        $this->basketItems = new ArrayCollection();
         $this->clinicProducts = new ArrayCollection();
         $this->availabilityTrackers = new ArrayCollection();
         $this->chatParticipants = new ArrayCollection();
@@ -609,36 +597,6 @@ class Distributors
     }
 
     /**
-     * @return Collection|OrderItems[]
-     */
-    public function getOrderItems(): Collection
-    {
-        return $this->orderItems;
-    }
-
-    public function addOrderItem(OrderItems $orderItem): self
-    {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrderItem(OrderItems $orderItem): self
-    {
-        if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
-            if ($orderItem->getDistributor() === $this) {
-                $orderItem->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, ListItems>
      */
     public function getListItems(): Collection
@@ -662,36 +620,6 @@ class Distributors
             // set the owning side to null (unless already changed)
             if ($listItem->getDistributor() === $this) {
                 $listItem->setDistributor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, BasketItems>
-     */
-    public function getBasketItems(): Collection
-    {
-        return $this->basketItems;
-    }
-
-    public function addBasketItem(BasketItems $basketItem): self
-    {
-        if (!$this->basketItems->contains($basketItem)) {
-            $this->basketItems[] = $basketItem;
-            $basketItem->setDistributor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBasketItem(BasketItems $basketItem): self
-    {
-        if ($this->basketItems->removeElement($basketItem)) {
-            // set the owning side to null (unless already changed)
-            if ($basketItem->getDistributor() === $this) {
-                $basketItem->setDistributor(null);
             }
         }
 

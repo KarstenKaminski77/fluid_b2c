@@ -32,6 +32,7 @@ export default class extends Controller
         let productId = $(clickedElement).attr('data-product-id');
         let qty = $(clickedElement).attr('data-qty');
         let price = $(clickedElement).attr('data-price');
+        let listItemId = $(clickedElement).attr('data-list-item-id');
         let self = this;
         let isValid = true;
 
@@ -52,6 +53,7 @@ export default class extends Controller
                     'product-id': productId,
                     'qty': qty,
                     'price': price,
+                    'list-item-id': listItemId,
                 },
                 beforeSend: function ()
                 {
@@ -61,7 +63,7 @@ export default class extends Controller
                 {
                     if(e.status === 500)
                     {
-                        window.location.href = '/retail/error';
+                        //window.location.href = '/retail/error';
                     }
                 },
                 success: function (response)
@@ -98,7 +100,7 @@ export default class extends Controller
         {
             $.ajax({
                 async: "true",
-                url: "/clinics/inventory/inventory-clear-basket",
+                url: "/retail/inventory/inventory-clear-basket",
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -128,7 +130,7 @@ export default class extends Controller
         {
             $.ajax({
                 async: "true",
-                url: "/retail/inventory/inventory-remove-basket-item",
+                url: "/retail/inventory-remove-basket-item",
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -141,7 +143,7 @@ export default class extends Controller
                 complete: function(e)
                 {
                     if(e.status === 500){
-                        window.location.href = '/retail/error';
+                        //window.location.href = '/retail/error';
                     }
                 },
                 success: function (response)
@@ -243,7 +245,7 @@ export default class extends Controller
             {
                 if(e.status === 500)
                 {
-                    window.location.href = '/retail/error';
+                    //window.location.href = '/retail/error';
                 }
             },
             success: function (response)

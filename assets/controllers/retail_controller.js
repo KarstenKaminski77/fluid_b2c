@@ -184,7 +184,7 @@ export default class extends Controller
                 {
                     if (e.status === 500)
                     {
-                        window.location.href = '/retail/error';
+                        //window.location.href = '/retail/error';
                     }
                 },
                 success: function (response)
@@ -385,7 +385,7 @@ export default class extends Controller
         $.ajax(
             {
             async: "true",
-            url: "/clinics/address/delete",
+            url: "/retail/address/delete",
             type: 'POST',
             timeout: 600000,
             data: {
@@ -544,7 +544,7 @@ export default class extends Controller
             {
                 if(e.status === 500)
                 {
-                    window.location.href = '/retail/error';
+                    //window.location.href = '/retail/error';
                 }
             },
             success: function (response)
@@ -600,9 +600,10 @@ export default class extends Controller
     {
         e.preventDefault();
 
-        let clinicId = $(this).attr('data-clinic-id');
-        let clinicLogo = $(this).attr('data-clinic-logo')
-        let clinicName = $(this).attr('data-clinic-name')
+        let clickedElement = e.currentTarget;
+        let clinicId = $(clickedElement).attr('data-clinic-id');
+        let clinicLogo = $(clickedElement).attr('data-clinic-logo')
+        let clinicName = $(clickedElement).attr('data-clinic-name')
 
         $('#btn_request_connection').attr('data-clinic-id', clinicId);
         $('#logo_img').attr('src', clinicLogo);
@@ -636,7 +637,7 @@ export default class extends Controller
                 {
                     if(e.status === 500)
                     {
-                        window.location.href = '/retail/error';
+                        //window.location.href = '/retail/error';
                     }
                 },
                 success: function (response)

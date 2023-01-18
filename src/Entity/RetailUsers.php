@@ -22,11 +22,6 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="retailUsers")
-     */
-    private $clinic;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $firstName;
@@ -112,6 +107,11 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $clinicId;
+
     public function __construct()
     {
         $this->setModified(new \DateTime());
@@ -127,18 +127,6 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getClinic(): ?Clinics
-    {
-        return $this->clinic;
-    }
-
-    public function setClinic(?Clinics $clinic): self
-    {
-        $this->clinic = $clinic;
-
-        return $this;
     }
 
     public function getFirstName(): ?string
@@ -461,6 +449,18 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setRetail(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClinicId(): ?int
+    {
+        return $this->clinicId;
+    }
+
+    public function setClinicId(?int $clinicId): self
+    {
+        $this->clinicId = $clinicId;
 
         return $this;
     }

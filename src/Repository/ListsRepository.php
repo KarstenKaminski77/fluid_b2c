@@ -3,8 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Lists;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * @method Lists|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,13 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Lists[]    findAll()
  * @method Lists[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ListsRepository extends ServiceEntityRepository
+class ListsRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Lists::class);
-    }
-
     public function getClinicLists($clinic_id): array
     {
         $queryBuilder = $this->createQueryBuilder('l')

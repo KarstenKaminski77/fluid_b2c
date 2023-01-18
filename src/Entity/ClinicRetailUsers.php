@@ -18,9 +18,9 @@ class ClinicRetailUsers
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="clinicRetailUsers")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $clinic;
+    private $clinicId;
 
     /**
      * @ORM\ManyToOne(targetEntity=RetailUsers::class, inversedBy="clinicRetailUsers")
@@ -61,14 +61,14 @@ class ClinicRetailUsers
         return $this->id;
     }
 
-    public function getClinic(): ?Clinics
+    public function getClinicId(): ?int
     {
-        return $this->clinic;
+        return $this->clinicId;
     }
 
-    public function setClinic(?Clinics $clinic): self
+    public function setClinic(?int $clinicId): self
     {
-        $this->clinic = $clinic;
+        $this->clinicId = $clinicId;
 
         return $this;
     }

@@ -33,9 +33,9 @@ class OrderItems
     private $product;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Distributors::class, inversedBy="orderItems")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $distributor;
+    private $distributorId;
 
     /**
      * @ORM\Column(type="integer")
@@ -201,14 +201,14 @@ class OrderItems
         return $this;
     }
 
-    public function getDistributor(): ?Distributors
+    public function getDistributorId(): ?int
     {
-        return $this->distributor;
+        return $this->distributorId;
     }
 
-    public function setDistributor(?Distributors $distributor): self
+    public function setDistributorId(?int $distributorId): self
     {
-        $this->distributor = $distributor;
+        $this->distributorId = $distributorId;
 
         return $this;
     }

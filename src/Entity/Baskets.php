@@ -20,14 +20,14 @@ class Baskets
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="baskets")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $clinic;
+    private $clinicId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Distributors::class, inversedBy="baskets")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $distributor;
+    private $distributorId;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -94,26 +94,26 @@ class Baskets
         return $this->id;
     }
 
-    public function getClinic(): ?Clinics
+    public function getClinicId(): ?int
     {
-        return $this->clinic;
+        return $this->clinicId;
     }
 
-    public function setClinic(?Clinics $clinic): self
+    public function setClinicId(?int $clinicId): self
     {
-        $this->clinic = $clinic;
+        $this->clinicId = $clinicId;
 
         return $this;
     }
 
-    public function getDistributor(): ?Distributors
+    public function getDistributorId(): ?int
     {
-        return $this->distributor;
+        return $this->distributorId;
     }
 
-    public function setDistributor(?Distributors $distributor): self
+    public function setDistributorId(?int $distributorId): self
     {
-        $this->distributor = $distributor;
+        $this->distributorId = $distributorId;
 
         return $this;
     }

@@ -20,9 +20,9 @@ class Orders
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="orders")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $clinic;
+    private $clinicId;
 
     /**
      * @ORM\ManyToOne(targetEntity=Addresses::class, inversedBy="orders")
@@ -140,14 +140,14 @@ class Orders
         return $this->id;
     }
 
-    public function getClinic(): ?Clinics
+    public function getClinicId(): ?int
     {
-        return $this->clinic;
+        return $this->clinicId;
     }
 
-    public function setClinic(?Clinics $clinic): self
+    public function setClinicId(?int $clinicId): self
     {
-        $this->clinic = $clinic;
+        $this->clinicId = $clinicId;
 
         return $this;
     }

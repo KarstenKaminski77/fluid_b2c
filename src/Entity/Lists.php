@@ -20,9 +20,9 @@ class Lists
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="lists")
+    @ORM\Column(type="integer", nullable=true)
      */
-    private $clinic;
+    private $clinicId;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -73,14 +73,14 @@ class Lists
         return $this->id;
     }
 
-    public function getClinic(): ?Clinics
+    public function getClinicId(): ?int
     {
-        return $this->clinic;
+        return $this->clinicId;
     }
 
-    public function setClinic(?Clinics $clinic): self
+    public function setClinicId(?int $clinicId): self
     {
-        $this->clinic = $clinic;
+        $this->clinicId = $clinicId;
 
         return $this;
     }

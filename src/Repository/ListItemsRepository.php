@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ListItems;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ListItems[]    findAll()
  * @method ListItems[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ListItemsRepository extends ServiceEntityRepository
+class ListItemsRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, ListItems::class);
-    }
-
     /**
      * @throws ORMException
      * @throws OptimisticLockException

@@ -30,14 +30,14 @@ class OrderStatus
     private $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="orderStatuses")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $orders;
+    private $ordersId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Distributors::class, inversedBy="orderStatuses")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $distributor;
+    private $distributorId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -86,26 +86,26 @@ class OrderStatus
         return $this;
     }
 
-    public function getOrders(): ?Orders
+    public function getOrdersId(): ?int
     {
-        return $this->orders;
+        return $this->ordersId;
     }
 
-    public function setOrders(?Orders $orders): self
+    public function setOrdersId(?int $ordersId): self
     {
-        $this->orders = $orders;
+        $this->ordersId = $ordersId;
 
         return $this;
     }
 
-    public function getDistributor(): ?Distributors
+    public function getDistributorId(): ?int
     {
-        return $this->distributor;
+        return $this->distributorId;
     }
 
-    public function setDistributor(?Distributors $distributor): self
+    public function setDistributorId(?int $distributorId): self
     {
-        $this->distributor = $distributor;
+        $this->distributorId = $distributorId;
 
         return $this;
     }

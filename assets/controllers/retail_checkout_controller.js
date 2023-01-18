@@ -34,7 +34,7 @@ export default class extends Controller
             complete: function(e)
             {
                 if(e.status === 500){
-                    window.location.href = '/retail/error';
+                    //window.location.href = '/retail/error';
                 }
             },
             success: function (response)
@@ -60,20 +60,26 @@ export default class extends Controller
                     .append('<span class="badge bg-success ms-3 toggle_address" role="button">Create A New Address</span>')
                     .append('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
                 $('#btn_checkout').hide();
+                $('#half_border_row').removeClass('px-sm-2');
+                $('#basket_items').removeClass('mx-sm-3');
                 window.scrollTo(0, 0);
             }
         });
     }
 
-    onClickModalShippingAddress()
+    onClickModalShippingAddress(e)
     {
+        let clickedElement = e.currentTarget;
+        let orderId = $(clickedElement).attr('data-order-id');
+
         $.ajax({
             async: "true",
-            url: "/clinics/get-address-modal/2",
+            url: "/retail/checkout/get-address-modal/2",
             type: 'POST',
             dataType: 'json',
             data:{
                 'retail': true,
+                'order-id': orderId,
             },
             success: function (response) {
                 $('#billing_address_modal').empty();
@@ -86,19 +92,24 @@ export default class extends Controller
                     .append('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
                 $('.modal-body-address-new').hide();
                 $('.modal-body-address-existing').show();
+                $('#address_type').val(2);
             }
         });
     }
 
-    onClickModalBillingAddress()
+    onClickModalBillingAddress(e)
     {
+        let clickedElement = e.currentTarget;
+        let orderId = $(clickedElement).attr('data-order-id');
+
         $.ajax({
             async: "true",
-            url: "/clinics/get-address-modal/1",
+            url: "/retail/checkout/get-address-modal/1",
             type: 'POST',
             dataType: 'json',
             data:{
                 'retail': true,
+                'order-id': orderId,
             },
             success: function (response) {
                 $('#shipping_address_modal').empty();
@@ -109,6 +120,7 @@ export default class extends Controller
                     .append('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
                 $('.modal-body-address-new').hide();
                 $('.modal-body-address-existing').show();
+                $('#address_type').val(1);
             }
         });
     }
@@ -125,7 +137,7 @@ export default class extends Controller
             separateDialCode: true,
             utilsScript: "/js/utils.js",
         });
-console.log($('.modal-body-address-new:visible').is(':visible'));
+
         if($('.modal-body-address-new:visible').is(':visible'))
         {
             $('#modal_header_address').empty()
@@ -182,34 +194,130 @@ console.log($('.modal-body-address-new:visible').is(':visible'));
         e.preventDefault();
 
         let data = new FormData($(this.element).find('#form_addresses_shipping_checkout')[0]);
-        let addressId = data.get('address');
+        let isValid = true;
+        let clinicName = $('#address_clinic_name').val()
+        let telephone = $('#address_telephone').val();
+        let addressLine1 = $('#address_line_1').val();
+        let postalCode = $('#address_postal_code').val();
+        let city = $('#address_city').val();
+        let state = $('#address_state').val();
+        let type = $('#address_type').val();
+        let errorClinicName = $('#error_address_clinic_name');
+        let errorTelephone = $('#error_address_telephone');
+        let errorAddressLine1 = $('#error_address_line_1');
+        let errorPostalCode = $('#error_address_postal_code');
+        let errorCity = $('#error_address_city');
+        let errorState = $('#error_address_state');
+        let errorType = $('#error_address_type');
 
-        if(addressId == null)
+        errorClinicName.hide();
+        errorTelephone.hide();
+        errorAddressLine1.hide();
+        errorPostalCode.hide();
+        errorCity.hide();
+        errorState.hide();
+        errorType.hide();
+
+        if(!$('.existing-address').is(':checked')) {
+            if (clinicName == '' || clinicName == 'undefined') {
+                errorClinicName.show();
+                isValid = false;
+            }
+
+            if (telephone == '' || telephone == 'undefined') {
+                errorTelephone.show();
+                isValid = false;
+            }
+
+            if (addressLine1 == '' || addressLine1 == 'undefined') {
+                errorAddressLine1.show();
+                isValid = false;
+            }
+
+            if (city == '' || city == 'undefined') {
+                errorCity.show();
+                isValid = false;
+            }
+
+            if (postalCode == '' || postalCode == 'undefined') {
+                errorPostalCode.show();
+                isValid = false;
+            }
+
+            if (state == '' || state == 'undefined') {
+                errorState.show();
+                isValid = false;
+            }
+
+            if (type == '' || type == 'undefined') {
+                errorType.show();
+                isValid = false;
+            }
+        }
+
+        if (isValid == true)
         {
-            let isValid = true;
-            let clinicName = $('#address_clinic_name').val()
-            let telephone = $('#address_telephone').val();
-            let addressLine1 = $('#address_line_1').val();
-            let postalCode = $('#address_postal_code').val();
-            let city = $('#address_city').val();
-            let state = $('#address_state').val();
-            let type = $('#address_type').val();
-            let errorClinicName = $('#error_address_clinic_name');
-            let errorTelephone = $('#error_address_telephone');
-            let errorAddressLine1 = $('#error_address_line_1');
-            let errorPostalCode = $('#error_address_postal_code');
-            let errorCity = $('#error_address_city');
-            let errorState = $('#error_address_state');
-            let errorType = $('#error_address_type');
+            $.ajax({
+                async: "true",
+                url: "/retail/update-retail-address",
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                timeout: 600000,
+                dataType: 'json',
+                data: data,
+                success: function (response)
+                {
+                    $('#checkout_shipping_address').empty().append(response.checkoutAddress);
+                    $('#modal_shipping_address').modal('toggle');
+                    $('.modal-backdrop').removeClass('modal-backdrop');
+                    $('#modal_shipping_address').addClass('fade');
+                    $('#basket_container').css({overflow: "auto"});
+                    $('#address_clinic_name').val('');
+                    $('#address_telephone').val('');
+                    $('#address_line_1').val('');
+                    $('#address_suite').val('');
+                    $('#address_postal_code').val('');
+                    $('#address_city').val('');
+                    $('#address_state').val('');
+                    $('#shipping_address_id').val(response.checkoutAddressId);
+                }
+            });
+        }
+    }
 
-            errorClinicName.hide();
-            errorTelephone.hide();
-            errorAddressLine1.hide();
-            errorPostalCode.hide();
-            errorCity.hide();
-            errorState.hide();
-            errorType.hide();
+    onSubmitBillingAddress(e)
+    {
+        e.preventDefault();
 
+        let data = new FormData($(this.element).find('#form_addresses_billing_checkout')[0]);
+        let isValid = true;
+        let clinicName = $('#address_clinic_name').val()
+        let telephone = $('#address_telephone').val();
+        let addressLine1 = $('#address_line_1').val();
+        let postalCode = $('#address_postal_code').val();
+        let city = $('#address_city').val();
+        let state = $('#address_state').val();
+        let type = $('#address_type').val();
+        let errorClinicName = $('#error_address_clinic_name');
+        let errorTelephone = $('#error_address_telephone');
+        let errorAddressLine1 = $('#error_address_line_1');
+        let errorPostalCode = $('#error_address_postal_code');
+        let errorCity = $('#error_address_city');
+        let errorState = $('#error_address_state');
+        let errorType = $('#error_address_type');
+
+        errorClinicName.hide();
+        errorTelephone.hide();
+        errorAddressLine1.hide();
+        errorPostalCode.hide();
+        errorCity.hide();
+        errorState.hide();
+        errorType.hide();
+
+        if(!$('.existing-address').is(':checked'))
+        {
             if (clinicName == '' || clinicName == 'undefined')
             {
                 errorClinicName.show();
@@ -251,123 +359,41 @@ console.log($('.modal-body-address-new:visible').is(':visible'));
                 errorType.show();
                 isValid = false;
             }
-
-            if (isValid == true)
-            {
-                $.ajax({
-                    async: "true",
-                    url: "/clinics/update-address",
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    timeout: 600000,
-                    dataType: 'json',
-                    data: data,
-                    success: function (response)
-                    {
-                        $('#checkout_shipping_address').empty().append(response.checkout_address);
-                        $('#modal_shipping_address').modal('toggle');
-                        $('.modal-backdrop').removeClass('modal-backdrop');
-                        $('#modal_shipping_address').addClass('fade');
-                        $('#basket_container').css({overflow: "auto"});
-                        $('#address_clinic_name').val('');
-                        $('#address_telephone').val('');
-                        $('#address_line_1').val('');
-                        $('#address_suite').val('');
-                        $('#address_postal_code').val('');
-                        $('#address_city').val('');
-                        $('#address_state').val('');
-                        $('#shipping_address_id').val(response.checkout_address_id);
-                    }
-                });
-            }
         }
-    }
 
-    onSubmitBillingAddress(e)
-    {
-        e.preventDefault();
-
-        if($('.existing-address').attr('disabled') == 'disabled')
+        if (isValid == true)
         {
-            let isValid = true;
-            let clinicName = $('#address_clinic_name').val();
-            let telephone = $('#address_telephone').val();
-            let addressLine1 = $('#address_line_1').val();
-            let type = $('#address_type').val();
-            let errorClinicName = $('#error_address_clinic_name');
-            let errorTelephone = $('#error_address_telephone');
-            let errorAddressLine1 = $('#error_address_line_1');
-            let errorType = $('#error_address_type');
-            let self = this;
-
-            errorClinicName.hide();
-            errorTelephone.hide();
-            errorAddressLine1.hide();
-            errorType.hide();
-
-            if(clinicName == '' || clinicName == 'undefined')
-            {
-                errorClinicName.show();
-                isValid = false;
-            }
-
-            if(telephone == '' || telephone == 'undefined')
-            {
-                errorTelephone.show();
-                isValid = false;
-            }
-
-            if(addressLine1 == '' || addressLine1 == 'undefined')
-            {
-                errorAddressLine1.show();
-                isValid = false;
-            }
-
-            if(type == '' || type == 'undefined')
-            {
-                errorType.show();
-                isValid = false;
-            }
-
-            if (isValid == true)
-            {
-                $("<input />").attr("type", "hidden").attr("name", "page_id").attr("value", $('#page_no').val()).appendTo("#form_addresses");
-
-                let data = new FormData($(this.element).find('#form_addresses_billing_checkout')[0]);
-
-                $.ajax({
-                    async: "true",
-                    url: "/clinics/update-address",
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    timeout: 600000,
-                    dataType: 'json',
-                    data: data,
-                    beforeSend: function (){
-                        self.isLoading(true);
-                    },
-                    success: function (response)
-                    {
-                        $('#checkout_billing_address').empty().append(response.checkout_address);
-                        $('#modal_billing_address').modal('toggle');
-                        $('#basket_container').css({overflow: "auto"});
-                        $('#address_clinic_name').val('');
-                        $('#address_telephone').val('');
-                        $('#address_mobile').val('');
-                        $('#address_line_1').val('');
-                        $('#billing_address_id').val(response.checkout_address_id);
-                        self.isLoading(false);
-                    }
-                });
-            }
+            $.ajax({
+                async: "true",
+                url: "/retail/update-retail-address",
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                timeout: 600000,
+                dataType: 'json',
+                data: data,
+                success: function (response)
+                {
+                    $('#checkout_billing_address').empty().append(response.checkoutAddress);
+                    $('#modal_billing_address').modal('toggle');
+                    $('.modal-backdrop').removeClass('modal-backdrop');
+                    $('#modal_billing_address').addClass('fade');
+                    $('#basket_container').css({overflow: "auto"});
+                    $('#address_clinic_name').val('');
+                    $('#address_telephone').val('');
+                    $('#address_line_1').val('');
+                    $('#address_suite').val('');
+                    $('#address_postal_code').val('');
+                    $('#address_city').val('');
+                    $('#address_state').val('');
+                    $('#billing_address_id').val(response.checkoutAddressId);
+                }
+            });
         }
     }
 
-    onClickSippingAddressMapBtn()
+    onClickShippingAddressMapBtn()
     {
         let visible = $('#address_map').is(":visible");
         let width = $(window).width();

@@ -45,7 +45,7 @@ class Clinics
     private $created;
 
     /**
-     * @ORM\OneToMany(targetEntity=Addresses::class, mappedBy="clinic")
+     * @ORM\OneToMany(targetEntity=Addresses::class, mappedBy="retail")
      */
     private $addresses;
 
@@ -75,19 +75,9 @@ class Clinics
     private $distributorClinicPrices;
 
     /**
-     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="clinic")
-     */
-    private $orders;
-
-    /**
      * @ORM\OneToMany(targetEntity=EventLog::class, mappedBy="clinic")
      */
     private $eventLogs;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Lists::class, mappedBy="clinic")
-     */
-    private $lists;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductNotes::class, mappedBy="clinic")
@@ -200,11 +190,6 @@ class Clinics
     private $managerIdExpDate;
 
     /**
-     * @ORM\OneToMany(targetEntity=RetailUsers::class, mappedBy="clinic")
-     */
-    private $retailUsers;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $logo;
@@ -262,9 +247,7 @@ class Clinics
         $this->clinicCommunicationMethods = new ArrayCollection();
         $this->clinicUsers = new ArrayCollection();
         $this->distributorClinicPrices = new ArrayCollection();
-        $this->orders = new ArrayCollection();
         $this->eventLogs = new ArrayCollection();
-        $this->lists = new ArrayCollection();
         $this->productNotes = new ArrayCollection();
         $this->availabilityTrackers = new ArrayCollection();
         $this->clinicProducts = new ArrayCollection();
@@ -274,8 +257,6 @@ class Clinics
         $this->chatParticipants = new ArrayCollection();
         $this->clinicUserPermissions = new ArrayCollection();
         $this->distributorClinics = new ArrayCollection();
-        $this->retailUsers = new ArrayCollection();
-        $this->clinicRetailUsers = new ArrayCollection();
         $this->productRetails = new ArrayCollection();
     }
 
@@ -483,36 +464,6 @@ class Clinics
     }
 
     /**
-     * @return Collection|Orders[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Orders $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Orders $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getClinic() === $this) {
-                $order->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|EventLog[]
      */
     public function getEventLogs(): Collection
@@ -536,36 +487,6 @@ class Clinics
             // set the owning side to null (unless already changed)
             if ($eventLog->getClinic() === $this) {
                 $eventLog->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Lists[]
-     */
-    public function getLists(): Collection
-    {
-        return $this->lists;
-    }
-
-    public function addList(Lists $list): self
-    {
-        if (!$this->lists->contains($list)) {
-            $this->lists[] = $list;
-            $list->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeList(Lists $list): self
-    {
-        if ($this->lists->removeElement($list)) {
-            // set the owning side to null (unless already changed)
-            if ($list->getClinic() === $this) {
-                $list->setClinic(null);
             }
         }
 
@@ -1010,36 +931,6 @@ class Clinics
         return $this;
     }
 
-    /**
-     * @return Collection<int, RetailUsers>
-     */
-    public function getRetailUsers(): Collection
-    {
-        return $this->retailUsers;
-    }
-
-    public function addRetailUser(RetailUsers $retailUser): self
-    {
-        if (!$this->retailUsers->contains($retailUser)) {
-            $this->retailUsers[] = $retailUser;
-            $retailUser->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRetailUser(RetailUsers $retailUser): self
-    {
-        if ($this->retailUsers->removeElement($retailUser)) {
-            // set the owning side to null (unless already changed)
-            if ($retailUser->getClinic() === $this) {
-                $retailUser->setClinic(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getLogo(): ?string
     {
         return $this->logo;
@@ -1048,36 +939,6 @@ class Clinics
     public function setLogo(?string $logo): self
     {
         $this->logo = $logo;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ClinicRetailUsers>
-     */
-    public function getClinicRetailUsers(): Collection
-    {
-        return $this->clinicRetailUsers;
-    }
-
-    public function addClinicRetailUser(ClinicRetailUsers $clinicRetailUser): self
-    {
-        if (!$this->clinicRetailUsers->contains($clinicRetailUser)) {
-            $this->clinicRetailUsers[] = $clinicRetailUser;
-            $clinicRetailUser->setClinic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicRetailUser(ClinicRetailUsers $clinicRetailUser): self
-    {
-        if ($this->clinicRetailUsers->removeElement($clinicRetailUser)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicRetailUser->getClinic() === $this) {
-                $clinicRetailUser->setClinic(null);
-            }
-        }
 
         return $this;
     }

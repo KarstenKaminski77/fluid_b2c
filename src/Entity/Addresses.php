@@ -20,11 +20,6 @@ class Addresses
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Clinics::class, inversedBy="addresses")
-     */
-    private $clinic;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $address;
@@ -122,18 +117,6 @@ class Addresses
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getClinic(): ?Clinics
-    {
-        return $this->clinic;
-    }
-
-    public function setClinic(?Clinics $clinic): self
-    {
-        $this->clinic = $clinic;
-
-        return $this;
     }
 
     public function getAddress(): ?string
