@@ -31,22 +31,31 @@ export default class extends Controller
             ]
         });
 
-        let uri = window.location.pathname;
-        let isContactPage = uri.match('/?contact');
 
-        if(isContactPage != null){
+        if(window.location.origin == window.location.href.replace(/\/+$/, '')){
 
-            $('body').scrollTo('#contact_container');
             $('body').removeClass('frontend-body-pt');
         }
 
-        if(uri != '/'){
 
-            $('.contact-link').attr('href', 'https://{{ app.request.httpHost }}?contact');
+        let urlParams = new URLSearchParams(window.location.search);
 
-        } else {
-
+        if(urlParams.has('contact'))
+        {
             $('body').removeClass('frontend-body-pt');
+            document.querySelector('#contact_title').scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            window.history.pushState(null, "Fluid", '/');
+        }
+
+        let uri = window.location.pathname;
+        let isSellersPage = uri.match('/sellers');
+
+        if(isSellersPage)
+        {
+            $('body').addClass('form-control-bg-grey');
         }
     }
 
@@ -54,9 +63,17 @@ export default class extends Controller
     {
         e.preventDefault();
 
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $("#contact_title").offset().top - 86
-        }, 300);
+        if(window.location.origin == window.location.href.replace(/\/+$/, ''))
+        {
+            $('body').removeClass('frontend-body-pt');
+            document.querySelector('#contact_title').scrollIntoView({
+                behavior: 'smooth'
+            });
+
+        } else {
+
+            window.location.href = window.location.protocol +'//'+ window.location.host + '/?contact';
+        }
     }
 
     onSubmitContactForm(e)
