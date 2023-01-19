@@ -42,13 +42,11 @@
         {% block footer %}{% endblock %}
 
         {% block javascripts %}
-            <script src="https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.umd.min.js"></script>
-
             <!-- jQuery -->
             {{ encore_entry_script_tags('app') }}
             <script src="{{ asset('js/jquery.session.min.js') }}"></script>
             <script src="{{ asset('js/google-maps.min.js') }}"></script>
-            <script src="{{ asset('js/geo_map.js') }}" type="text/javascript"></script>
+            <script src="{{ asset('js/geo_map.min.js') }}" type="text/javascript"></script>
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOX2X9tgaJA1LCfyf8tAFdqa8ueVJqzm8&;callback=gmapController.initialize" type="text/javascript"></script>
         {% endblock %}
     </body>

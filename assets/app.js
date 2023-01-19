@@ -17,7 +17,6 @@ import  'intl-tel-input/build/css/intlTelInput.css' ;
 window [ 'intlTelInput' ] = intlTelInput;
 import 'jquery-scrollTo';
 import 'popper.js';
-import '../public/js/geo_map';
 
 // start the Stimulus application
 import './bootstrap';
