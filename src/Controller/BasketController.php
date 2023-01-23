@@ -36,10 +36,12 @@ class BasketController extends AbstractController
     #[Route('/retail/inventory-remove-basket-item', name: 'inventory_remove_basket_item_retail')]
     public function removeBasketItemAction(Request $request): Response
     {
-        $basketItemId = $request->request->get('item-id');
+        $basketItemId = (int) $request->request->get('item-id');
         $basketItem = $this->em->getRepository(BasketItems::class)->find($basketItemId);
         $basketId = $basketItem->getBasket()->getId();
         $basket = $this->em->getRepository(Baskets::class)->find($basketId);
+        $productId = $basketItem->getProductId();
+        $product = $this->emRemote->getRepository(Products::class)->find($productId);
 
         if($basketItem != null){
 
@@ -60,7 +62,7 @@ class BasketController extends AbstractController
 
         $response = [
 
-            'message' => '<b><i class="fas fa-check-circle"></i> '. $basketItem->getProduct()->getName() .' removed.<div class="flash-close"><i class="fa-solid fa-xmark"></i></div>',
+            'message' => '<b><i class="fas fa-check-circle"></i> '. $product->getName() .' removed.<div class="flash-close"><i class="fa-solid fa-xmark"></i></div>',
             'basketId' => $basketId,
         ];
 
@@ -121,7 +123,7 @@ class BasketController extends AbstractController
         $basket = $this->em->getRepository(Baskets::class)->findOneBy([
             'retailUser' => $retailUserId
         ]);
-        $product = $this->em->getRepository(Products::class)->find($productId);
+        $product = $this->emRemote->getRepository(Products::class)->find($productId);
         $listItem = $this->emRemote->getRepository(ListItems::class)->find($listItemId);
         $distributor = $listItem->getDistributor();
 
@@ -147,7 +149,7 @@ class BasketController extends AbstractController
         // Add item to basket
         $basketItem = $this->em->getRepository(BasketItems::class)->findOneBy([
             'basket' => $basket->getId(),
-            'product' => $productId,
+            'productId' => $productId,
         ]);
 
         if($basketItem == null)
@@ -156,7 +158,7 @@ class BasketController extends AbstractController
         }
 
         $basketItem->setBasket($basket);
-        $basketItem->setProduct($product);
+        $basketItem->setProductId($product->getId());
         $basketItem->setDistributorId($distributor->getId());
         $basketItem->setName($product->getName());
         $basketItem->setQty($qty);
@@ -264,10 +266,11 @@ class BasketController extends AbstractController
                         foreach ($basket->getBasketItems() as $basketItem)
                         {
                             $total = number_format($basketItem->getQty() * $basketItem->getUnitPrice(), 2);
-                            $firstImage = $this->em->getRepository(ProductImages::class)->findOneBy([
-                                'product' => $basketItem->getProduct()->getId(),
+                            $firstImage = $this->emRemote->getRepository(ProductImages::class)->findOneBy([
+                                'product' => $basketItem->getProductId(),
                                 'isDefault' => 1
                             ]);
+                            $product = $this->emRemote->getRepository(Products::class)->find($basketItem->getProductId());
 
                             if($firstImage == null){
 
@@ -294,7 +297,7 @@ class BasketController extends AbstractController
                                                     '. $this->encryptor->decrypt($clinic->getClinicName()) .'
                                                 </span>
                                                 <h6 class="fw-bold text-primary lh-base my-0">
-                                                    '. $basketItem->getProduct()->getName() .'
+                                                    '. $product->getName() .'
                                                 </h6>
                                             </div>
                                             <!-- Product Quantity -->
@@ -411,7 +414,8 @@ class BasketController extends AbstractController
     {
         $itemId = $request->request->get('item-id');
         $basketItem = $this->em->getRepository(BasketItems::class)->find($itemId);
-        $productName = $basketItem->getProduct()->getName();
+        $product = $this->emRemote->getRepository(Products::class)->find($basketItem->getProductId());
+        $productName = $product->getName();
         $basketId = $basketItem->getBasket()->getId();
         $basket = $this->em->getRepository(Baskets::class)->find($basketId);
         $currency = $this->getUser()->getCountry()->getCurrency();

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ClinicRetailUsers;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ClinicRetailUsers[]    findAll()
  * @method ClinicRetailUsers[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ClinicRetailUsersRepository extends ServiceEntityRepository
+class ClinicRetailUsersRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, ClinicRetailUsers::class);
-    }
-
     public function add(ClinicRetailUsers $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

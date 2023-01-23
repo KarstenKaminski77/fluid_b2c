@@ -15,7 +15,6 @@ use App\Entity\ManufacturerUsers;
 use App\Entity\RetailUsers;
 use App\Form\ResetPasswordRequestFormType;
 use App\Services\PaginationManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Nzo\UrlEncryptorBundle\Encryptor\Encryptor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -215,7 +214,7 @@ class RetailUsersController extends AbstractController
             foreach($results as $clinic)
             {
                 $address = $this->em->getRepository(Addresses::class)->findOneBy([
-                    'clinic' => $clinic->getId(),
+                    'retail' => $this->getUser()->getId(),
                     'isDefaultBilling' => 1,
                 ]);
                 $logo = $this->getParameter('app.base_url') .'/images/logos/image-not-found.jpg';
@@ -696,8 +695,8 @@ class RetailUsersController extends AbstractController
         $data = $request->request;
         $retailUserId = (int) $data->get('retail-user-id') ?? 0;
         $clinicId = (int) $data->get('clinic-id') ?? 0;
-        $clinicRetailUser = $this->em->getRepository(ClinicRetailUsers::class)->findOneBy([
-            'retailUser' => $retailUserId,
+        $clinicRetailUser = $this->emRemote->getRepository(ClinicRetailUsers::class)->findOneBy([
+            'retailUserId' => $retailUserId,
             'clinicId' => $clinicId,
         ]);
         $response = [];
@@ -717,11 +716,12 @@ class RetailUsersController extends AbstractController
                 $retailUser = $this->em->getRepository(RetailUsers::class)->find($retailUserId);
 
                 $clinicRetailUser->setClinic($clinicId);
-                $clinicRetailUser->setRetailUser($retailUser);
+                $clinicRetailUser->setRetailUserId($retailUser->getId());
                 $clinicRetailUser->setIsApproved(1);
                 $clinicRetailUser->setIsIgnored(0);
 
-                $this->em->persist($clinicRetailUser);
+                $this->emRemote->persist($clinicRetailUser);
+                $this->emRemote->flush();
 
                 $retailUser->setClinicId($clinicId);
 

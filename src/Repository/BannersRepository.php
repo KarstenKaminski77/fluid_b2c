@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Banners;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Banners[]    findAll()
  * @method Banners[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BannersRepository extends ServiceEntityRepository
+class BannersRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Banners::class);
-    }
-
     public function add(Banners $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

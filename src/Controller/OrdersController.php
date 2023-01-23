@@ -11,6 +11,7 @@ use App\Entity\OrderItems;
 use App\Entity\Orders;
 use App\Entity\OrderStatus;
 use App\Entity\ProductImages;
+use App\Entity\Products;
 use App\Entity\Status;
 use App\Services\PaginationManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -68,7 +69,6 @@ class OrdersController extends AbstractController
         $order = $this->em->getRepository(Orders::class)->findOneBy([
             'basket' => $basketId,
         ]);
-        $distributor = $this->emRemote->getRepository(Distributors::class)->find($order->getOrderItems()->first()->getDistributorId());
         $basket = $this->em->getRepository(Baskets::class)->find($basketId);
 
         $user = $this->getUser();
@@ -193,7 +193,7 @@ class OrdersController extends AbstractController
 
                 $orderItems->setOrders($order);
                 $orderItems->setDistributorId($basketItem->getDistributorId());
-                $orderItems->setProduct($basketItem->getProduct());
+                $orderItems->setProductId($basketItem->getProductId());
                 $orderItems->setUnitPrice($basketItem->getUnitPrice());
                 $orderItems->setQuantity($basketItem->getQty());
                 $orderItems->setQuantityDelivered($basketItem->getQty());
@@ -221,7 +221,6 @@ class OrdersController extends AbstractController
                 ]);
                 if($orderStatus == null)
                 {
-                    $distributorId = $basketItem->getDistributorId();
                     $status = $this->em->getRepository(Status::class)->find(2);
 
                     $orderStatus = new OrderStatus();
@@ -292,10 +291,10 @@ class OrdersController extends AbstractController
                     <div class="alert alert-secondary" role="alert">
                         <div class="row border-dark">
                             <div class="col-6 text-truncate">
-                                ' . $this->encryptor->decrypt($distributor->getDistributorName()) . '
+                                ' . $this->encryptor->decrypt($clinic->getClinicName()) . '
                             </div>
                             <div class="col-6 text-end text-truncate">
-                                ' . $distributor->getPoNumberPrefix() . '-' . $order->getId() . '
+                                ' . $clinic->getPoNumberPrefix() . '-' . $order->getId() . '
                             </div>
                         </div>
                     </div>
@@ -621,22 +620,27 @@ class OrdersController extends AbstractController
                     foreach($basket->getBasketItems() as $item)
                     {
                         // Product Image
-                        $productImages = $item->getProduct()->getProductImages();
-                        $image = 'image-not-found.jpg';
+                        $image = $this->emRemote->getRepository(ProductImages::class)->findOneBy([
+                            'product' => $item->getProductId(),
+                            'isDefault' => 1
+                        ]);
 
-                        if(count($productImages) > 0)
-                        {
-                            $image = $this->em->getRepository(ProductImages::class)->findOneBy([
-                                'product' => $item->getProduct()->getId(),
-                                'isDefault' => 1
-                            ])->getImage();
+                        if($image == null){
+
+                            $firstImage = 'image-not-found.jpg';
+
+                        } else {
+
+                            $firstImage = $image->getImage();
                         }
+
+                        $product = $this->emRemote->getRepository(Products::class)->find($item->getProductId());
 
                         $response .= '
                         <div class="row">
                             <!-- Thumbnail -->
                             <div class="col-12 col-sm-2 text-center pt-3">
-                                <img class="img-fluid basket-img" src="/images/products/' . $image . '" style="max-height: 45px">
+                                <img class="img-fluid basket-img" src="/images/products/' . $firstImage . '" style="max-height: 45px">
                             </div>
                             <div class="col-12 col-sm-10 pt-3">
                                 <!-- Product Name and Qty -->
@@ -645,7 +649,7 @@ class OrdersController extends AbstractController
                                     <div class="col-12 col-sm-6 text-center text-sm-start">
                                         <span class="info">'. $this->encryptor->decrypt($clinic->getClinicName()) .'</span>
                                         <h6 class="fw-bold text-center text-sm-start text-primary mb-0">
-                                            ' . $item->getProduct()->getName() . ': ' . $item->getProduct()->getDosage() . ' ' . $item->getProduct()->getUnit() . '
+                                            ' . $product->getName() . ': ' . $product->getDosage() . ' ' . $product->getUnit() . '
                                         </h6>
                                     </div>
                                     <!-- Product Quantity -->
@@ -904,7 +908,7 @@ class OrdersController extends AbstractController
         return $btnConfirm;
     }
 
-    public function generatePpPdfAction($orderId, $distributorId, $status)
+    public function generatePdfAction($orderId, $distributorId, $status)
     {
         $distributor = $this->em->getRepository(Distributors::class)->find($distributorId);
         $currency = $distributor->getAddressCountry()->getCurrency();

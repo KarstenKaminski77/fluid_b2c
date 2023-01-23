@@ -23,11 +23,6 @@ class BasketItems
     private $basket;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Products::class, inversedBy="basketItems")
-     */
-    private $product;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Distributors::class, inversedBy="basketItems")
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -68,6 +63,11 @@ class BasketItems
      */
     private $itemId;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $productId;
+
     public function __construct()
     {
         $this->setModified(new \DateTime());
@@ -89,18 +89,6 @@ class BasketItems
     public function setBasket(?Baskets $basket): self
     {
         $this->basket = $basket;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Products
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Products $product): self
-    {
-        $this->product = $product;
 
         return $this;
     }
@@ -197,6 +185,18 @@ class BasketItems
     public function setItemId(string $itemId): self
     {
         $this->itemId = $itemId;
+
+        return $this;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->productId;
+    }
+
+    public function setProductId(?int $productId): self
+    {
+        $this->productId = $productId;
 
         return $this;
     }

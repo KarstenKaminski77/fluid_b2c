@@ -90,19 +90,9 @@ class Products
     private $created;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItems::class, mappedBy="product")
-     */
-    private $orderItems;
-
-    /**
      * @ORM\OneToMany(targetEntity=ListItems::class, mappedBy="product")
      */
     private $listItems;
-
-    /**
-     * @ORM\OneToMany(targetEntity=BasketItems::class, mappedBy="product")
-     */
-    private $basketItems;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -163,11 +153,9 @@ class Products
         }
 
         $this->distributorProducts = new ArrayCollection();
-        $this->orderItems = new ArrayCollection();
         $this->productNotes = new ArrayCollection();
         $this->productReviews = new ArrayCollection();
         $this->listItems = new ArrayCollection();
-        $this->basketItems = new ArrayCollection();
         $this->clinicProducts = new ArrayCollection();
         $this->productFavourites = new ArrayCollection();
         $this->productImages = new ArrayCollection();
@@ -348,36 +336,6 @@ class Products
     }
 
     /**
-     * @return Collection|OrderItems[]
-     */
-    public function getOrderItems(): Collection
-    {
-        return $this->orderItems;
-    }
-
-    public function addOrderItem(OrderItems $orderItem): self
-    {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrderItem(OrderItems $orderItem): self
-    {
-        if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
-            if ($orderItem->getProduct() === $this) {
-                $orderItem->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, ListItems>
      */
     public function getListItems(): Collection
@@ -401,36 +359,6 @@ class Products
             // set the owning side to null (unless already changed)
             if ($listItem->getProduct() === $this) {
                 $listItem->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, BasketItems>
-     */
-    public function getBasketItems(): Collection
-    {
-        return $this->basketItems;
-    }
-
-    public function addBasketItem(BasketItems $basketItem): self
-    {
-        if (!$this->basketItems->contains($basketItem)) {
-            $this->basketItems[] = $basketItem;
-            $basketItem->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBasketItem(BasketItems $basketItem): self
-    {
-        if ($this->basketItems->removeElement($basketItem)) {
-            // set the owning side to null (unless already changed)
-            if ($basketItem->getProduct() === $this) {
-                $basketItem->setProduct(null);
             }
         }
 

@@ -22,12 +22,8 @@ class Baskets
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $clinicId;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $distributorId;
+    private $clinicId;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -102,18 +98,6 @@ class Baskets
     public function setClinicId(?int $clinicId): self
     {
         $this->clinicId = $clinicId;
-
-        return $this;
-    }
-
-    public function getDistributorId(): ?int
-    {
-        return $this->distributorId;
-    }
-
-    public function setDistributorId(?int $distributorId): self
-    {
-        $this->distributorId = $distributorId;
 
         return $this;
     }

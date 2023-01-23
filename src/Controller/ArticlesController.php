@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ArticleDetails;
 use App\Entity\Articles;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Nzo\UrlEncryptorBundle\Encryptor\Encryptor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,19 +14,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticlesController extends AbstractController
 {
-    private $em;
+    private $emRemote;
     private $encryptor;
 
-    public function __construct(EntityManagerInterface $em, Encryptor $encryptor)
+    public function __construct(ManagerRegistry $entityManager, Encryptor $encryptor)
     {
-        $this->em = $em;
+        $this->emRemote = $entityManager->getManager('remote');
         $this->encryptor = $encryptor;
     }
 
     #[Route('/article/{pageId}', name: 'articles_page')]
     public function articlesAction(Request $request): Response
     {
-        $article = $this->em->getRepository(Articles::class)->findByPageId($request->get('pageId'));
+        $article = $this->emRemote->getRepository(Articles::class)->findByPageId($request->get('pageId'));
 
         return $this->render('frontend/articles.html.twig', [
             'articles' => $article,
@@ -35,7 +36,7 @@ class ArticlesController extends AbstractController
     #[Route('/support/authors/{articleId}', name: 'support_authors')]
     public function articleAuthorsAction(Request $request): Response
     {
-        $authors = $this->em->getRepository(ArticleDetails::class)->findUsersByld($request->get('articleId'));
+        $authors = $this->emRemote->getRepository(ArticleDetails::class)->findUsersByld($request->get('articleId'));
         $response = '';
         $count = count($authors);
 
@@ -51,8 +52,8 @@ class ArticlesController extends AbstractController
     #[Route('/article-list/authors/{articleDetailId}/{showAuthors}', name: 'article_list_authors')]
     public function articleListAuthorsAction(Request $request): Response
     {
-        $articleDetails = $this->em->getRepository(ArticleDetails::class)->find($request->get('articleDetailId'));
-        $lastUpdated = $this->em->getRepository(ArticleDetails::class)->findByLastUpdated($request->get('articleDetailId'));
+        $articleDetails = $this->emRemote->getRepository(ArticleDetails::class)->find($request->get('articleDetailId'));
+        $lastUpdated = $this->emRemote->getRepository(ArticleDetails::class)->findByLastUpdated($request->get('articleDetailId'));
         $response = '';
 
         if($request->get('showAuthors') == 1) {
@@ -88,7 +89,7 @@ class ArticlesController extends AbstractController
     public function articleListAction(Request $request): Response
     {
         $articleId = $request->get('articleId');
-        $article = $this->em->getRepository(Articles::class)->find($articleId);
+        $article = $this->emRemote->getRepository(Articles::class)->find($articleId);
 
         return $this->render('frontend/articles_list.html.twig', [
             'article' => $article,
@@ -99,7 +100,7 @@ class ArticlesController extends AbstractController
     public function articleDetailsAction(Request $request): Response
     {
         $articleDetailId = $request->get('articleDetailId');
-        $articleDetails = $this->em->getRepository(ArticleDetails::class)->find($articleDetailId);
+        $articleDetails = $this->emRemote->getRepository(ArticleDetails::class)->find($articleDetailId);
 
         return $this->render('frontend/article_details.html.twig', [
             'articleDetails' => $articleDetails,

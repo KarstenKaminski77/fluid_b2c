@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ArticleDetails;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArticleDetails[]    findAll()
  * @method ArticleDetails[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticleDetailsRepository extends ServiceEntityRepository
+class ArticleDetailsRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, ArticleDetails::class);
-    }
-
     public function add(ArticleDetails $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

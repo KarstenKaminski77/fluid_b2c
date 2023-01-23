@@ -87,11 +87,6 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
     private $addresses;
 
     /**
-     * @ORM\OneToMany(targetEntity=ClinicRetailUsers::class, mappedBy="retailUser")
-     */
-    private $clinicRetailUsers;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="retailUsers")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -119,7 +114,6 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
             $this->setCreated(new \DateTime());
         }
         $this->addresses = new ArrayCollection();
-        $this->clinicRetailUsers = new ArrayCollection();
         $this->baskets = new ArrayCollection();
         $this->orders = new ArrayCollection();
     }
@@ -345,36 +339,6 @@ class RetailUsers implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($address->getRetail() === $this) {
                 $address->setRetail(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ClinicRetailUsers>
-     */
-    public function getClinicRetailUsers(): Collection
-    {
-        return $this->clinicRetailUsers;
-    }
-
-    public function addClinicRetailUser(ClinicRetailUsers $clinicRetailUser): self
-    {
-        if (!$this->clinicRetailUsers->contains($clinicRetailUser)) {
-            $this->clinicRetailUsers[] = $clinicRetailUser;
-            $clinicRetailUser->setRetailUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClinicRetailUser(ClinicRetailUsers $clinicRetailUser): self
-    {
-        if ($this->clinicRetailUsers->removeElement($clinicRetailUser)) {
-            // set the owning side to null (unless already changed)
-            if ($clinicRetailUser->getRetailUser() === $this) {
-                $clinicRetailUser->setRetailUser(null);
             }
         }
 

@@ -28,7 +28,7 @@ class HomePageController extends AbstractController
     #[Route('/', name: 'home_page')]
     public function index(): Response
     {
-        $banners = $this->em->getRepository(Banners::class)->findHomePage();
+        $banners = $this->emRemote->getRepository(Banners::class)->findHomePage();
         $products = $this->emRemote->getRepository(Products::class)->findByRand();
 
         foreach($products as $product){

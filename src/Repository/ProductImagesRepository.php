@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ProductImages;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ProductImages[]    findAll()
  * @method ProductImages[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductImagesRepository extends ServiceEntityRepository
+class ProductImagesRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, ProductImages::class);
-    }
-
     /**
      * @throws ORMException
      * @throws OptimisticLockException

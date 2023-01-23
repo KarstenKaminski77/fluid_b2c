@@ -28,11 +28,6 @@ class OrderItems
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Products::class, inversedBy="orderItems")
-     */
-    private $product;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $distributorId;
@@ -152,6 +147,11 @@ class OrderItems
      */
     private $itemId;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $productId;
+
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -185,18 +185,6 @@ class OrderItems
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Products
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Products $product): self
-    {
-        $this->product = $product;
 
         return $this;
     }
@@ -485,6 +473,18 @@ class OrderItems
     public function setItemId(string $itemId): self
     {
         $this->itemId = $itemId;
+
+        return $this;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->productId;
+    }
+
+    public function setProductId(?int $productId): self
+    {
+        $this->productId = $productId;
 
         return $this;
     }

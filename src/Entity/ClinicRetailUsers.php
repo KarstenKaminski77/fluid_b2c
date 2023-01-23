@@ -23,11 +23,6 @@ class ClinicRetailUsers
     private $clinicId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=RetailUsers::class, inversedBy="clinicRetailUsers")
-     */
-    private $retailUser;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $isApproved;
@@ -46,6 +41,11 @@ class ClinicRetailUsers
      * @ORM\Column(type="date", nullable=true)
      */
     private $created;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $retailUserId;
 
     public function __construct()
     {
@@ -69,18 +69,6 @@ class ClinicRetailUsers
     public function setClinic(?int $clinicId): self
     {
         $this->clinicId = $clinicId;
-
-        return $this;
-    }
-
-    public function getRetailUser(): ?RetailUsers
-    {
-        return $this->retailUser;
-    }
-
-    public function setRetailUser(?RetailUsers $retailUser): self
-    {
-        $this->retailUser = $retailUser;
 
         return $this;
     }
@@ -129,6 +117,18 @@ class ClinicRetailUsers
     public function setCreated(?\DateTimeInterface $created): self
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function getRetailUserId(): ?int
+    {
+        return $this->retailUserId;
+    }
+
+    public function setRetailUserId(?int $retailUserId): self
+    {
+        $this->retailUserId = $retailUserId;
 
         return $this;
     }
